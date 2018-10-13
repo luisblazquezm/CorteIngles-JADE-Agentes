@@ -142,5 +142,32 @@ public class Utils
     		e.printStackTrace();
         }
     }
+    
+    /**
+     * Defines a service that will be implemented by one or more agents.
+     * @param agent Agent that implements the service.
+	 * @param serviceType New service's type.
+	 * @param serviceName New service's name.
+     */
+    protected static void defineService(Agent agent, String serviceType, String serviceName)
+    {
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		
+		ServiceDescription sd = new ServiceDescription();
+		sd.setName(serviceName);
+		sd.setType(serviceType);
+		sd.addOntologies("ontologia");
+		sd.addLanguages(new SLCodec().getName());
+		dfd.addServices(sd);
+		
+		try {
+			DFService.register(agent, dfd);
+		} catch (FIPAException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    }
+
 
 }
