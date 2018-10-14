@@ -1,13 +1,8 @@
 package platform1;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeParseException;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 import jade.core.Agent;
@@ -32,8 +27,8 @@ public class CyclicBehaviourMakeTrip extends CyclicBehaviour
 		List<String> messageContentActivity = new ArrayList<String>();
 		List<String> messageContentAccomodation = new ArrayList<String>();
 		Scanner sc = new Scanner(System.in);
-        String answer, behaviourAction, reserveInfo;
-        int requestWait; // Number of agents that implement a determined service
+        String answer, behaviourAction = "Default", reserveInfo = "Default";
+        int requestWait = -1; // Number of agents that implement a determined service
         
 		// Ask the user through the console about the information of the trip is planning to make
         do{
@@ -142,7 +137,7 @@ public class CyclicBehaviourMakeTrip extends CyclicBehaviour
 				
 				if (reserveInfo != null) {
 					System.out.printf("%s", reserveInfo);
-					(requesWait)--;
+					(requestWait)--;
 				} else {
 					System.err.printf("%n(CyclicBehaviourMakeTrip)ERROR:Received information is NULL%n");
 				}

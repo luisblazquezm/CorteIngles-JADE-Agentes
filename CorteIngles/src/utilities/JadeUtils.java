@@ -149,7 +149,7 @@ public class JadeUtils
 	 * @param serviceType New service's type.
 	 * @param serviceName New service's name.
      */
-    protected static void defineService(Agent agent, String serviceType, String serviceName)
+    public static void registerService(Agent agent, String serviceType, String serviceName)
     {
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(agent.getAID());

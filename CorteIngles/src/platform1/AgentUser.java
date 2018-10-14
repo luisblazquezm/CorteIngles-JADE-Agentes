@@ -10,10 +10,10 @@ public class AgentUser extends Agent
 	@Override
 	public void setup()
 	{
-		//Definir servicios
-		JadeUtils.defineService(this, "reserve", "User");
+		//Define servies
+		JadeUtils.registerService(this, "reserve", "User");
 		
-		//Definir comportamiento
+		//Define behaviour
 		cB = new CyclicBehaviourMakeTrip(this);
 		addBehaviour(cB);
 		

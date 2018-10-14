@@ -11,7 +11,7 @@ public class AgentAccomodation extends Agent
 	public void setup()
 	{
 		//Definir servicios
-		JadeUtils.defineService(this, "doReserve", "Accomodation");
+		JadeUtils.registerService(this, "doReserve", "Accomodation");
 		
 		//Definir comportamiento
 		cB = new CyclicBehaviourReservation(this);
