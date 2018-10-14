@@ -23,7 +23,9 @@ import java.util.Iterator;
 
 public class JadeUtils
 {
-	
+	public static final int cityIndex = 0;
+	public static final int departureIndex = 1;
+	public static final int returnIndex = 2;
 	/**
 	 * Look for all agents providing a service.
 	 * @param clientAgent Agent that requests service.

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import utilities.JadeUtils;
+
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -16,8 +18,12 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 
+import model.Model;
+
 public class CyclicBehaviourReservation extends CyclicBehaviour
 {
+	Model m = new Model();
+	
 	public CyclicBehaviourReservation(Agent agent)
 	{
 		super(agent);
@@ -67,8 +73,10 @@ public class CyclicBehaviourReservation extends CyclicBehaviour
 	public String reserveAccomodation(List<String> data)
 	{
 		StringBuilder sb = new StringBuilder();
+
+		boolean available = this.checkAvailability(data);
 		
-		if (/*availability true*/){
+		if (available){
 	    	sb.append(String.format("%s", "+-----------------------------------+"));
 	    	sb.append(String.format("| %s | %s | %s | %s|\n","City", "Hotel Name" ,"Number of Rooms", "Calendar"));
 	    	sb.append(String.format("%s", "+-----------------------------------+"));
@@ -82,5 +90,22 @@ public class CyclicBehaviourReservation extends CyclicBehaviour
 				
 		
 		return sb.toString();
+	}
+	
+	public boolean checkAvailability(List<String> data){
+		
+		String city = data.get(JadeUtils.cityIndex);
+		String departureD = data.get(JadeUtils.departureIndex);
+		String returnD = data.get(JadeUtils.returnIndex);
+		
+		Accomodation newAccomodation = new Accomodation();
+		
+				m.getListAccomodations();
+		
+		if (m.setListAccomodations(accomodation)){
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
