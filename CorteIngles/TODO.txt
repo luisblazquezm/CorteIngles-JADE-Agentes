@@ -1,0 +1,19 @@
+TODO:
+-    El metodo "Utils.defineService" quiza seria mejor llamarlo "registerService", para
+     mantener la notacion del entorno JADE
+     
+-    En el metodo "Utils.defineService", cuando se llama a getAID() hay que hacerlo como
+     "agent.getAID()"
+     
+-    El metodo "Utils.defineService" no tiene ningun motivo para ser "protected". Puede
+     ser public, ya que la clase Utils es una clase de servicios.
+     
+-    En la clase CyclicBehaviourMakeTrip hay una errata, pone "requesWait" en lugar de
+     "requestWait"
+     
+-    Las clases deberian llamarse "X_Agent" y no "Agent_X"
+
+-    He creado un paquete "utilities", en el que se mete todo el código estático. Lo
+     apropiado sería tener una clase "Accomodations" (que es el nombre que se da en
+     Java a las clases con métodos estáticos, veáse Arrays vs. Array) y luego una clase
+     Accomodation, como he hecho yo con Activity

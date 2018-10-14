@@ -15,6 +15,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import utilities.JadeUtils;
 
 public class CyclicBehaviourMakeTrip extends CyclicBehaviour
 {
@@ -113,10 +114,10 @@ public class CyclicBehaviourMakeTrip extends CyclicBehaviour
 
         switch(behaviourAction){
 	        case "1": // Send Message Accomodation
-	    		Utils.sendMessage(this.myAgent, "reserve", messageContentAccomodation);
+	    		JadeUtils.sendMessage(this.myAgent, "reserve", messageContentAccomodation);
 	            break;
 	        case "2": // Send Message Activity
-	    		Utils.sendMessage(this.myAgent, "reserve", messageContentActivity);
+	    		JadeUtils.sendMessage(this.myAgent, "reserve", messageContentActivity);
 	            break;
 	        default:
 	            System.out.printf("%n%nOpcion incorrecta%n%n");

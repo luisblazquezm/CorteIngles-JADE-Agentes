@@ -4,7 +4,7 @@
  * TODO:
  * - Change package when added to new project
  */
-package platform1;
+package utilities;
 
 import jade.content.lang.sl.SLCodec;
 import jade.core.AID;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
 
-public class Utils
+public class JadeUtils
 {
 	
 	/**
@@ -152,7 +152,7 @@ public class Utils
     protected static void defineService(Agent agent, String serviceType, String serviceName)
     {
 		DFAgentDescription dfd = new DFAgentDescription();
-		dfd.setName(getAID());
+		dfd.setName(agent.getAID());
 		
 		ServiceDescription sd = new ServiceDescription();
 		sd.setName(serviceName);

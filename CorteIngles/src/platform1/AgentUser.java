@@ -1,6 +1,7 @@
 package platform1;
 
 import jade.core.Agent;
+import utilities.JadeUtils;
 
 public class AgentUser extends Agent  
 {
@@ -10,7 +11,7 @@ public class AgentUser extends Agent
 	public void setup()
 	{
 		//Definir servicios
-		Utils.defineService(this, "reserve", "User");
+		JadeUtils.defineService(this, "reserve", "User");
 		
 		//Definir comportamiento
 		cB = new CyclicBehaviourMakeTrip(this);
