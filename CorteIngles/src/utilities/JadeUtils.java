@@ -152,7 +152,13 @@ public class JadeUtils
 	 * @param serviceName New service's name.
      */
     public static void registerService(Agent agent, String serviceType, String serviceName)
+    	throws NullPointerException
     {
+    	
+    	if (agent == null) {
+    		throw new NullPointerException();
+    	}
+    	
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(agent.getAID());
 		
@@ -169,6 +175,21 @@ public class JadeUtils
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+    }
+    
+    public static void deregisterService (Agent agent) 
+    		throws NullPointerException
+    {
+    	if (agent == null) {
+    		throw new NullPointerException();
+    	}
+    	
+    	try {
+    		DFService.deregister(agent);
+    	} catch (FIPAException e) {
+    		e.printStackTrace();
+    	}
+    		
     }
 
 
