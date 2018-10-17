@@ -11,7 +11,7 @@ import jade.lang.acl.MessageTemplate;
  * @author mrhyd
  *
  */
-public class CyclicBehaviourActivityAgent extends CyclicBehaviour {
+public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 
 	/**
 	 * 
@@ -30,7 +30,11 @@ public class CyclicBehaviourActivityAgent extends CyclicBehaviour {
 		if (message == null) {
 			block();
 		} else {
-			// Wtf here?
+			
+			/*
+			 * Retrieve information
+			 */
+			
 		}
 	}
 

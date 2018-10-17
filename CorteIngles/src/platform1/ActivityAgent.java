@@ -16,7 +16,11 @@ public class ActivityAgent extends Agent {
 	@Override
 	protected void setup() {
 		
-		JadeUtils.registerService(this, "activity-service", "add-activity");
+		/*
+		 *  At least initially, this is not needed, but I just wrote it \_('-')_/
+		 */
+//		JadeUtils.registerService(this, "activity-service", "add-activity");
+		
 		JadeUtils.registerService(this, "activity-service", "retrieve-activity");
 		
 	}
