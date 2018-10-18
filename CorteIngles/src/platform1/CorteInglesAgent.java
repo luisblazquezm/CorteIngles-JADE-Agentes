@@ -23,8 +23,12 @@ public class CorteInglesAgent extends Agent {
 	@Override
 	protected void setup() {
 		
-		JadeUtils.registerService(this, "corte-ingles-service", "handle-reservation-request");
-		JadeUtils.registerService(this, "corte-ingles-service", "handle-activity-request");
+		JadeUtils.registerService(this,
+				                  PlatformData.HANDLE_RESERVATION_SER,
+				                  getLocalName());
+		JadeUtils.registerService(this,
+				                  PlatformData.HANDLE_ACTIVITY_REQUEST,
+				                  getLocalName());
 		
 	}
 

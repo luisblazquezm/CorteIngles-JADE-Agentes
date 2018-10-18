@@ -19,3 +19,6 @@ TODO:
 
 - Conseguir la arquitectura que permita que CorteInglesAgent pueda recibir peticiones mientras
   espera una respuesta. Esto podria ser util: "https://www.iro.umontreal.ca/~vaucher/Agents/Jade/primer6.html#6.6.4"
+  
+  - Al registrar un servicio, haremos:
+  		JadeUtils.registerService(this, PlatformData.serviceName, getLocalName())
