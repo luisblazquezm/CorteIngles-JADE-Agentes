@@ -9,32 +9,17 @@ package platform1;
  */
 public class PlatformData {
 
-	// Agents' aliases
+	// Agents' alias
 	public static final String USER_ALIAS = "user-agent";
 	public static final String RESERVATION_ALIAS = "reservation-agent";
 	public static final String ACTIVITY_ALIAS = "activity-agent";
 	public static final String CORTE_INGLES_ALIAS = "corte-ingles-agent";
 	
 	// Services' names and types
-	/**
-	 * Service provided by ActivityAgent
-	 */
 	public static final String RETRIEVE_ACTIVITY_SER = "retrieve-activity";
-	
-	/**
-	 * Service provided by ReservationAgent
-	 */
 	public static final String MAKE_RESERVATION_SER = "make-reservation";
-	
-	/**
-	 * Services provided by CorteInglesAgent
-	 */
 	public static final String HANDLE_RESERVATION_SER = "handle-reservation-request";
 	public static final String HANDLE_ACTIVITY_SER = "handle-activity-request";
-	
-	/**
-	 * Service provided by UserAgent
-	 */
 	public static final String HANDLE_USER_REQUEST_SER = "handle-user-request";
 	
 	// Delimiter for message content
@@ -47,4 +32,15 @@ public class PlatformData {
 	// Availability of reservation
 	public static final String RESERVATION_AVAILABLE = "available";
 	public static final String RESERVATION_NOT_AVAILABLE = "not-available";
+	
+	// Indexes from reservation message object
+	public static final int CITY_INDEX = 0;
+	public static final int HOTEL_INDEX = 1;
+	public static final int DEPARTURE_INDEX = 2;
+	public static final int RETURN_INDEX = 3;
+	
+	// Indexes from activity message object
+	// cityIndex = 0
+	public static final int SCHEDULE_DESCRIPTION_INDEX = 1;
+
 }

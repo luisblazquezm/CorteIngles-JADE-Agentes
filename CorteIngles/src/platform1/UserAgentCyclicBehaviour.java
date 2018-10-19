@@ -3,9 +3,7 @@ package platform1;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 
 import jade.core.Agent;
@@ -17,6 +15,11 @@ import utilities.JadeUtils;
 
 public class UserAgentCyclicBehaviour extends CyclicBehaviour
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public UserAgentCyclicBehaviour(Agent agent)
 	{
 		super(agent);
@@ -33,6 +36,10 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         String answer, behaviourAction = "Default", reserveInfo = "Default";
         String date1, date2, scheduleDate;
         boolean departureDateIsCorrect = false, returnDateIsCorrect = false, scheduleDateIsCorrect = false;
+        
+        MessageContent<String> msgContentReservation = null;
+        MessageContent<String> msgContentActivity = null;
+
         
         int requestWait = -1; // Number of agents that implement a determined service
         
@@ -86,7 +93,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	    		try{
 	    			departureDate = new SimpleDateFormat("dd/MM/yyyy").parse(date1);
 	    		} catch (Exception e) {
-	    			System.err.printf("%n%s%n", e.toString());
+	    			System.err.printf("%nUserAgentCyclicBehaviour:action:reservation: %s%n", e.toString());
 	    		}
 	    		
 	    		if (!(departureDate.after(min1) && departureDate.before(max1))){
@@ -105,7 +112,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	    			returnDate = new SimpleDateFormat("dd/MM/yyyy").parse(date2);
 
 	    		} catch (Exception e) {
-	    			System.err.printf("%n%s%n", e.toString());
+	    			System.err.printf("%nUserAgentCyclicBehaviour:action:reservation: %s%n", e.toString());
 	    		}
 	    		
 	    		if (!(returnDate.after(min2) && returnDate.before(max2))){
@@ -118,7 +125,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
     		
     		
     		messageContentReservation = String.format("%s" + PlatformData.DELIMITER + "%s" + PlatformData.DELIMITER + "%s" + PlatformData.DELIMITER + "%s", cityDestination, hotelDestination, date1, date2);
-    		
+    		msgContentReservation = new MessageContent<>(PlatformData.HANDLE_RESERVATION_SER, messageContentReservation);
     		// Insert the messageContent into the MessageContent object -> data and requestedService -> PlatformData.HANDLE_RESERVATION_SER
 	
         } else if ("nN".contains(answer)) {
@@ -141,18 +148,19 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
     	    		try{
     	    			activityDate = new SimpleDateFormat("dd/MM/yyyy").parse(scheduleDate);
     	    		} catch (Exception e) {
-    	    			System.err.printf("%n%s%n", e.toString());
+    	    			System.err.printf("%nUserAgentCyclicBehaviour:action:activity: %s%n", e.toString());
     	    		}
     	    		
     	    		if (!(activityDate.after(min1) && activityDate.before(max2))){
     	    			System.err.printf("%nDeparture date not included in the range of dates. Please introduce it again%n");
     	    		} else {
-    	    			departureDateIsCorrect = true;
+    	    			scheduleDateIsCorrect = true;
     	    		}
     	    		
-        		} while (!departureDateIsCorrect);
+        		} while (!scheduleDateIsCorrect);
         		
         		messageContentActivity = String.format("%s" + PlatformData.DELIMITER + "%s", city, scheduleDate);  
+        		msgContentActivity = new MessageContent<>(PlatformData.HANDLE_ACTIVITY_SER, messageContentActivity);
         		// Insert the messageContent into the MessageContent object -> data and requestedService -> PlatformData.HANDLE_ACTIVITY_SER
 
             } else if ("nN".contains(answer)) {
@@ -161,18 +169,19 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 
         }
         
-
+        
         switch(behaviourAction){
 	        case "1": // Send Message Reservation
-	    		requestWait = JadeUtils.sendMessage(this.myAgent, "reserve", messageContentReservation);
+	    		requestWait = JadeUtils.sendMessage(this.myAgent, PlatformData.HANDLE_RESERVATION_SER, msgContentReservation);
 	            break;
 	        case "2": // Send Message Activity
-	        	requestWait = JadeUtils.sendMessage(this.myAgent, "reserve", messageContentActivity);
+	        	requestWait = JadeUtils.sendMessage(this.myAgent, PlatformData.HANDLE_ACTIVITY_SER, msgContentActivity);
 	            break;
 	        default:
-	            System.out.printf("%n%nOpcion incorrecta%n%n");
+	            System.out.printf("%n%nUserAgentCyclicBehaviour:action: NO AGENTS WORKING%n%n");
 	            break;
         }	
+        
         
 		// Waiting for the INFORM message from AgentCorteIngles in a non-blocking state
 		ACLMessage msg = this.myAgent.receive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchOntology("ontologia")));
@@ -194,10 +203,10 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 					System.out.printf("%s", reserveInfo);
 					(requestWait)--;
 				} else {
-					System.err.printf("%n(UserAgentCyclicBehaviour)ERROR:Received information is NULL%n");
+					System.err.printf("%nUserAgentCyclicBehaviour:action: ERROR:Request Wait < 0%n");
 				}
         	} else {
-				System.err.printf("%n(UserAgentCyclicBehaviour)ERROR:Received information is NULL%n");
+				System.err.printf("%nUserAgentCyclicBehaviour:action: ERROR:Received information is NULL%n");
         	}
         } else {
     		block();
