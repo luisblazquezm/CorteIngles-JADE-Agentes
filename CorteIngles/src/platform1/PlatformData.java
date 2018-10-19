@@ -36,4 +36,15 @@ public class PlatformData {
 	 * Service provided by UserAgent
 	 */
 	public static final String HANDLE_USER_REQUEST_SER = "handle-user-request";
+	
+	// Delimiter for message content
+	public static final String DELIMITER = "#";
+	
+	// Type of message
+	public static final String ACTIVITY_MESSAGE = "activity-message";
+	public static final String RESERVATION_MESSAGE = "reservation-message";
+	
+	// Availability of reservation
+	public static final String RESERVATION_AVAILABLE = "available";
+	public static final String RESERVATION_NOT_AVAILABLE = "not-available";
 }

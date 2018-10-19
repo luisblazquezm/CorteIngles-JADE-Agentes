@@ -23,9 +23,15 @@ import java.util.Iterator;
 
 public class JadeUtils
 {
+	// Indexes from reservation message object
 	public static final int cityIndex = 0;
 	public static final int departureIndex = 1;
 	public static final int returnIndex = 2;
+	
+	// Indexes from activity message object
+	// cityIndex = 0
+	public static final int scheduleDescriptionIndex = 1;
+
 	/**
 	 * Look for all agents providing a service.
 	 * @param clientAgent Agent that requests service.
@@ -114,7 +120,7 @@ public class JadeUtils
 	 * @param serviceType  Required service's type.
 	 * @param object Sent message.
      */
-    public static void sendMessage(Agent clientAgent, String serviceType, Object object)
+    public static int sendMessage(Agent clientAgent, String serviceType, Object object)
     {
         DFAgentDescription[] dfd;
         dfd = findAgentsForService(clientAgent, serviceType);
@@ -143,6 +149,8 @@ public class JadeUtils
 //                                        JOptionPane.ERROR_MESSAGE);
     		e.printStackTrace();
         }
+        
+        return dfd.length;
     }
     
     /**
