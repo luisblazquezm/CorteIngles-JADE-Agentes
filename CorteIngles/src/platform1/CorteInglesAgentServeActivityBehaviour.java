@@ -39,14 +39,20 @@ public class CorteInglesAgentServeActivityBehaviour extends CyclicBehaviour {
 		if (message == null) {
 			block();
 		} else {
-			IdentifiedMessageContent<String> messageContent =
-					new IdentifiedMessageContent<>(
-							JadeUtils.extractMessageContent(message),
-							message.getSender()
-					);
-			JadeUtils.sendMessage(message.get,
-					              serviceType,
-					              object)
+			IdentifiedMessageContent<String> messageContent;
+			try {
+				messageContent = new IdentifiedMessageContent<>(
+						JadeUtils.extractMessageContent(message),
+						message.getSender()
+				);
+
+				JadeUtils.sendMessage(this.myAgent,
+						              PlatformData.RETRIEVE_ACTIVITY_SER,
+						              messageContent);
+			} catch (UnreadableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
