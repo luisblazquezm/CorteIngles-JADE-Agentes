@@ -3,12 +3,20 @@
  */
 package platform1;
 
+import java.io.Serializable;
+
 /**
  * @author mrhyd
  *
  */
-public class MessageContent<T> {
+public class MessageContent<T>
+	implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Requested service from the list in PlatformData
 	 */

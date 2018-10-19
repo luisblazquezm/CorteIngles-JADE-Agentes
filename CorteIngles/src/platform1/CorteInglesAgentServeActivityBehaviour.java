@@ -6,6 +6,8 @@ package platform1;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
+import utilities.JadeUtils;
 
 /**
  * @author mrhyd
@@ -21,6 +23,7 @@ public class CorteInglesAgentServeActivityBehaviour extends CyclicBehaviour {
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void action() {
 
@@ -30,12 +33,11 @@ public class CorteInglesAgentServeActivityBehaviour extends CyclicBehaviour {
 		if (message == null) {
 			block();
 		} else {
-<<<<<<< HEAD
 			IdentifiedMessageContent<String> messageContent;
 			try {
 				messageContent = new IdentifiedMessageContent<>(
-						JadeUtils.extractMessageContent(message),
-						message.getSender()
+					(IdentifiedMessageContent<String>) JadeUtils.extractMessageContent(message),
+					message.getSender()
 				);
 
 				JadeUtils.sendMessage(this.myAgent,
@@ -45,9 +47,6 @@ public class CorteInglesAgentServeActivityBehaviour extends CyclicBehaviour {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-=======
-			// Handle message
->>>>>>> 3ac555aeb7616db17b4a70355f83f35bc2180d73
 		}
 
 	}

@@ -7,7 +7,6 @@
 package utilities;
 
 import jade.content.lang.sl.SLCodec;
-import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -16,6 +15,8 @@ import jade.domain.FIPAAgentManagement.Envelope;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
+import platform1.MessageContent;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -77,9 +78,12 @@ public class JadeUtils
                 for (int i = 0; i < results.length; ++i) {
                 	
                     DFAgentDescription dfd = results[i];
-                    AID provider = dfd.getName();
                     
-                    Iterator iterator = dfd.getAllServices();
+                    // Not used, wtf? This guys gives us this shitty code...
+//                    AID provider = dfd.getName();
+                    
+                    @SuppressWarnings("unchecked")
+					Iterator<ServiceDescription> iterator = dfd.getAllServices();
                     
                     while (iterator.hasNext()) {
                         ServiceDescription sd = (ServiceDescription) iterator.next();
@@ -190,6 +194,13 @@ public class JadeUtils
     		e.printStackTrace();
     	}
     		
+    }
+    
+	@SuppressWarnings("unchecked")
+	public static <T extends MessageContent<?>> T extractMessageContent(ACLMessage message)
+    		throws UnreadableException
+    {
+    	return (T) message.getContentObject();
     }
 
 
