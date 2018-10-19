@@ -47,7 +47,8 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 		} else {
 			try
 			{
-				answer = this.reserveAccomodation((List<String>) msg.getContentObject());
+				answer = this.reserveAccomodation((MessageContent<String>) msg.getContentObject());
+				// answer = this.reserveAccomodation(JadeUtils.extractMessageContent(msg));
 				
 		    	//INFORM MESSAGE ELABORATION 
 				System.out.println("(ReservationAgent)REQUEST received from AgentCorteIngles\n");
@@ -81,11 +82,14 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 	}
 	
 
-	private String reserveAccomodation(List<String> receivedData)
+	private String reserveAccomodation(MessageContent<String> receivedData)
 	{
 		StringBuilder sb = new StringBuilder();
+		String content = receivedData.getData();
+		
+		String[] data = content.split(Pattern.quote(PlatformData.DELIMITER));
 
-		boolean available = this.checkAvailability(receivedData);
+		boolean available = this.checkAvailability(data);
 		
 		if (available){
 	    	sb.append(String.format("%s", "+-----------------------------------+"));
@@ -96,18 +100,26 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 	    	}
 		} else {
 			sb.append(String.format("Sorry for the inconvenience. The reservation could not be done "));
-			sb.append(String.format("as there were no more rooms available in the hotel %s on the period of days you asked: %s to %s", receivedData.get(0), receivedData.get(1), receivedData.get(2)));
+			sb.append(String.format("as there were no more rooms available in the hotel %s on the period of days you asked: %s to %s", data[PlatformData.HOTEL_INDEX], data[PlatformData.DEPARTURE_INDEX], data[PlatformData.RETURN_INDEX]));
 		}
 				
 		
 		return sb.toString();
 	}
 	
-	private boolean checkAvailability(List<String> data){
+	private boolean checkAvailability(String[] data){
 		
-		String city = data.get(JadeUtils.cityIndex);
-		String departureD = data.get(JadeUtils.departureIndex);
-		String returnD = data.get(JadeUtils.returnIndex);
+		String city = data[PlatformData.CITY_INDEX];
+		String hotel = data[PlatformData.HOTEL_INDEX];
+		String departureDate = data[PlatformData.DEPARTURE_INDEX];
+		String departureDay = departureDate.split("\\/\\"); // Gets only the day dd from dd/MM/yyyy
+		String returnDate = data[PlatformData.RETURN_INDEX];
+	   
+		
+		for(Reservation r : this.listOfReservations) {
+			if (r.getCity().equals(city) && r.getHotelName().equals(hotel) && r.getOccupationCalendar()[])
+		}
+		
 		/*
 		Reservation newReservation = Accomodations.instanceWithRandomAttributes();
 		

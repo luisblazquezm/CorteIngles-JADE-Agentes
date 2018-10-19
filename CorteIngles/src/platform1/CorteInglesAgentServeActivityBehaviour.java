@@ -3,12 +3,9 @@
  */
 package platform1;
 
-import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
-import utilities.JadeUtils;
 
 /**
  * @author mrhyd
@@ -27,18 +24,13 @@ public class CorteInglesAgentServeActivityBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() {
 
-		MessageTemplate template = 
-				MessageTemplate.and(
-						MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-						MessageTemplate.MatchSender(
-								new AID(PlatformData.ACTIVITY_ALIAS, AID.ISLOCALNAME)
-						)
-		        );
+		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
 		
 		if (message == null) {
 			block();
 		} else {
+<<<<<<< HEAD
 			IdentifiedMessageContent<String> messageContent;
 			try {
 				messageContent = new IdentifiedMessageContent<>(
@@ -53,6 +45,9 @@ public class CorteInglesAgentServeActivityBehaviour extends CyclicBehaviour {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+=======
+			// Handle message
+>>>>>>> 3ac555aeb7616db17b4a70355f83f35bc2180d73
 		}
 
 	}
