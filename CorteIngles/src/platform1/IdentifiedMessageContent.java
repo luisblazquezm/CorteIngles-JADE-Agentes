@@ -14,6 +14,11 @@ import jade.core.Agent;
 public class IdentifiedMessageContent<T> extends MessageContent<T>{
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
 	 * The AID of the agent who requested the data 
 	 */
 	private AID requester;
@@ -35,6 +40,28 @@ public class IdentifiedMessageContent<T> extends MessageContent<T>{
 	 */
 	public IdentifiedMessageContent(String requestedService, T data, Agent requester) {
 		this(requestedService, data, requester.getAID());
+	}
+	
+	/**
+	 * @param requestedService
+	 * @param data
+	 * @param requester
+	 */
+	public IdentifiedMessageContent(MessageContent<T> messageContent, AID requester) {
+		this(messageContent.getRequestedService(),
+		     messageContent.getData(),
+		     requester);
+	}
+	
+	/**
+	 * @param requestedService
+	 * @param data
+	 * @param requester
+	 */
+	public IdentifiedMessageContent(MessageContent<T> messageContent, Agent requester) {
+		this(messageContent.getRequestedService(),
+		     messageContent.getData(),
+		     requester.getAID());
 	}
 
 	/**
