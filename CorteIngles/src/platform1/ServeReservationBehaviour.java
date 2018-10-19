@@ -11,7 +11,7 @@ import jade.lang.acl.MessageTemplate;
  * @author mrhyd
  *
  */
-public class CorteInglesAgentServeReservationBehaviour extends CyclicBehaviour {
+public class ServeReservationBehaviour extends CyclicBehaviour {
 
 	/**
 	 * 

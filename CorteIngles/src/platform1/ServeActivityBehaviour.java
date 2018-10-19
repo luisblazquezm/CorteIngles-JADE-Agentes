@@ -13,7 +13,7 @@ import utilities.JadeUtils;
  * @author mrhyd
  *
  */
-public class CorteInglesAgentServeActivityBehaviour extends CyclicBehaviour {
+public class ServeActivityBehaviour extends CyclicBehaviour {
 
 	/**
 	 * 

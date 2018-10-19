@@ -34,9 +34,15 @@ public class CorteInglesAgent extends Agent {
 		ParallelBehaviour corteInglesBehaviour = 
 				new ParallelBehaviour(this, ParallelBehaviour.WHEN_ANY);
 		
-		corteInglesBehaviour.addSubBehaviour(new CorteInglesAgentServeUserBehaviour());
-		corteInglesBehaviour.addSubBehaviour(new CorteInglesAgentServeReservationBehaviour());
-		corteInglesBehaviour.addSubBehaviour(new CorteInglesAgentServeActivityBehaviour());
+		corteInglesBehaviour.addSubBehaviour(
+			new ServeUserBehaviour()
+		);
+		corteInglesBehaviour.addSubBehaviour(
+			new ServeReservationBehaviour()
+		);
+		corteInglesBehaviour.addSubBehaviour(
+			new ServeActivityBehaviour()
+		);
 		
 		this.addBehaviour(corteInglesBehaviour);
 		

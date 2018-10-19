@@ -12,7 +12,7 @@ import jade.lang.acl.MessageTemplate;
  * @author mrhyd
  *
  */
-public class CorteInglesAgentServeUserBehaviour extends CyclicBehaviour {
+public class ServeUserBehaviour extends CyclicBehaviour {
 
 	/**
 	 * 
@@ -63,7 +63,7 @@ public class CorteInglesAgentServeUserBehaviour extends CyclicBehaviour {
 				
 			} else {
 				// Should not happen but hey, just in case
-				System.err.println("CorteInglesAgentServeUserBehaviour: unknown sender");
+				System.err.println("ServeUserBehaviour: unknown sender");
 			}
 		}
 	}
