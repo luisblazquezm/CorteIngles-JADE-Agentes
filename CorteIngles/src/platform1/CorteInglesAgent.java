@@ -5,6 +5,7 @@ package platform1;
 
 import jade.core.Agent;
 import utilities.JadeUtils;
+import jade.core.behaviours.ParallelBehaviour;
 
 /**
  * @author mrhyd
@@ -29,6 +30,15 @@ public class CorteInglesAgent extends Agent {
 		JadeUtils.registerService(this,
 				                  PlatformData.HANDLE_ACTIVITY_SER,
 				                  getLocalName());
+		
+		ParallelBehaviour corteInglesBehaviour = 
+				new ParallelBehaviour(this, ParallelBehaviour.WHEN_ANY);
+		
+		corteInglesBehaviour.addSubBehaviour(new CorteInglesAgentServeUserBehaviour());
+		corteInglesBehaviour.addSubBehaviour(new CorteInglesAgentServeReservationBehaviour());
+		corteInglesBehaviour.addSubBehaviour(new CorteInglesAgentServeActivityBehaviour());
+		
+		this.addBehaviour(corteInglesBehaviour);
 		
 	}
 

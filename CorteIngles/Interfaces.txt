@@ -1,0 +1,40 @@
+____________                                                     ____________
+|          |    REQ: userToCorteInglesReservationMsgContent      |          |
+|          | ==================================================> |  Corte   |
+|   User   |                                                     |  Ingles  |
+|          | <-------------------------------------------------- |          |
+|__________|    INF: corteInglesToUserReservationMsgContent      |__________|
+
+____________                                                     ____________
+|          |    REQ: userToCorteInglesActivityMsgContent         |          |
+|          | ==================================================> |  Corte   |
+|   User   |                                                     |  Ingles  |
+|          | <-------------------------------------------------- |          |
+|__________|    INF: corteInglesToUserActivityMsgContent         |__________|
+
+____________                                             ____________
+|          |    REQ: corteInglesToActivityMsgContent     |          |
+|  Corte   | ==========================================> |          |
+|  Ingles  |                                             | Activity |
+|          | <------------------------------------------ |          |
+|__________|    INF: activityToCorteInglesMsgContent     |__________|
+
+____________                                               ______________
+|          |    REQ: corteInglesToReservationMsgContent    |             |
+|  Corte   | ============================================> |             |
+|  Ingles  |                                               | Reservation |
+|          | <-------------------------------------------- |             |
+|__________|    INF: reservationToCorteInglesMsgContent    |_____________|
+
+
+userToCorteInglesReservationMsgContent: MessageContent
+	- requestedService: PlatformData.MAKE_RESERVATION_SER
+	- data: "City#Hotel#DepartureDate#ReturnDate"
+userToCorteInglesActividadMsgContent:
+	-requestedService: PlatformData.RETRIEVE_ACTIVITY_SER
+	-data: "City#Date"
+corteInglesToUserReservationMsgContent: "Availability:City:Hotel:DespartureDate:ReturnDate"
+	Availability = AVAILABLE, NOT_AVAILABLE
+corteInglesToUserActivityMsgContent: "City:Activity:StartDate:EndDate"
+corteInglesToActivityMsgContent: IdentifiedMessageContent
+	

@@ -8,20 +8,11 @@ import jade.core.Agent;
 
 /**
  * @author mrhyd
+ * @param <T>
  *
  */
-public class IdentifiedMessageContent<T> {
-	
-	/**
-	 * Requested service from the list in PlatformData
-	 */
-	private String requestedService;
-	
-	/**
-	 * The data to be transmitted to some recipient agent
-	 */
-	private T data;
-	
+public class IdentifiedMessageContent<T> extends MessageContent<T>{
+
 	/**
 	 * The AID of the agent who requested the data 
 	 */
@@ -33,9 +24,7 @@ public class IdentifiedMessageContent<T> {
 	 * @param requester
 	 */
 	public IdentifiedMessageContent(String requestedService, T data, AID requester) {
-		super();
-		this.requestedService = requestedService;
-		this.data = data;
+		super(requestedService, data);
 		this.requester = requester;
 	}
 	
@@ -46,20 +35,6 @@ public class IdentifiedMessageContent<T> {
 	 */
 	public IdentifiedMessageContent(String requestedService, T data, Agent requester) {
 		this(requestedService, data, requester.getAID());
-	}
-		
-	/**
-	 * @return the data
-	 */
-	public T getData() {
-		return data;
-	}
-
-	/**
-	 * @param data the data to set
-	 */
-	public void setData(T data) {
-		this.data = data;
 	}
 
 	/**
@@ -75,19 +50,4 @@ public class IdentifiedMessageContent<T> {
 	public void setRequestor(AID requester) {
 		this.requester = requester;
 	}
-
-	/**
-	 * @return the requestedService
-	 */
-	public String getRequestedService() {
-		return requestedService;
-	}
-
-	/**
-	 * @param requestedService the requestedService to set
-	 */
-	public void setRequestedService(String requestedService) {
-		this.requestedService = requestedService;
-	}
-
 }
