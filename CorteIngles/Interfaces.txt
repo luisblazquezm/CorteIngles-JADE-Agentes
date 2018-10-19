@@ -27,14 +27,43 @@ ____________                                               ______________
 |__________|    INF: reservationToCorteInglesMsgContent    |_____________|
 
 
+# -> Chosen delimiter (see PlatformData class)
+
 userToCorteInglesReservationMsgContent: MessageContent
-	- requestedService: PlatformData.MAKE_RESERVATION_SER
+	- requestedService: PlatformData.HANDLE_RESERVATION_SER
 	- data: "City#Hotel#DepartureDate#ReturnDate"
+	
 userToCorteInglesActividadMsgContent:
-	-requestedService: PlatformData.RETRIEVE_ACTIVITY_SER
+	-requestedService: PlatformData.HANDLE_ACTIVITY_SER
 	-data: "City#Date"
-corteInglesToUserReservationMsgContent: "Availability:City:Hotel:DespartureDate:ReturnDate"
-	Availability = AVAILABLE, NOT_AVAILABLE
-corteInglesToUserActivityMsgContent: "City:Activity:StartDate:EndDate"
+	
+corteInglesToUserReservationMsgContent: "Type#Availability#City#Hotel#DespartureDate#ReturnDate"
+	- Type: PlatformData.RESERVATION_MESSAGE
+	- Availability = PlatformData.RESERVATION_AVAILABLE/PlatformData.RESERVATION_NOT_AVAILABLE
+	
+corteInglesToUserActivityMsgContent: "Type#City#Activity#StartDate#EndDate"
+	- Type: PlatformData.ACTIVITY_MESSAGE
+
 corteInglesToActivityMsgContent: IdentifiedMessageContent
+	- AID: userX
+	- requestedService: Platform.RETRIEVE_ACTIVITY
+	- data: "City#StartDate#EndDate"
+
+activityToCorteInglesMsgContent: IdentifiedMessageContent
+	- AID: same userX received
+	- requestedService: PlatformData.HANDLE_ACTIVITY_SER
+	- data: "Type#City#StartDate#EndDate"
+		+ Type: PlatformData.ACTIVITY_MESSAGE
+
+corteInglesToReservationMsgContent: IdentifiedMessageContent
+	- AID: userX
+	- requestedService: Platform.MAKE_RESERVATION
+	- data: "City#Hotel#DespartureDate#ReturnDate"
+	
+reservationToCorteInglesMsgContent: IdentifiedMessageContent
+	- AID: same userX received
+	- requestedService: PlatformData.HANDLE_RESERVATION_SER
+	- data: "Type#Availability#City#Hotel#DespartureDate#ReturnDate"
+		+ Type: PlatformData.RESERVATION_MESSAGE
+		+ Availability = PlatformData.RESERVATION_AVAILABLE/PlatformData.RESERVATION_NOT_AVAILABLE
 	
