@@ -1,17 +1,16 @@
 package platform1;
 
-import java.util.List;
-
 import utilities.Accomodations;
+
 
 public class Reservation 
 {
 	private String city;
     private String hotelName;
     private int numberOfRooms;
-    private List<String> occupationCalendar;
+    private int[] occupationCalendar;
     
-    public Reservation(String city, String hotelName, int numberOfRooms, List<String> occupationCalendar) {
+    public Reservation(String city, String hotelName, int numberOfRooms, int[] occupationCalendar) {
 		this.city = city;
 		this.hotelName = hotelName;
 		this.numberOfRooms = numberOfRooms;
@@ -60,12 +59,12 @@ public class Reservation
 		this.numberOfRooms = numberOfRooms;
 	}
 
-	public List<String> getOccupationCalendar() {
+	public int[] getOccupationCalendar() {
 		return occupationCalendar;
 	}
 
 
-	public void setOccupationCalendar(List<String> occupationCalendar) {
+	public void setOccupationCalendar(int[] occupationCalendar) {
 		this.occupationCalendar = occupationCalendar;
 	}
 

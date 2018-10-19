@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import utilities.Accomodations;
 import utilities.JadeUtils;
 
 import jade.content.lang.sl.SLCodec;
@@ -18,11 +19,14 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 
-import model.Model;
 
 public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 {
-	Model m = new Model();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final List<Reservation> listOfReservations = new ArrayList<>();
 	
 	public ReservationAgentCyclicBehaviour(Agent agent)
 	{
@@ -35,46 +39,53 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 		String answer;
 
 		// Waiting for a REQUEST message from AgentCorteIngles to do the reservation
-		ACLMessage msg = this.myAgent.blockingReceive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("ontologia")));
-
-		try
-		{
-			answer = reserveAccomodation((List<String>) msg.getContentObject());
-			
-	    	//INFORM MESSAGE ELABORATION 
-			System.out.println("(ReservationAgent)REQUEST received from AgentCorteIngles\n");
-			ACLMessage aclMessage = new ACLMessage(ACLMessage.INFORM);    	
-	   		aclMessage.addReceiver(msg.getSender());
-	   		
-	        aclMessage.setOntology("ontologia");
-	        aclMessage.setLanguage(new SLCodec().getName()); 	       
-	        aclMessage.setEnvelope(new Envelope());                     
-			aclMessage.getEnvelope().setPayloadEncoding("ISO8859_1");   
-	        //aclMessage.getEnvelope().setAclRepresentation(FIPANames.ACLCodec.XML); 
-			try {
-				aclMessage.setContentObject((Serializable)answer); 
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		ACLMessage msg = this.myAgent.receive(template);
+		
+		if (msg == null) {
+			block();
+		} else {
+			try
+			{
+				answer = this.reserveAccomodation((List<String>) msg.getContentObject());
+				
+		    	//INFORM MESSAGE ELABORATION 
+				System.out.println("(ReservationAgent)REQUEST received from AgentCorteIngles\n");
+				ACLMessage aclMessage = new ACLMessage(ACLMessage.INFORM);    	
+		   		aclMessage.addReceiver(msg.getSender());
+		   		
+		        aclMessage.setOntology("ontologia");
+		        aclMessage.setLanguage(new SLCodec().getName()); 	       
+		        aclMessage.setEnvelope(new Envelope());                     
+				aclMessage.getEnvelope().setPayloadEncoding("ISO8859_1");   
+		        //aclMessage.getEnvelope().setAclRepresentation(FIPANames.ACLCodec.XML); 
+				try {
+					aclMessage.setContentObject((Serializable)answer); 
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+		    	//INFORM MESSAGE ELABORATION 
+				this.myAgent.send(aclMessage); 
+				System.out.println("INFORM message sent");
+			}
+			catch (UnreadableException e)
+			{
+			// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-	    	//INFORM MESSAGE ELABORATION 
-			this.myAgent.send(aclMessage); 
-			System.out.println("INFORM message sent");
 		}
-		catch (UnreadableException e)
-		{
-		// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 	
 
-	public String reserveAccomodation(List<String> data)
+	private String reserveAccomodation(List<String> receivedData)
 	{
 		StringBuilder sb = new StringBuilder();
 
-		boolean available = this.checkAvailability(data);
+		boolean available = this.checkAvailability(receivedData);
 		
 		if (available){
 	    	sb.append(String.format("%s", "+-----------------------------------+"));
@@ -85,27 +96,29 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 	    	}
 		} else {
 			sb.append(String.format("Sorry for the inconvenience. The reservation could not be done "));
-			sb.append(String.format("as there were no more rooms available in the hotel %s on the period of days you asked: %s to %s", data.get(0), data.get(1), data.get(2)));
+			sb.append(String.format("as there were no more rooms available in the hotel %s on the period of days you asked: %s to %s", receivedData.get(0), receivedData.get(1), receivedData.get(2)));
 		}
 				
 		
 		return sb.toString();
 	}
 	
-	public boolean checkAvailability(List<String> data){
+	private boolean checkAvailability(List<String> data){
 		
 		String city = data.get(JadeUtils.cityIndex);
 		String departureD = data.get(JadeUtils.departureIndex);
 		String returnD = data.get(JadeUtils.returnIndex);
-		
-		Reservation newAccomodation = new Reservation();
-		
-				m.getListAccomodations();
+		/*
+		Reservation newReservation = Accomodations.instanceWithRandomAttributes();
 		
 		if (m.setListAccomodations(accomodation)){
 			return true;
 		} else {
 			return false;
 		}
+		*/
+		return false;
 	}
+	
+	
 }

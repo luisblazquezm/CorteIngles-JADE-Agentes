@@ -21,4 +21,15 @@ public class PlatformData {
 	public static final String HANDLE_RESERVATION_SER = "handle-reservation-request";
 	public static final String HANDLE_ACTIVITY_SER = "handle-activity-request";
 	public static final String HANDLE_USER_REQUEST_SER = "handle-user-request";
+	
+	// Delimiter for message content
+	public static final String DELIMITER = "#";
+	
+	// Type of message
+	public static final String ACTIVITY_MESSAGE = "activity-message";
+	public static final String RESERVATION_MESSAGE = "reservation-message";
+	
+	// Availability of reservation
+	public static final String RESERVATION_AVAILABLE = "available";
+	public static final String RESERVATION_NOT_AVAILABLE = "not-available";
 }

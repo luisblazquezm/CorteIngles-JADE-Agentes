@@ -1,19 +1,21 @@
 package platform1;
 
+import java.util.Date;
+
 import utilities.Activities;
 
 public class Activity {
 
 	private String city;
 	private String activity;
-	private String scheduleDescription;
+	private Date scheduleDescription;
 	
 	/**
 	 * @param city
 	 * @param activity
 	 * @param scheduleDescription
 	 */
-	public Activity(String city, String activity, String scheduleDescription) {
+	public Activity(String city, String activity, Date scheduleDescription) {
 		super();
 		this.city = city;
 		this.activity = activity;
@@ -26,7 +28,7 @@ public class Activity {
 		super();
 		this.city = "Default";
 		this.activity = "Default";
-		this.scheduleDescription = "Default";
+		this.scheduleDescription = null;
 	}
 
 	/**
