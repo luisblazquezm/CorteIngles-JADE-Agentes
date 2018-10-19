@@ -7,3 +7,5 @@ TODO:
     es usar la clase IdentifiedMessageContent para tener identificado el servicio solicitado y el
     agente solicitante. Es raro que esto no lo permita hacer el entorno. Investigar...,
     el problema en es: ¿como diferenciar el servicio solicitado?
+
+- Hay que poner timers a las peticiones en caso de que no se cumplieran
