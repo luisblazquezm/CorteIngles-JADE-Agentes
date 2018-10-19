@@ -1,24 +1,9 @@
 TODO:
-
-- Corregir errata en CyclicBehaviourReservation
-
-- Unificar nomenclatura:
-	+ Alias para los agentes: "X-agent"
-		* "user-agent"
-		* "corte-ingles-agent"
-		* "reservation-agent"
-		* "activity-agent"
-	+ Nombre de las clases: XAgentBehaviour, XAgent
-		* Ejemplo: UserAgent, UserAgentCyclicBehaviour
-	+ Llamar a la clase "Reservation" mejor que "Accomodation". Creo que lo hace mas uniforme
-	
-- La comunicacion creo que es toda de tipo ACLMessage.REQUEST, no?
-	+ Si es asi, en los template usar siempre ACLMessage.REQUEST
-	
-- Llamar igual a los metodos de las clases del paquete utilities (Accomodations y Activities)
-
+		
 - Conseguir la arquitectura que permita que CorteInglesAgent pueda recibir peticiones mientras
   espera una respuesta. Esto podria ser util: "https://www.iro.umontreal.ca/~vaucher/Agents/Jade/primer6.html#6.6.4"
-  
-  - Al registrar un servicio, haremos:
-  		JadeUtils.registerService(this, PlatformData.serviceName, getLocalName())
+    		
+  - Al enviar un mensaje desde el CorteInglesAgent a ActivityAgent o ReservationAgent lo que hacemos
+    es usar la clase IdentifiedMessageContent para tener identificado el servicio solicitado y el
+    agente solicitante. Es raro que esto no lo permita hacer el entorno. Investigar...,
+    el problema en es: ¿como diferenciar el servicio solicitado?

@@ -20,11 +20,11 @@ import jade.lang.acl.UnreadableException;
 
 import model.Model;
 
-public class CyclicBehaviourReservation extends CyclicBehaviour
+public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 {
 	Model m = new Model();
 	
-	public CyclicBehaviourReservation(Agent agent)
+	public ReservationAgentCyclicBehaviour(Agent agent)
 	{
 		super(agent);
 	}
@@ -42,7 +42,7 @@ public class CyclicBehaviourReservation extends CyclicBehaviour
 			answer = reserveAccomodation((List<String>) msg.getContentObject());
 			
 	    	//INFORM MESSAGE ELABORATION 
-			System.out.println("(AgentAccomodation)REQUEST received from AgentCorteIngles\n");
+			System.out.println("(ReservationAgent)REQUEST received from AgentCorteIngles\n");
 			ACLMessage aclMessage = new ACLMessage(ACLMessage.INFORM);    	
 	   		aclMessage.addReceiver(msg.getSender());
 	   		
@@ -98,7 +98,7 @@ public class CyclicBehaviourReservation extends CyclicBehaviour
 		String departureD = data.get(JadeUtils.departureIndex);
 		String returnD = data.get(JadeUtils.returnIndex);
 		
-		Accomodation newAccomodation = new Accomodation();
+		Reservation newAccomodation = new Reservation();
 		
 				m.getListAccomodations();
 		

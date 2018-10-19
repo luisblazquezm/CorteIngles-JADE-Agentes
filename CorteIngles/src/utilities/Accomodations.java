@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import platform1.Accomodation;
+import platform1.Reservation;
 
 public class Accomodations 
 {
@@ -19,39 +19,39 @@ public class Accomodations
 		random.setSeed(System.currentTimeMillis());
 	}
     
-	public static String stringDescription(Accomodation accomodation) {
-		if (accomodation != null) {
-			return accomodation.getCity() + ": "
-		           + accomodation.getHotelName() + ": "
-				   + accomodation.getNumberOfRooms() + ": "
-				   + accomodation.getOccupationCalendar() + ": ";
+	public static String stringDescription(Reservation reservation) {
+		if (reservation != null) {
+			return reservation.getCity() + ": "
+		           + reservation.getHotelName() + ": "
+				   + reservation.getNumberOfRooms() + ": "
+				   + reservation.getOccupationCalendar() + ": ";
 		} else {
 			return null;
 		}
 	}
 	
-    public Accomodation instanceWithRandomAttributes(){
-    	return new Accomodation(
-    			Accomodations.getCITIES(), 
-    			Accomodations.getHOTELS(), 
-    			Accomodations.getROOMS(), 
-    			Accomodations.getCALENDAR_DATES()
+    public Reservation instanceWithRandomAttributes(){
+    	return new Reservation(
+    			Accomodations.getRandomCity(), 
+    			Accomodations.getRandomHotel(), 
+    			Accomodations.getRandomRoom(), 
+    			Accomodations.getRandomCalendarDate()
     			);
     }
     
-    public static String getCITIES() {
+    public static String getRandomCity() {
 		return Accomodations.CITIES[random.nextInt() % Accomodations.CITIES.length];
 	}
 
-	public static String getHOTELS() {
+	public static String getRandomHotel() {
 		return Accomodations.HOTELS[random.nextInt() % Accomodations.HOTELS.length];	
 	}
 
-	public static int getROOMS() {
-		return (1 + random.nextInt(10));	
+	public static int getRandomRoom() {
+		return Accomodations.ROOMS[random.nextInt() % Accomodations.ROOMS.length];	
 	}
 
-	public static List<String> getCALENDAR_DATES() {
+	public static List<String> getRandomCalendarDate() {
 		List<String> newList = new ArrayList<>();
 		
 		for(int i = 0; i < 10 ; i++){

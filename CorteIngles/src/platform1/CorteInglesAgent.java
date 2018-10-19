@@ -27,7 +27,7 @@ public class CorteInglesAgent extends Agent {
 				                  PlatformData.HANDLE_RESERVATION_SER,
 				                  getLocalName());
 		JadeUtils.registerService(this,
-				                  PlatformData.HANDLE_ACTIVITY_REQUEST,
+				                  PlatformData.HANDLE_ACTIVITY_SER,
 				                  getLocalName());
 		
 	}

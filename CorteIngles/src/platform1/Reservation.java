@@ -4,14 +4,14 @@ import java.util.List;
 
 import utilities.Accomodations;
 
-public class Accomodation 
+public class Reservation 
 {
 	private String city;
     private String hotelName;
     private int numberOfRooms;
     private List<String> occupationCalendar;
     
-    public Accomodation(String city, String hotelName, int numberOfRooms, List<String> occupationCalendar) {
+    public Reservation(String city, String hotelName, int numberOfRooms, List<String> occupationCalendar) {
 		this.city = city;
 		this.hotelName = hotelName;
 		this.numberOfRooms = numberOfRooms;
@@ -19,7 +19,7 @@ public class Accomodation
 	}
 
 
-	public Accomodation() {
+	public Reservation() {
 		super();
 		this.city = "Default";
 		this.hotelName = "Default";
