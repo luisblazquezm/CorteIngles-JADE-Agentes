@@ -1,30 +1,38 @@
+                        (HANDLE_RESERVATION_SER)
 ____________                                                     ____________
 |          |    REQ: userToCorteInglesReservationMsgContent      |          |
 |          | ==================================================> |  Corte   |
 |   User   |                                                     |  Ingles  |
 |          | <-------------------------------------------------- |          |
 |__________|    INF: corteInglesToUserReservationMsgContent      |__________|
+                        (HANDLE_USER_REQUEST_SER)
 
+                        (HANDLE_ACTIVITY_SER)
 ____________                                                     ____________
 |          |    REQ: userToCorteInglesActivityMsgContent         |          |
 |          | ==================================================> |  Corte   |
 |   User   |                                                     |  Ingles  |
 |          | <-------------------------------------------------- |          |
 |__________|    INF: corteInglesToUserActivityMsgContent         |__________|
+                        (HANDLE_USER_REQUEST_SER)
 
+                        (RETRIEVE_ACTIVITY_SER)
 ____________                                             ____________
 |          |    REQ: corteInglesToActivityMsgContent     |          |
 |  Corte   | ==========================================> |          |
 |  Ingles  |                                             | Activity |
 |          | <------------------------------------------ |          |
 |__________|    INF: activityToCorteInglesMsgContent     |__________|
+                        (HANDLE_ACTIVITY_SER)
 
+                        (MAKE_RESERVATION_SER)
 ____________                                               ______________
 |          |    REQ: corteInglesToReservationMsgContent    |             |
 |  Corte   | ============================================> |             |
 |  Ingles  |                                               | Reservation |
 |          | <-------------------------------------------- |             |
 |__________|    INF: reservationToCorteInglesMsgContent    |_____________|
+                        (HANDLE_RESERVATION_SER)
 
 
 # -> Chosen delimiter (see PlatformData class)

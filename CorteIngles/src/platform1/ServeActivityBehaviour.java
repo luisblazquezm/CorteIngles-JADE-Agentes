@@ -27,22 +27,21 @@ public class ServeActivityBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() {
 
-		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		
 		if (message == null) {
 			block();
 		} else {
-			IdentifiedMessageContent<String> messageContent;
+			
 			try {
-				messageContent = new IdentifiedMessageContent<>(
-					(IdentifiedMessageContent<String>) JadeUtils.extractMessageContent(message),
-					message.getSender()
-				);
+				
+				IdentifiedMessageContent<String> messageContent = (IdentifiedMessageContent<String>) message.getContentObject();
 
 				JadeUtils.sendMessage(this.myAgent,
-						              PlatformData.RETRIEVE_ACTIVITY_SER,
+						              PlatformData.HANDLE_USER_REQUEST_SER,
 						              messageContent);
+				
 			} catch (UnreadableException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

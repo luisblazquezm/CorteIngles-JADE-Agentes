@@ -7,6 +7,8 @@ import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
+import utilities.JadeUtils;
 
 /**
  * @author mrhyd
@@ -22,48 +24,56 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void action() {
-		
-		/*
-		 * 1- Get request from client
-		 * 2- Send message to server
-		 * 3- Wait for answer server (THIS IS THE KEY: it may be able to receive new requests)
-		 * 4- Forward answer to client
-		 */
-		
-		AID userAgentAid = new AID("user-agent", AID.ISLOCALNAME);
-		AID reservationAgentAid = new AID("reservation-agent", AID.ISLOCALNAME);
-		AID activityAgentAid = new AID("activity-agent", AID.ISLOCALNAME);
-		
+				
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
 		
 		if (message == null) {
 			block();
 		} else {
-			if (message.getSender().equals(userAgentAid)) {
+			
+			try {
+
+				MessageContent<String> messageContent;
+				AID userAid = message.getSender();
 				
-				/*
-				 * 1- Determine whether it relates to a reservation or an activity
-				 * 2- Send appropriate message to corresponding agent
-				 */
+				messageContent = (MessageContent<String>) message.getContentObject();
 				
-			} else if (message.getSender().equals(reservationAgentAid)) {
+				if (messageContent.getRequestedService().equals(PlatformData.HANDLE_RESERVATION_SER)) {
+					
+					JadeUtils.sendMessage(
+							this.myAgent,
+							PlatformData.MAKE_RESERVATION_SER, 
+							new IdentifiedMessageContent<String>(
+								PlatformData.MAKE_RESERVATION_SER,
+								messageContent.getData(),
+								userAid
+							)
+					);
+					
+				} else if (messageContent.getRequestedService().equals(PlatformData.HANDLE_ACTIVITY_SER)) {
+					
+					JadeUtils.sendMessage(
+							this.myAgent,
+							PlatformData.RETRIEVE_ACTIVITY_SER, 
+							new IdentifiedMessageContent<String>(
+								PlatformData.RETRIEVE_ACTIVITY_SER,
+								messageContent.getData(),
+								userAid
+							)
+					);
+					
+				} else {
+					// Should not happen but hey, just in case
+					System.err.println("ServeUserBehaviour: unknown sender");
+				}
 				
-				/*
-				 * Basically forward answer to user agent
-				 */
-				
-			} else if (message.getSender().equals(activityAgentAid)) {
-				
-				/*
-				 * Basically forward answer to user agent
-				 */
-				
-			} else {
-				// Should not happen but hey, just in case
-				System.err.println("ServeUserBehaviour: unknown sender");
+			} catch (UnreadableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

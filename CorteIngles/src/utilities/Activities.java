@@ -1,5 +1,6 @@
 package utilities;
 
+import java.util.Date;
 import java.util.Random;
 
 import platform1.Activity;
@@ -9,7 +10,7 @@ public class Activities {
 	private static Random random;
 	public static String[] CITIES = {};
 	public static String[] ACTIVITIES = {};
-	public static String[] SCHEDULE_DESCRIPTIONS = {};
+	public static Date[] SCHEDULE_DESCRIPTIONS = {};
 	
 	static {
 		random = new Random();
@@ -25,7 +26,7 @@ public class Activities {
 		if (activity != null) {
 			return activity.getCity() + ": "
 		           + activity.getActivity() + ": "
-				   + activity.getScheduleDescription();
+				   + activity.getScheduleDescription().toString();
 		} else {
 			return null;
 		}
@@ -60,7 +61,7 @@ public class Activities {
 	 * Returns a random schedule description from the static field SCHEDULE_DESCRIPTIONS
 	 * @return Random schedule description
 	 */
-	public static String getRandomScheduleDescription() {
+	public static Date getRandomScheduleDescription() {
 		return Activities.SCHEDULE_DESCRIPTIONS[random.nextInt() % Activities.SCHEDULE_DESCRIPTIONS.length];
 	}
 

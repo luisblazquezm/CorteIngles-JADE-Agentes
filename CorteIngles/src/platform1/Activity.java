@@ -58,15 +58,19 @@ public class Activity {
 	/**
 	 * @return the scheduleDescription
 	 */
-	public String getScheduleDescription() {
+	public Date getScheduleDescription() {
 		return scheduleDescription;
 	}
 	/**
 	 * @param scheduleDescription the scheduleDescription to set
 	 */
-	public void setScheduleDescription(String scheduleDescription) {
+	public void setScheduleDescription(Date scheduleDescription) {
 		this.scheduleDescription = scheduleDescription;
 	}
+	/**
+	 * @return the scheduleDescription
+	 */
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
