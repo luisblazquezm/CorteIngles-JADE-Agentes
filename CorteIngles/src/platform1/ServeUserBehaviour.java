@@ -8,6 +8,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import utilities.Debug;
 import utilities.JadeUtils;
 
 /**
@@ -36,6 +37,17 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 		} else {
 			
 			try {
+				
+				if (Debug.IS_ON) {
+					System.out.println(
+						"Message from "
+						+ PlatformData.USER_ALIAS
+						+ " was received at "
+						+ PlatformData.CORTE_INGLES_ALIAS
+					);
+					
+					System.out.print("Request will be forwarded to ");
+				}
 
 				MessageContent<String> messageContent;
 				AID userAid = message.getSender();
@@ -43,6 +55,10 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				messageContent = (MessageContent<String>) message.getContentObject();
 				
 				if (messageContent.getRequestedService().equals(PlatformData.HANDLE_RESERVATION_SER)) {
+					
+					if(Debug.IS_ON) {
+						System.out.println(PlatformData.RESERVATION_ALIAS);
+					}
 					
 					JadeUtils.sendMessage(
 							this.myAgent,
@@ -55,6 +71,10 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 					);
 					
 				} else if (messageContent.getRequestedService().equals(PlatformData.HANDLE_ACTIVITY_SER)) {
+					
+					if(Debug.IS_ON) {
+						System.out.println(PlatformData.RESERVATION_ALIAS);
+					}
 					
 					JadeUtils.sendMessage(
 							this.myAgent,
@@ -69,6 +89,10 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				} else {
 					// Should not happen but hey, just in case
 					System.err.println("ServeUserBehaviour: unknown sender");
+				}
+				
+				if (Debug.IS_ON) {
+					System.out.println("Message was forwarded");
 				}
 				
 			} catch (UnreadableException e) {

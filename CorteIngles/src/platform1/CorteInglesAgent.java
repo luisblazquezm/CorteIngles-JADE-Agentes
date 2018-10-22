@@ -38,10 +38,7 @@ public class CorteInglesAgent extends Agent {
 			new ServeUserBehaviour()
 		);
 		corteInglesBehaviour.addSubBehaviour(
-			new ServeReservationBehaviour()
-		);
-		corteInglesBehaviour.addSubBehaviour(
-			new ServeActivityBehaviour()
+			new GetInformResponseBehaviour()
 		);
 		
 		this.addBehaviour(corteInglesBehaviour);
