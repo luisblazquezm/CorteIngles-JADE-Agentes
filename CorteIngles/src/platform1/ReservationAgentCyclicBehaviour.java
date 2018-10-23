@@ -1,15 +1,10 @@
 package platform1;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Pattern;
-
-import utilities.Accomodations;
-import utilities.JadeUtils;
 
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
@@ -26,7 +21,8 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final List<Reservation> listOfReservations = new ArrayList<>();
+	private List<Reservation> listOfReservations = new ArrayList<>();
+	private boolean dataNotFound = false;
 	
 	public ReservationAgentCyclicBehaviour(Agent agent)
 	{
@@ -81,10 +77,9 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 
 	}
 	
-
 	private String reserveAccomodation(MessageContent<String> receivedData)
 	{
-		StringBuilder sb = new StringBuilder();
+		String answer = new String();
 		String content = receivedData.getData();
 		
 		String[] data = content.split(Pattern.quote(PlatformData.DELIMITER));
@@ -92,45 +87,66 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 		boolean available = this.checkAvailability(data);
 		
 		if (available){
-	    	sb.append(String.format("%s", "+-----------------------------------+"));
-	    	sb.append(String.format("| %s | %s | %s | %s|\n","City", "Hotel Name" ,"Number of Rooms", "Calendar"));
-	    	sb.append(String.format("%s", "+-----------------------------------+"));
-	    	for(int i = 0; i < 10 ; i++){
-	    		
-	    	}
+			answer = PlatformData.RESERVATION_MESSAGE + PlatformData.DELIMITER + 
+					 PlatformData.RESERVATION_AVAILABLE + PlatformData.DELIMITER + 
+					 data[PlatformData.SENDER_CITY_INDEX] + PlatformData.DELIMITER +
+					 data[PlatformData.SENDER_HOTEL_INDEX] + PlatformData.DELIMITER +
+					 data[PlatformData.SENDER_DEPARTURE_INDEX] + PlatformData.DELIMITER +
+					 data[PlatformData.SENDER_RETURN_INDEX] + PlatformData.DELIMITER; 
 		} else {
-			sb.append(String.format("Sorry for the inconvenience. The reservation could not be done "));
-			sb.append(String.format("as there were no more rooms available in the hotel %s on the period of days you asked: %s to %s", data[PlatformData.HOTEL_INDEX], data[PlatformData.DEPARTURE_INDEX], data[PlatformData.RETURN_INDEX]));
+			if (this.dataNotFound){
+				answer = PlatformData.RESERVATION_MESSAGE + PlatformData.DELIMITER + 
+						 PlatformData.RESERVATION_NOT_AVAILABLE + PlatformData.DELIMITER + 
+						 data[PlatformData.SENDER_CITY_INDEX] + PlatformData.DELIMITER +
+						 data[PlatformData.SENDER_HOTEL_INDEX] + PlatformData.DELIMITER +
+						 data[PlatformData.SENDER_DEPARTURE_INDEX] + PlatformData.DELIMITER +
+						 data[PlatformData.SENDER_RETURN_INDEX] + PlatformData.DELIMITER; 
+			} else {
+				answer = "DATA NOT FOUND.";
+			}
 		}
 				
-		
-		return sb.toString();
+		return answer;
 	}
 	
 	private boolean checkAvailability(String[] data){
 		
-		String city = data[PlatformData.CITY_INDEX];
-		String hotel = data[PlatformData.HOTEL_INDEX];
-		String departureDate = data[PlatformData.DEPARTURE_INDEX];
-		String departureDay = departureDate.split("\\/\\"); // Gets only the day dd from dd/MM/yyyy
-		String returnDate = data[PlatformData.RETURN_INDEX];
-	   
+		String city = data[PlatformData.SENDER_CITY_INDEX];
+		String hotel = data[PlatformData.SENDER_HOTEL_INDEX];
+		String departureDate = data[PlatformData.SENDER_DEPARTURE_INDEX];
+		String[] partsOfDate = departureDate.split("/");
+		int departureDay = Integer.parseInt(partsOfDate[0]); // Gets only the day dd from dd/MM/yyyy
+		String returnDate = data[PlatformData.SENDER_RETURN_INDEX];
+		partsOfDate = returnDate.split("/");
+		int returnDay = Integer.parseInt(partsOfDate[0]);
+		int[] calendar;
+	    int index = 0;
 		
-		for(Reservation r : this.listOfReservations) {
-			if (r.getCity().equals(city) && r.getHotelName().equals(hotel) && r.getOccupationCalendar()[])
+		for (Reservation r : this.listOfReservations) {
+
+			if (r.getCity().equals(city) && r.getHotelName().equals(hotel)) {
+				calendar = r.getOccupationCalendar();
+				for (int i = departureDay; i <= returnDay; i++) {
+					if ((calendar[i]-1) < 0) 
+						return false;
+				}
+				
+				for (int i = departureDay; i <= returnDay; i++) {
+					(calendar[i])--;
+				}
+				
+				r.setOccupationCalendar(calendar);
+			    this.listOfReservations.add(index, r);
+				
+				return true;
+			}
+			index++;
 		}
 		
-		/*
-		Reservation newReservation = Accomodations.instanceWithRandomAttributes();
-		
-		if (m.setListAccomodations(accomodation)){
-			return true;
-		} else {
-			return false;
-		}
-		*/
+		// Reservation not found with those parameters 
+		System.out.printf("%nReservationAgentCyclicBehaviour:checkAvailability: ERROR:Reservation not found or incorrect %n");
+		this.dataNotFound = true;
 		return false;
 	}
-	
-	
+
 }

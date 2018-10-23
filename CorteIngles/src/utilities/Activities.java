@@ -10,7 +10,7 @@ public class Activities {
 	private static Random random;
 	public static String[] CITIES = {};
 	public static String[] ACTIVITIES = {};
-	public static Date[] SCHEDULE_DESCRIPTIONS = {};
+	public static int[] SCHEDULE_DESCRIPTIONS = {};
 	
 	static {
 		random = new Random();
@@ -26,7 +26,8 @@ public class Activities {
 		if (activity != null) {
 			return activity.getCity() + ": "
 		           + activity.getActivity() + ": "
-				   + activity.getScheduleDescription().toString();
+				   + activity.getStartActivityDay() + ": "
+				   + activity.getEndActivityDay() + ": ";
 		} else {
 			return null;
 		}
@@ -39,6 +40,7 @@ public class Activities {
 		return new Activity(
 			Activities.getRandomCity(),
 			Activities.getRandomActivity(),
+			Activities.getRandomScheduleDescription(),
 			Activities.getRandomScheduleDescription()
 		);
 		
@@ -61,8 +63,8 @@ public class Activities {
 	 * Returns a random schedule description from the static field SCHEDULE_DESCRIPTIONS
 	 * @return Random schedule description
 	 */
-	public static Date getRandomScheduleDescription() {
-		return Activities.SCHEDULE_DESCRIPTIONS[random.nextInt() % Activities.SCHEDULE_DESCRIPTIONS.length];
+	public static int getRandomScheduleDescription() {
+		return random.nextInt(31);
 	}
 
 }

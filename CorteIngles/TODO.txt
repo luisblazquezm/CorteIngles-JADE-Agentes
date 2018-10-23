@@ -9,3 +9,5 @@ TODO:
     el problema en es: ¿como diferenciar el servicio solicitado?
 
 - Hay que poner timers a las peticiones en caso de que no se cumplieran
+- En ReservationAgentCyclicBehaviour hay que tratar el caso en el que el usario 
+  no encuentra información acerca de los parametros que ha pedido el usuario

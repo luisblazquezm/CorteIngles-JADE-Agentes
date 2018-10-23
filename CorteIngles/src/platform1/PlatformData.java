@@ -34,13 +34,37 @@ public class PlatformData {
 	public static final String RESERVATION_NOT_AVAILABLE = "not-available";
 	
 	// Indexes from reservation message object
-	public static final int CITY_INDEX = 0;
-	public static final int HOTEL_INDEX = 1;
-	public static final int DEPARTURE_INDEX = 2;
-	public static final int RETURN_INDEX = 3;
+	public static final int SENDER_CITY_INDEX = 0;
+	public static final int SENDER_HOTEL_INDEX = 1;
+	public static final int SENDER_DEPARTURE_INDEX = 2;
+	public static final int SENDER_RETURN_INDEX = 3;
+	
+	// Indexes from activity message object
+	//public static final int SENDER_CITY_INDEX = 0;
+	public static final int SENDER_START_OF_ACTIVITY_INDEX = 1;
+	public static final int SENDER_END_OF_ACTIVITY_INDEX = 2;
+	
+	// Indexes from receiving message the userAgent has to show the real user (RESERVATION)
+	public static final int RECEIVER_TYPE_INDEX = 0;
+	public static final int RECEIVER_AVAILABILITY_INDEX = 1;
+	public static final int RECEIVER_CITY_INDEX = 2;
+	public static final int RECEIVER_HOTEL_INDEX = 3;
+	public static final int RECEIVER_DEPARTURE_INDEX = 4;
+	public static final int RECEIVER_RETURN_INDEX = 5;
+	
+	// Indexes from receiving message the userAgent has to show the real user (ACTIVITY)
+	//public static final int RECEIVER_TYPE_INDEX = 0;
+	public static final int RECEIVER_ACTIVITY_INDEX = 1;
+	//public static final int RECEIVER_CITY_INDEX = 2;
+	public static final int RECEIVER_START_OF_ACTIVITY_INDEX = 3;
+	public static final int RECEIVER_END_OF_ACTIVITY_INDEX = 4;
 	
 	// Indexes from activity message object
 	// cityIndex = 0
 	public static final int SCHEDULE_DESCRIPTION_INDEX = 1;
+	
+	// Others
+	public static final int DAYS_OF_MAY = 31;
+	public static final int DEFAULT_AVAILABLE_ROOMS = 5;
 
 }

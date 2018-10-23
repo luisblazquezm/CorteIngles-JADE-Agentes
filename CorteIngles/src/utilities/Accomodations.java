@@ -1,7 +1,7 @@
 package utilities;
 
 import java.util.Random;
-
+import platform1.PlatformData;
 import platform1.Reservation;
 
 public class Accomodations 
@@ -10,7 +10,7 @@ public class Accomodations
 	private static String[] CITIES = {"Vigo", "Plasencia", "Madrid", "Salamanca", "Leon", "Caceres", "Lugo", "Toledo"};
     private static String[] HOTELS = {};
     private static int[] ROOMS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    private static int[] CALENDARS = new int[31];
+    private static int[] CALENDARS = new int[PlatformData.DAYS_OF_MAY];
     
 	static {
 		random = new Random();
@@ -49,6 +49,9 @@ public class Accomodations
 	}
 	
 	public static int[] getRandomCalendar() {
+		for (int i = 0; i < PlatformData.DAYS_OF_MAY; i++)
+			Accomodations.CALENDARS[i] = PlatformData.DEFAULT_AVAILABLE_ROOMS;
+		
 		return CALENDARS;
 	}
 

@@ -9,21 +9,24 @@ public class UserAgent extends Agent
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected UserAgentCyclicBehaviour cB;
 	
 	@Override
 	public void setup()
 	{
-		//Define servies
 		JadeUtils.registerService(this,
 								  PlatformData.USER_ALIAS,
 								  PlatformData.HANDLE_USER_REQUEST_SER);
 		
-		//Define behaviour
-		cB = new UserAgentCyclicBehaviour(this);
-		addBehaviour(cB);
+		UserAgentCyclicBehaviour userBehaviour = new UserAgentCyclicBehaviour(this);
+		this.addBehaviour(userBehaviour);
 		
-		// rEcogido en el texot
-		
+	}
+	
+	/* (non-Javadoc)
+	 * @see jade.core.Agent#takeDown()
+	 */
+	@Override
+	protected void takeDown() {
+		JadeUtils.deregisterService(this);
 	}
 }

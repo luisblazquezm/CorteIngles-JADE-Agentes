@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import utilities.JadeUtils;
+import java.util.regex.Pattern;
 
 import jade.content.lang.sl.SLCodec;
 import jade.core.behaviours.CyclicBehaviour;
@@ -27,7 +26,7 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final List<Activity> listOfActivities = new ArrayList<>();
+	private List<Activity> listOfActivities = new ArrayList<>();
 
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
@@ -47,7 +46,8 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		} else {
 			try
 			{
-				answer = this.getInfoActivity((List<String>) msg.getContentObject());
+				answer = this.getInfoActivity(((MessageContent<String>) msg.getContentObject()));
+				//answer = this.getInfoActivity((List<String>) msg.getContentObject());
 				
 		    	//INFORM MESSAGE ELABORATION 
 				System.out.println("(ReservationAgent)REQUEST received from AgentCorteIngles\n");
@@ -79,30 +79,45 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		}
 	}
 
-	private String getInfoActivity(List<String> receivedData) {
-		StringBuilder sb = new StringBuilder();
-		String cityName = receivedData.get(JadeUtils.cityIndex);
-		String scheduleDescriptionDates = receivedData.get(JadeUtils.scheduleDescriptionIndex);
-		boolean found = false;		
+	private String getInfoActivity(MessageContent<String> receivedData) {
+		String content = receivedData.getData();
+		String answer = new String();
 		
-    	sb.append(String.format("%s", "+-----------------------------------+"));
-    	sb.append(String.format("| %s | %s | %s |\n","City", "Activity" ,"Calendar"));
-    	sb.append(String.format("%s", "+-----------------------------------+"));
-    	
+		String[] data = content.split(Pattern.quote(PlatformData.DELIMITER));
+		
+		String activity = this.checkActivity(data);	
+		
+		answer = PlatformData.ACTIVITY_MESSAGE + PlatformData.DELIMITER + 
+				 activity + PlatformData.DELIMITER + 
+				 data[PlatformData.SENDER_CITY_INDEX] + PlatformData.DELIMITER +
+				 data[PlatformData.SENDER_START_OF_ACTIVITY_INDEX] + PlatformData.DELIMITER +
+				 data[PlatformData.SENDER_END_OF_ACTIVITY_INDEX]; 
+			
+		return answer;
+	}
+
+	private String checkActivity(String[] data) {
+		
+		String city = data[PlatformData.SENDER_CITY_INDEX];
+		String startActivityDate = data[PlatformData.SENDER_START_OF_ACTIVITY_INDEX];
+		String endActivityDate = data[PlatformData.SENDER_END_OF_ACTIVITY_INDEX];
+		
+		String activity = "None";
+
+		String[] partsOfDate = startActivityDate.split("/");
+		int startActivityDay = Integer.parseInt(partsOfDate[0]); // Gets only the day dd from dd/MM/yyyy
+		
+		partsOfDate = endActivityDate.split("/");
+		int endActivityDay = Integer.parseInt(partsOfDate[0]);
+		
 		for (Activity a : this.listOfActivities) {
-			if (a.getCity().equals(cityName) && a.getScheduleDescription().equals(scheduleDescriptionDates)){
-		    	sb.append(String.format("| %s | %s | %s |\n", a.getCity(), a.getActivity() , a.getScheduleDescription()));
-		    	found = true;
-		    	break;
+			if (a.getCity().equals(city) && (a.getStartActivityDay() >= startActivityDay) && (a.getEndActivityDay() <= endActivityDay)){
+				return a.getActivity();
 			}
 		}
 
-		// Activity non existant or not found
-		if (!found) 
-			sb.append(String.format("Activity required does not appear in the list of activities showed."));
 		
-
-		return sb.toString();
+		return activity;
 	}
 
 

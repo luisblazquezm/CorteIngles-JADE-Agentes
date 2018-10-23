@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -34,8 +35,8 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		String messageContentReservation = new String();
 		Scanner sc = new Scanner(System.in);
         String answer, behaviourAction = "Default", reserveInfo = "Default";
-        String date1, date2, scheduleDate;
-        boolean departureDateIsCorrect = false, returnDateIsCorrect = false, scheduleDateIsCorrect = false;
+        String date1, date2, scheduleStartDate, scheduleEndDate;
+        boolean departureDateIsCorrect = false, returnDateIsCorrect = false, scheduleStartDateIsCorrect = false, scheduleEndDateIsCorrect = false;
         
         MessageContent<String> msgContentReservation = null;
         MessageContent<String> msgContentActivity = null;
@@ -124,7 +125,10 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
     		} while(!returnDateIsCorrect);
     		
     		
-    		messageContentReservation = String.format("%s" + PlatformData.DELIMITER + "%s" + PlatformData.DELIMITER + "%s" + PlatformData.DELIMITER + "%s", cityDestination, hotelDestination, date1, date2);
+    		messageContentReservation = String.format("%s" + PlatformData.DELIMITER + 
+    												  "%s" + PlatformData.DELIMITER + 
+    												  "%s" + PlatformData.DELIMITER + 
+    												  "%s", cityDestination, hotelDestination, date1, date2);
     		msgContentReservation = new MessageContent<>(PlatformData.HANDLE_RESERVATION_SER, messageContentReservation);
     		// Insert the messageContent into the MessageContent object -> data and requestedService -> PlatformData.HANDLE_RESERVATION_SER
 	
@@ -141,12 +145,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         		System.out.printf("%nIntroduce the city: ");
         		String city = sc.nextLine();
         		
-        		do{
-            		System.out.printf("%nDate (Available from 01/05/2018 until 31/05/2018): ");
-            		scheduleDate = sc.nextLine();
-            		
+        		do {
+            		System.out.printf("%nDate Start of activity (Available from 01/05/2018 until 31/05/2018): ");
+            		scheduleStartDate = sc.nextLine();
+            		      		
     	    		try{
-    	    			activityDate = new SimpleDateFormat("dd/MM/yyyy").parse(scheduleDate);
+    	    			activityDate = new SimpleDateFormat("dd/MM/yyyy").parse(scheduleStartDate);
     	    		} catch (Exception e) {
     	    			System.err.printf("%nUserAgentCyclicBehaviour:action:activity: %s%n", e.toString());
     	    		}
@@ -154,12 +158,32 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
     	    		if (!(activityDate.after(min1) && activityDate.before(max2))){
     	    			System.err.printf("%nDeparture date not included in the range of dates. Please introduce it again%n");
     	    		} else {
-    	    			scheduleDateIsCorrect = true;
+    	    			scheduleStartDateIsCorrect = true;
     	    		}
     	    		
-        		} while (!scheduleDateIsCorrect);
+        		} while (!scheduleStartDateIsCorrect);
         		
-        		messageContentActivity = String.format("%s" + PlatformData.DELIMITER + "%s", city, scheduleDate);  
+        		do {
+            		System.out.printf("%nDate End of activity (Available from 01/05/2018 until 31/05/2018): ");
+            		scheduleEndDate = sc.nextLine();
+            		
+    	    		try{
+    	    			activityDate = new SimpleDateFormat("dd/MM/yyyy").parse(scheduleEndDate);
+    	    		} catch (Exception e) {
+    	    			System.err.printf("%nUserAgentCyclicBehaviour:action:activity: %s%n", e.toString());
+    	    		}
+    	    		
+    	    		if (!(activityDate.after(min1) && activityDate.before(max2))){
+    	    			System.err.printf("%nDeparture date not included in the range of dates. Please introduce it again%n");
+    	    		} else {
+    	    			scheduleEndDateIsCorrect = true;
+    	    		}
+    	    		
+        		} while (!scheduleEndDateIsCorrect);
+        		
+        		messageContentActivity = String.format("%s" + PlatformData.DELIMITER + 
+        											   "%s" + PlatformData.DELIMITER +
+        											   "%s", city, scheduleStartDate, scheduleEndDate);  
         		msgContentActivity = new MessageContent<>(PlatformData.HANDLE_ACTIVITY_SER, messageContentActivity);
         		// Insert the messageContent into the MessageContent object -> data and requestedService -> PlatformData.HANDLE_ACTIVITY_SER
 
@@ -184,14 +208,18 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         
         
 		// Waiting for the INFORM message from AgentCorteIngles in a non-blocking state
-		ACLMessage msg = this.myAgent.receive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchOntology("ontologia")));
+        
+        MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+		ACLMessage message = this.myAgent.receive(template);
 		System.out.println("INFORM Message received in CBleer");
 		
-        if (msg != null) {
+        if (message == null) {
+    		block();
+        } else {
         	if (requestWait > 0) { /*IMPORTANT: modify return value of Utils.sendMessage so it can return the number of agents that implement a determined service*/
 				try
 				{
-					reserveInfo = (String) msg.getContentObject(); // reserveInfo as sBAppend if it returns a table
+					reserveInfo = this.printInfoMessage((MessageContent<String>) message.getContentObject()); // reserveInfo as sBAppend if it returns a table
 				}
 				catch (UnreadableException e)
 				{
@@ -208,9 +236,52 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         	} else {
 				System.err.printf("%nUserAgentCyclicBehaviour:action: ERROR:Received information is NULL%n");
         	}
-        } else {
-    		block();
     	}
 
+	}
+
+	private String printInfoMessage(MessageContent<String> contentObject) {
+		StringBuilder sb = new StringBuilder();
+		String content = contentObject.getData();
+		
+		String[] data = content.split(Pattern.quote(PlatformData.DELIMITER));
+		String type = data[PlatformData.RECEIVER_TYPE_INDEX];
+
+		
+		if (type.equals(PlatformData.RESERVATION_MESSAGE)) {
+			String availability = data[PlatformData.RECEIVER_AVAILABILITY_INDEX];
+			String city = data[PlatformData.RECEIVER_CITY_INDEX];
+			String hotel = data[PlatformData.RECEIVER_HOTEL_INDEX];
+			String departureDate = data[PlatformData.RECEIVER_DEPARTURE_INDEX];
+			String returnDate = data[PlatformData.RECEIVER_RETURN_INDEX];
+			
+			if (availability.equals(PlatformData.RESERVATION_AVAILABLE)){				
+		    	sb.append(String.format("%s", "+-----------------------------------+\n"));
+		    	sb.append(String.format("| %s | %s | %s | %s |\n", "City", "Hotel Name" , "DepartureDate", "ReturnDate"));
+		    	sb.append(String.format("%s", "+-----------------------------------+\n"));
+			    sb.append(String.format("| %s | %s | %s | %s | %s |\n", city, hotel , departureDate, returnDate));
+		    	sb.append(String.format("%s", "+-----------------------------------+\n"));
+		    	
+			} else if (availability.equals(PlatformData.RESERVATION_NOT_AVAILABLE)){
+				return String.format("\nReservation not available in City: %s  Hotel: %s from %s  to  %s\n", city, hotel, departureDate, returnDate);
+			}	
+    	} else if (type.equals(PlatformData.ACTIVITY_MESSAGE)) {
+    		String activity = data[PlatformData.RECEIVER_ACTIVITY_INDEX];
+			String city = data[PlatformData.RECEIVER_CITY_INDEX];
+			String startActivityDate = data[PlatformData.RECEIVER_START_OF_ACTIVITY_INDEX];
+			String endActivityDate = data[PlatformData.RECEIVER_END_OF_ACTIVITY_INDEX];
+			
+			if (!activity.equals("None")){
+		    	sb.append(String.format("%s", "+-----------------------------------+"));
+		    	sb.append(String.format("| %s | %s | %s | %s |\n", "City", "Activity" , "Date Start of Activity", "Date End of Activity"));
+		    	sb.append(String.format("%s", "+-----------------------------------+"));
+			    sb.append(String.format("| %s | %s | %s | %s | %s |\n", city, activity , startActivityDate, endActivityDate));
+		    	sb.append(String.format("%s", "+-----------------------------------+"));
+			} else {
+				return String.format("\nActivity not found in City: %s in dates %s  to  %s\n", city, startActivityDate, endActivityDate);
+			}
+    	}
+		
+		return sb.toString();
 	}
 }
