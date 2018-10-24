@@ -49,19 +49,24 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 				if (Debug.IS_ON) {
 					if (message.getSender().equals(new AID(PlatformData.ACTIVITY_ALIAS, AID.ISLOCALNAME))) {
 						System.out.println(
-							PlatformData.CORTE_INGLES_ALIAS
+							"GetInformResponseBehaviour: "
+							+ PlatformData.CORTE_INGLES_ALIAS
 							+ " received INFORM type message from "
 							+ PlatformData.ACTIVITY_ALIAS
 						);
 					} else {
 						System.out.println(
-								PlatformData.CORTE_INGLES_ALIAS
+								"GetInformResponseBehaviour: "
+								+ PlatformData.CORTE_INGLES_ALIAS
 								+ " received INFORM type message from "
 								+ PlatformData.RESERVATION_ALIAS
 							);
 					}
 					
-					System.out.println("Message will be forwarded to " + PlatformData.USER_ALIAS);
+					System.out.println(
+						"GetInformResponseBehaviour: Message will be forwarded to "
+						+ PlatformData.USER_ALIAS
+					);
 				}
 				
 				// Forward message to UserAgent
@@ -71,11 +76,11 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 						              messageContent);
 				
 				if (Debug.IS_ON) {
-					System.out.println("Message was forwarded");
+					System.out.println("GetInformResponseBehaviour: Message was forwarded");
 				}
 				
 			} catch (UnreadableException e) {
-				// TODO Auto-generated catch block
+				System.err.println("GetInformResponseBehaviour: getContentObject failed");
 				e.printStackTrace();
 			}
 		}

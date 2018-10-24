@@ -14,7 +14,6 @@ package platform1;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -25,7 +24,7 @@ import jade.domain.FIPAAgentManagement.Envelope;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import utilities.Activities;
+import utilities.Debug;
 
 /**
  * @author mrhyd
@@ -64,12 +63,15 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		} else {
 			try
 			{
+				@SuppressWarnings("unchecked")
 				MessageContent<String> content = (MessageContent<String>) msg.getContentObject();
 				String data = content.getData();
 				answerMessageContentData = this.getActivitiesString(data);
 				
-		    	//INFORM MESSAGE ELABORATION 
-				System.out.println("ActivityAgent: REQUEST received from AgentCorteIngles\n");
+		    	//INFORM MESSAGE ELABORATION
+				if (Debug.IS_ON) {
+					System.out.println("ActivityAgent: REQUEST received from AgentCorteIngles\n");
+				}
 				ACLMessage aclMessage = new ACLMessage(ACLMessage.INFORM);    	
 		   		aclMessage.addReceiver(msg.getSender());
 		        aclMessage.setOntology("ontologia");
@@ -80,17 +82,19 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 				try {
 					aclMessage.setContentObject((Serializable) answerMessageContentData); 
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					System.err.println("ActivityAgentCyclicBehaviour: setContentObject failed");
 					e.printStackTrace();
 				}
 				
 		    	//INFORM MESSAGE SENDING 
 				this.myAgent.send(aclMessage); 
-				System.out.println("ActivityAgent: INFORM message sent");
+				if (Debug.IS_ON) {
+					System.out.println("ActivityAgent: INFORM message sent");
+				}
 			}
 			catch (UnreadableException e)
 			{
-			// TODO Auto-generated catch block
+				System.err.println("ActivityAgentCyclicBehaviour: getContentObject failed");
 				e.printStackTrace();
 			}
 			

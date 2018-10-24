@@ -49,13 +49,13 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				
 				if (Debug.IS_ON) {
 					System.out.println(
-						"Message from "
+						"ServeUserBehaviour: Message from "
 						+ PlatformData.USER_ALIAS
 						+ " was received at "
 						+ PlatformData.CORTE_INGLES_ALIAS
 					);
 					
-					System.out.print("Request will be forwarded to ");
+					System.out.print("ServeUserBehaviour: Request will be forwarded to ");
 				}
 
 				// Unwrap message content
@@ -105,11 +105,11 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				}
 				
 				if (Debug.IS_ON) {
-					System.out.println("Message was forwarded");
+					System.out.println("ServeUserBehaviour: Message was forwarded");
 				}
 				
 			} catch (UnreadableException e) {
-				// TODO Auto-generated catch block
+				System.err.println("ServeUserBehaviour: getContentObject failed");
 				e.printStackTrace();
 			}
 		}
