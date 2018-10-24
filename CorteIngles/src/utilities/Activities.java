@@ -8,8 +8,24 @@ import platform1.Activity;
 public class Activities {
 		
 	private static Random random;
-	public static String[] CITIES = {};
-	public static String[] ACTIVITIES = {};
+	
+	public static String[] CITIES = {"Vigo",
+								  	 "Plasencia",
+								     "Madrid",
+								     "Salamanca",
+								     "Leon",
+								     "Caceres",
+								     "Lugo",
+								     "Toledo"};
+	
+	public static String[] ACTIVITIES = {"Nada",
+										 "Visita a museo",
+										 "Pinopuente bajando escaleras",
+										 "Viaje en barco",
+										 "Trekking en una montaña alta",
+										 "Esquí",
+										 "Paseo en camello por el desierto"};
+	
 	public static int[] SCHEDULE_DESCRIPTIONS = {};
 	
 	static {

@@ -7,9 +7,26 @@ import platform1.Reservation;
 public class Accomodations 
 {
 	private static Random random;
-	private static String[] CITIES = {"Vigo", "Plasencia", "Madrid", "Salamanca", "Leon", "Caceres", "Lugo", "Toledo"};
-    private static String[] HOTELS = {};
+	
+	private static String[] CITIES = {"Vigo",
+									  "Plasencia",
+									  "Madrid",
+									  "Salamanca",
+									  "Leon",
+									  "Caceres",
+									  "Lugo",
+									  "Toledo"};
+	
+    private static String[] HOTELS = {"Trivago",
+    								  "Victoria",
+    								  "Schönwohnen",
+    								  "Alfonso III",
+    								  "Hilton",
+    								  "Trip Caballo Blanco",
+    								  "Four Seasons"};
+    
     private static int[] ROOMS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
     private static int[] CALENDARS = new int[PlatformData.DAYS_OF_MAY];
     
 	static {
