@@ -46,11 +46,11 @@ public class Hotels {
 		return list;
     }
 	
-	public static String getRandomHotelName() {
+	private static String getRandomHotelName() {
 		return Hotels.HOTEL_NAMES[random.nextInt() % Hotels.HOTEL_NAMES.length];	
 	}
 	
-	public static int[] getRandomOccupationCalendar() {
+	private static int[] getRandomOccupationCalendar() {
 		
 		int MAX_ROOMS_IN_HOTEL = 100;
 		int MAX_PEOPLE_IN_ROOM = 4;

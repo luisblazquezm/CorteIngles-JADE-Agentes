@@ -21,7 +21,6 @@ public class Hotel {
 		this.name = name;
 		this.occupationCalendar = occupationCalendar;
 	}
-	
 	/**
 	 * 
 	 */
@@ -30,28 +29,24 @@ public class Hotel {
 		this.name = null;
 		this.occupationCalendar = null;
 	}
-	
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
-	
 	/**
 	 * @return the occupationCalendar
 	 */
 	public int[] getOccupationCalendar() {
 		return occupationCalendar;
 	}
-	
 	/**
 	 * @param occupationCalendar the occupationCalendar to set
 	 */
 	public void setOccupationCalendar(int[] occupationCalendar) {
 		this.occupationCalendar = occupationCalendar;
 	}
-	
 	/**
 	 * @param roomNumber Number of the room to be reserved
 	 * @param numberOfCustomers Number of customers to be added

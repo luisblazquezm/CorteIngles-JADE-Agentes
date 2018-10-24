@@ -127,7 +127,7 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 				&& a.getScheduleDescription()[0] >= startActivityDay
 				&& a.getScheduleDescription()[1] <= endActivityDay)
 			{
-				return a.getActivity();
+				return a.getName();
 			}
 		}
 

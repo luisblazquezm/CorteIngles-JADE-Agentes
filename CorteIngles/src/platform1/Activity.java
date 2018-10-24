@@ -4,32 +4,31 @@ import utilities.Activities;
 
 public class Activity {
 
-	private String activity;
+	private String name;
 	private int[] scheduleDescription;
 	
 	/**
-	 * @param activity
+	 * @param name
 	 * @param scheduleDescription
 	 */
-	public Activity(String activity, int[] scheduleDescription) {
+	public Activity(String name, int[] scheduleDescription) {
 		super();
-		this.activity = activity;
+		this.name = name;
 		this.scheduleDescription = scheduleDescription;
 	}
 	
 	/**
-	 * @return the activity
+	 * @return the name
 	 */
-	public String getActivity() {
-		return activity;
+	public String getName() {
+		return name;
 	}
 	/**
-	 * @param activity the activity to set
+	 * @param name the name to set
 	 */
-	public void setActivity(String activity) {
-		this.activity = activity;
+	public void setName(String activity) {
+		this.name = activity;
 	}
-	
 	/**
 	 * @return the scheduleDescription
 	 */

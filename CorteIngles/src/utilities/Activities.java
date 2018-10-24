@@ -31,7 +31,7 @@ public class Activities {
 	 */
 	public static String stringDescription(Activity activity) {
 		if (activity != null) {
-			return activity.getActivity() + ": "
+			return activity.getName() + ": "
 				   + activity.getScheduleDescription()[0] + ": "
 				   + activity.getScheduleDescription()[1] + ": ";
 		} else {
@@ -62,14 +62,14 @@ public class Activities {
 	 * Returns a random activity from the static field ACTIVITIES
 	 * @return Random activity
 	 */
-	public static String getRandomActivity() {
+	private static String getRandomActivity() {
 		return Activities.ACTIVITIES[random.nextInt() % Activities.ACTIVITIES.length];
 	}
 	/**
 	 * Returns a random schedule description from the static field SCHEDULE_DESCRIPTIONS
 	 * @return Random schedule description
 	 */
-	public static int[] getRandomScheduleDescription() {
+	private static int[] getRandomScheduleDescription() {
 		int start, end;
 		start = random.nextInt(30) + 1; 			// 1 - 31
 		end = start + random.nextInt(31 - start);	// start - 31
