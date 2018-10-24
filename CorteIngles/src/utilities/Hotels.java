@@ -1,6 +1,10 @@
 /**
+ * @author mrhyd
+ * 
+ * Wrapper class for Hotel class. It provides with a set of static utilities. 
  * 
  */
+
 package utilities;
 
 import java.util.ArrayList;
@@ -15,8 +19,14 @@ import platform1.Hotel;
  */
 public class Hotels {
 	
+	/**
+	 * Random object used by class
+	 */
 	private static Random random;
 	
+	/**
+	 * Hotels' names
+	 */
 	public static String[] HOTEL_NAMES = {"Ámister", "Gran Vía", "Inglaterra", "América", "American",
 			  							  "Antártida", "Atlántico", "Bahía", "Biarritz", "Calypso",
 			  							  "Caribe", "Casablanca", "Central", "City", "Colonial",
@@ -34,10 +44,16 @@ public class Hotels {
 		random.setSeed(System.currentTimeMillis());
 	}
 	
+	/**
+	 * @return Random Hotel class's instance
+	 */
 	public static Hotel instanceWithRandomAttributes() {
 		return new Hotel(Hotels.getRandomHotelName(), Hotels.getRandomOccupationCalendar());
 	}
 	
+	/**
+	 * @return Random-length list of random Hotel class's instances
+	 */
 	public static List<Hotel> randomList() {
     	List<Hotel> list = new ArrayList<>();
 		for (int i = 0; i < random.nextInt() % HOTEL_NAMES.length + 1; ++i) {
@@ -46,10 +62,16 @@ public class Hotels {
 		return list;
     }
 	
+	/**
+	 * @return Random name from HOTEL_NAMES
+	 */
 	private static String getRandomHotelName() {
 		return Hotels.HOTEL_NAMES[random.nextInt() % Hotels.HOTEL_NAMES.length];	
 	}
 	
+	/**
+	 * @return Random rooms' representation as stated in the occupationCalendar field of Hotel class
+	 */
 	private static int[] getRandomOccupationCalendar() {
 		
 		int MAX_ROOMS_IN_HOTEL = 100;

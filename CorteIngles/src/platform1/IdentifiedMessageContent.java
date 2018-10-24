@@ -1,6 +1,11 @@
 /**
+ * @author mrhyd
+ * 
+ * Type of MessageContent that allows to identify the last agent
+ * that must receive the information being exchanged
  * 
  */
+
 package platform1;
 
 import jade.core.AID;
@@ -20,7 +25,7 @@ public class IdentifiedMessageContent<T>
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * The AID of the agent who requested the data 
+	 * The AID of the agent who requested the data in first place (usually one UserAgent)
 	 */
 	private AID requester;
 	

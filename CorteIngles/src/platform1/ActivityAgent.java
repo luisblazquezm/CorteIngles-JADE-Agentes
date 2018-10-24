@@ -1,3 +1,10 @@
+/**
+ * @author mrhyd
+ * 
+ * This class is the agent named 'Ocio' in the task's PDF file.
+ * 
+ */
+
 package platform1;
 
 import jade.core.Agent;

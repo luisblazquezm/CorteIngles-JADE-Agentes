@@ -1,6 +1,11 @@
 /**
  * 
+ * @author mrhyd
+ * 
+ * Class that stores information used by all agents in the platform.
+ * It's program's configuration data, not user-valuable information.
  */
+
 package platform1;
 
 /**
@@ -24,6 +29,7 @@ public class PlatformData {
 	
 	// Delimiter for message content
 	public static final String DELIMITER = "#";
+	public static final String ACTIVITIES_DELIMITER = "\t";
 	
 	// Type of message
 	public static final String ACTIVITY_MESSAGE = "activity-message";

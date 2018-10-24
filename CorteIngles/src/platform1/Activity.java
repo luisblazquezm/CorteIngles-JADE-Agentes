@@ -1,10 +1,24 @@
+/**
+ * @author mrhyd
+ * 
+ * This class is a data-type class that represents an activity.
+ * Activities are always associated to a city (City class is client).
+ * 
+ */
+
 package platform1;
 
 import utilities.Activities;
 
 public class Activity {
 
-	private String name;
+	/**
+	 * Name of the activity
+	 */
+	private String name;	
+	/**
+	 * Start and end dates of the activity
+	 */
 	private int[] scheduleDescription;
 	
 	/**
@@ -16,7 +30,6 @@ public class Activity {
 		this.name = name;
 		this.scheduleDescription = scheduleDescription;
 	}
-	
 	/**
 	 * @return the name
 	 */

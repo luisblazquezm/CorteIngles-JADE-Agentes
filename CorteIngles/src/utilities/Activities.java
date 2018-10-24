@@ -1,3 +1,9 @@
+/**
+ * @author mrhyd
+ * 
+ * Wrapper class for Activity class. It provides with a set of static utilities.
+ */
+
 package utilities;
 
 import java.util.ArrayList;
@@ -7,9 +13,15 @@ import java.util.Random;
 import platform1.Activity;
 
 public class Activities {
-		
+	
+	/**
+	 * Random object used by class
+	 */
 	private static Random random;
 	
+	/**
+	 * Availables activities
+	 */
 	public static String[] ACTIVITIES = {"Paseo en barco", "Montañismo", "Salto en paracaídas",
 									     "Paintball", "Quads en campo abierto", "Puenting",
 									     "Tiro con arco", "Escalada", "Baile de salón", "Espectáculo de magia",

@@ -21,7 +21,6 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<City> listOfCities;
 	private boolean dataNotFound = false;
 	
 	public ReservationAgentCyclicBehaviour(Agent agent)

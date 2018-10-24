@@ -1,6 +1,10 @@
 /**
+ * @author mrhyd
+ * 
+ * This class represents a hotel, which has a name and a list of rooms, 
  * 
  */
+
 package platform1;
 
 /**
@@ -9,7 +13,14 @@ package platform1;
  */
 public class Hotel {
 	
+	/**
+	 *  Hotel name
+	 */
 	private final String name;
+	
+	/**
+	 * List of rooms. Array index is room number, content is size of empty room.
+	 */
 	private int[] occupationCalendar;
 	
 	/**

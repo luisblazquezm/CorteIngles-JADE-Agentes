@@ -1,9 +1,10 @@
-/* This class provides the user with a set of static methods
- * that implement different utilities for the JADE RTE
+/**
+ * @author mrhyd
  * 
- * TODO:
- * - Change package when added to new project
+ * This class provides the user with a set of static methods
+ * that implement different utilities for the JADE RTE
  */
+
 package utilities;
 
 import jade.content.lang.sl.SLCodec;

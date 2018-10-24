@@ -1,6 +1,14 @@
 /**
+ * @author mrhyd
+ * 
+ * This is one of the two subbehaviours of the agent named 'CorteIngles' in the task's PDF file.
+ * Its cyclic functioning is:
+ * 		1- Get REQUEST message (from UserAgent)
+ * 		2- Differentiate between reservation and activity requests
+ * 		3- Send request to ReservationAgent or ActivityAgent
  * 
  */
+
 package platform1;
 
 import jade.core.AID;
@@ -29,6 +37,7 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() {
 				
+		// Get REQUEST message from UserAgent
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
 		
@@ -49,17 +58,20 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 					System.out.print("Request will be forwarded to ");
 				}
 
+				// Unwrap message content
 				MessageContent<String> messageContent;
 				AID userAid = message.getSender();
 				
 				messageContent = (MessageContent<String>) message.getContentObject();
 				
+				// Differentiate between reservation requests and activities requests
 				if (messageContent.getRequestedService().equals(PlatformData.HANDLE_RESERVATION_SER)) {
 					
 					if(Debug.IS_ON) {
 						System.out.println(PlatformData.RESERVATION_ALIAS);
 					}
 					
+					// If reservation request, send REQUEST to ReservationAgent
 					JadeUtils.sendMessage(
 							this.myAgent,
 							PlatformData.MAKE_RESERVATION_SER, 
@@ -76,6 +88,7 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 						System.out.println(PlatformData.RESERVATION_ALIAS);
 					}
 					
+					// If activity request, send REQUEST to ActivityAgent
 					JadeUtils.sendMessage(
 							this.myAgent,
 							PlatformData.RETRIEVE_ACTIVITY_SER, 
@@ -88,7 +101,7 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 					
 				} else {
 					// Should not happen but hey, just in case
-					System.err.println("ServeUserBehaviour: unknown sender");
+					System.err.println("ServeUserBehaviour: unknown request");
 				}
 				
 				if (Debug.IS_ON) {

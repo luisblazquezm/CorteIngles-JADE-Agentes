@@ -1,6 +1,10 @@
 /**
+ * @author mrhyd
+ * 
+ * Dummy class, created to emulate conditional compilation
  * 
  */
+
 package utilities;
 
 /**

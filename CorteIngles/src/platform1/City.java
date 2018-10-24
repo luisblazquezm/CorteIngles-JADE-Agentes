@@ -1,6 +1,10 @@
 /**
+ * @author mrhyd
+ * 
+ * This class represents a city, which contains a list of hotels and activities.
  * 
  */
+
 package platform1;
 
 import java.util.ArrayList;
@@ -13,8 +17,19 @@ import java.util.List;
  */
 public class City {
 	
+	/**
+	 * City's name
+	 */
 	private final String name;
+	
+	/**
+	 * List of available activities in this city
+	 */
 	private List<Activity> listOfActivities;
+	
+	/**
+	 * List of hotels in this city
+	 */
 	private List<Hotel> listOfHotels;
 	
 	/**
@@ -73,9 +88,4 @@ public class City {
 	public String getName() {
 		return name;
 	}
-	
-	
-	
-	
-
 }

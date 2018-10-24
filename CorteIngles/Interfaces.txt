@@ -36,6 +36,7 @@ ____________                                               ______________
 
 
 # -> Chosen delimiter (see PlatformData class)
+* -> Chosen activities' delimiter (see PlatformData class)
 
 userToCorteInglesReservationMsgContent: MessageContent
 	- requestedService: PlatformData.HANDLE_RESERVATION_SER
@@ -49,18 +50,18 @@ corteInglesToUserReservationMsgContent: "Type#Availability#City#Hotel#Desparture
 	- Type: PlatformData.RESERVATION_MESSAGE
 	- Availability = PlatformData.RESERVATION_AVAILABLE/PlatformData.RESERVATION_NOT_AVAILABLE
 	
-corteInglesToUserActivityMsgContent: "Type#Activity#City#StartDate#EndDate"
+corteInglesToUserActivityMsgContent: "Type*Activity1#City1#StartDate1#EndDate1*Activity2#City2#StartDate2#EndDate2..."
 	- Type: PlatformData.ACTIVITY_MESSAGE
 
 corteInglesToActivityMsgContent: IdentifiedMessageContent
 	- AID: userX
 	- requestedService: Platform.RETRIEVE_ACTIVITY
-	- data: "City#StartDate#EndDate"
+	- data: "City#Date"
 
 activityToCorteInglesMsgContent: IdentifiedMessageContent
 	- AID: same userX received
 	- requestedService: PlatformData.HANDLE_ACTIVITY_SER
-	- data: "Type#Activity#City#StartDate#EndDate"
+	- data: "Type*Activity1#City1#StartDate1#EndDate1*Activity2#City2#StartDate2#EndDate2..."
 		+ Type: PlatformData.ACTIVITY_MESSAGE
 
 corteInglesToReservationMsgContent: IdentifiedMessageContent
@@ -73,4 +74,4 @@ reservationToCorteInglesMsgContent: IdentifiedMessageContent
 	- requestedService: PlatformData.HANDLE_RESERVATION_SER
 	- data: "Type#Availability#City#Hotel#DespartureDate#ReturnDate"
 		+ Type: PlatformData.RESERVATION_MESSAGE
-+ Availability = PlatformData.RESERVATION_AVAILABLE/PlatformData.RESERVATION_NOT_AVAILABLE
+		+ Availability = PlatformData.RESERVATION_AVAILABLE/PlatformData.RESERVATION_NOT_AVAILABLE

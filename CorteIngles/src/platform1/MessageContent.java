@@ -1,6 +1,11 @@
 /**
+ * @author mrhyd
+ * 
+ * Class that wraps up the information needed to identify the requested service
+ * for which a message asks.
  * 
  */
+
 package platform1;
 
 import java.io.Serializable;
@@ -18,7 +23,7 @@ public class MessageContent<T>
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Requested service from the list in PlatformData
+	 * Requested service from the list in PlatformData class
 	 */
 	private String requestedService;
 	

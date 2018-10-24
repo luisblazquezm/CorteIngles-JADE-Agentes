@@ -1,6 +1,13 @@
 /**
+ * @author mrhyd
+ * 
+ * This is one of the two subbehaviours of the agent named 'CorteIngles' in the task's PDF file.
+ * Its cyclic functioning is:
+ * 		1- Receive INFORM message (from ActivityAgent or ReservationAgent)
+ * 		2- Forward message (to UserAgent)
  * 
  */
+
 package platform1;
 
 import jade.core.AID;
@@ -29,6 +36,7 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() {
 
+		// Receive INFORM message from ActivityAgent or ReservationAgent
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		
@@ -56,6 +64,7 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 					System.out.println("Message will be forwarded to " + PlatformData.USER_ALIAS);
 				}
 				
+				// Forward message to UserAgent
 				IdentifiedMessageContent<String> messageContent = (IdentifiedMessageContent<String>) message.getContentObject();
 				JadeUtils.sendMessage(this.myAgent,
 						              PlatformData.HANDLE_USER_REQUEST_SER,
