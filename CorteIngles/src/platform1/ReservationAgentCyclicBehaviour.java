@@ -21,12 +21,16 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Reservation> listOfReservations = new ArrayList<>();
+	private List<City> listOfCities;
 	private boolean dataNotFound = false;
 	
 	public ReservationAgentCyclicBehaviour(Agent agent)
 	{
 		super(agent);
+		listOfCities = new ArrayList<>();
+		listOfReservations.add(
+			new City)()
+		)
 	}
 	
 	@Override

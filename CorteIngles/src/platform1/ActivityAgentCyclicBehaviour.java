@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import jade.content.lang.sl.SLCodec;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPAAgentManagement.Envelope;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import utilities.Activities;
 
 /**
  * @author mrhyd
@@ -26,7 +28,17 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Activity> listOfActivities = new ArrayList<>();
+	private List<Activity> listOfActivities;
+	
+	public ActivityAgentCyclicBehaviour(Agent agent) {
+		super(agent);
+		listOfActivities = Activities.randomList();
+	}
+	
+	public ActivityAgentCyclicBehaviour() {
+		super();
+		listOfActivities = Activities.randomList();
+	}
 
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
@@ -111,7 +123,10 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		int endActivityDay = Integer.parseInt(partsOfDate[0]);
 		
 		for (Activity a : this.listOfActivities) {
-			if (a.getCity().equals(city) && (a.getStartActivityDay() >= startActivityDay) && (a.getEndActivityDay() <= endActivityDay)){
+			if (a.getCity().equals(city)
+				&& a.getScheduleDescription()[0] >= startActivityDay
+				&& a.getScheduleDescription()[1] <= endActivityDay)
+			{
 				return a.getActivity();
 			}
 		}
