@@ -108,14 +108,14 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		
 		List<Activity> activities = Data.getActivities(data[0], Integer.parseInt(data[1]));
 		if (activities == null) {
-			return PlatformData.ACTIVITY_MESSAGE + PlatformData.ACTIVITIES_DELIMITER + "None";
+			return PlatformData.ACTIVITY_MESSAGE + PlatformData.DELIMITER + "None";
 		}
 		
 		StringBuilder answer = new StringBuilder();
 		
 		answer.append(PlatformData.ACTIVITY_MESSAGE);
 		for (Activity a : activities) {
-			answer.append(PlatformData.ACTIVITIES_DELIMITER);
+			answer.append(PlatformData.DELIMITER);
 			answer.append(delimitedStringFromActivity(a));
 		}
 		
@@ -129,9 +129,9 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		StringBuilder string = new StringBuilder();
 		
 		string.append(activity.getName());
-		string.append(PlatformData.DELIMITER);
+		string.append(PlatformData.ACTIVITIES_DELIMITER);
 		string.append(String.valueOf(schedule[0]));
-		string.append(PlatformData.DELIMITER);
+		string.append(PlatformData.ACTIVITIES_DELIMITER);
 		string.append(String.valueOf(schedule[1]));
 		
 		return new String(string);

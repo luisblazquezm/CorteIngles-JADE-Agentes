@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 
 import platform1.Hotel;
+import platform1.PlatformData;
 
 /**
  * @author mrhyd
@@ -74,14 +75,11 @@ public class Hotels {
 	 */
 	private static int[] getRandomOccupationCalendar() {
 		
-		int MAX_ROOMS_IN_HOTEL = 100;
-		int MAX_PEOPLE_IN_ROOM = 4;
+		int numberOfRooms = random.nextInt(PlatformData.MAX_ROOMS_IN_HOTEL) + 1;
+		int[] occupationCalendar = new int[PlatformData.DAYS_OF_MAY];
 		
-		int numberOfRooms = random.nextInt(MAX_ROOMS_IN_HOTEL) + 1;
-		int[] occupationCalendar = new int[numberOfRooms];
-		
-		for (int i = 0; i < numberOfRooms; ++i) {
-			occupationCalendar[i] = random.nextInt(MAX_PEOPLE_IN_ROOM) + 1;
+		for (int i = 0; i < PlatformData.DAYS_OF_MAY; ++i) {
+			occupationCalendar[i] = numberOfRooms;
 		}
 		
 		return occupationCalendar;

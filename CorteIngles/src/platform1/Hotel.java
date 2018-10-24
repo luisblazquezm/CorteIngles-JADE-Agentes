@@ -62,12 +62,30 @@ public class Hotel {
 	 * @param roomNumber Number of the room to be reserved
 	 * @param numberOfCustomers Number of customers to be added
 	 */
-	public void addCustomer(int roomNumber, int numberOfCustomers)
-		throws Exception 
+	public boolean addCustomer(int departureDate, int returnDate, int numberOfCustomers)
 	{
-		if (this.occupationCalendar[roomNumber] >= numberOfCustomers)
-			this.occupationCalendar[roomNumber] -= numberOfCustomers;
-		else
-			throw new Exception("addCustomer: room not available");
+		boolean customerCanBeAdded = true;
+		
+		if (departureDate == 0 || returnDate == 0 || numberOfCustomers == 0) {
+			System.out.printf("%naddCustomer: invalid parameters%n");
+		} else {
+			for (int i = departureDate ; i <= returnDate ; i++) {
+				if (this.occupationCalendar[i] < numberOfCustomers) {
+					System.out.printf("%naddCustomer: room not available%n");
+					customerCanBeAdded = false;
+				}
+			}
+			
+			if (customerCanBeAdded){
+				System.out.printf("%nRoom available for days passed as parameters%n");
+				for (int i = departureDate ; i <= returnDate ; i++) 
+					this.occupationCalendar[i] -= numberOfCustomers;
+					
+				return true;
+			}
+		}
+		
+		return false;
+		
 	}
 }

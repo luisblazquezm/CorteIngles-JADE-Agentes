@@ -50,7 +50,7 @@ corteInglesToUserReservationMsgContent: "Type#Availability#City#Hotel#Desparture
 	- Type: PlatformData.RESERVATION_MESSAGE
 	- Availability = PlatformData.RESERVATION_AVAILABLE/PlatformData.RESERVATION_NOT_AVAILABLE
 	
-corteInglesToUserActivityMsgContent: "Type*Activity1#City1#StartDate1#EndDate1*Activity2#City2#StartDate2#EndDate2..."
+corteInglesToUserActivityMsgContent: "Type#Activity1*City1*StartDate1*EndDate1#Activity2*City2*StartDate2*EndDate2..."
 	- Type: PlatformData.ACTIVITY_MESSAGE
 
 corteInglesToActivityMsgContent: IdentifiedMessageContent
@@ -61,7 +61,7 @@ corteInglesToActivityMsgContent: IdentifiedMessageContent
 activityToCorteInglesMsgContent: IdentifiedMessageContent
 	- AID: same userX received
 	- requestedService: PlatformData.HANDLE_ACTIVITY_SER
-	- data: "Type*Activity1#City1#StartDate1#EndDate1*Activity2#City2#StartDate2#EndDate2..."
+	- data: "Type#Activity1*City1*StartDate1*EndDate1#Activity2*City2*StartDate2*EndDate2..."
 		+ Type: PlatformData.ACTIVITY_MESSAGE
 
 corteInglesToReservationMsgContent: IdentifiedMessageContent

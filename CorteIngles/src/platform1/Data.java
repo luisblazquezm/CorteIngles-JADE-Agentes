@@ -55,5 +55,46 @@ public class Data {
 			return list;
 		}
 	}
+	
+	public static boolean checkAvailability(String cityName, String hotelName, int departureDay, int returnDay){
+			
+		City city = null;
+		for (City c : listOfCities) {
+			if (c.getName().equals(cityName))
+				city = c;
+		}
+		
+		Hotel hotel = null;
+		if (city == null) {
+			return false;
+		} else {
+			
+			for (Hotel h : city.getListOfHotels()) {
+				if (h.getName().equals(hotelName)) {
+					hotel = h;
+				}
+			}
+			
+		}
+		
+		if (hotel == null) {
+			return false;
+		} else {
+			try {
+				return hotel.addCustomer(departureDay, returnDay, 1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
+	   
+	}
+
+	public static List<City> getListOfCities() {
+		return listOfCities;
+	}
+	
+	
 
 }

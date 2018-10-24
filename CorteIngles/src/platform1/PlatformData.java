@@ -29,7 +29,7 @@ public class PlatformData {
 	
 	// Delimiter for message content
 	public static final String DELIMITER = "#";
-	public static final String ACTIVITIES_DELIMITER = "\t";
+	public static final String ACTIVITIES_DELIMITER = "*";
 	
 	// Type of message
 	public static final String ACTIVITY_MESSAGE = "activity-message";
@@ -60,10 +60,10 @@ public class PlatformData {
 	
 	// Indexes from receiving message the userAgent has to show the real user (ACTIVITY)
 	//public static final int RECEIVER_TYPE_INDEX = 0;
-	public static final int RECEIVER_ACTIVITY_INDEX = 1;
-	//public static final int RECEIVER_CITY_INDEX = 2;
-	public static final int RECEIVER_START_OF_ACTIVITY_INDEX = 3;
-	public static final int RECEIVER_END_OF_ACTIVITY_INDEX = 4;
+	public static final int RECEIVER_ACTIVITY_INDEX = 0;
+	public static final int RECEIVER_ACTIVITY_CITY_INDEX = 1;
+	public static final int RECEIVER_START_OF_ACTIVITY_INDEX = 2;
+	public static final int RECEIVER_END_OF_ACTIVITY_INDEX = 3;
 	
 	// Indexes from activity message object
 	// cityIndex = 0
@@ -71,6 +71,6 @@ public class PlatformData {
 	
 	// Others
 	public static final int DAYS_OF_MAY = 31;
-	public static final int DEFAULT_AVAILABLE_ROOMS = 5;
+	public static final int MAX_ROOMS_IN_HOTEL = 5;
 
 }
