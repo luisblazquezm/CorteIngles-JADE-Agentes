@@ -11,3 +11,16 @@ TODO:
 - Hay que poner timers a las peticiones en caso de que no se cumplieran
 - En ReservationAgentCyclicBehaviour hay que tratar el caso en el que el usario 
   no encuentra información acerca de los parametros que ha pedido el usuario
+  
+  
+- ERRORES ENCONTRADOS
+	> JadeUtils.sendMessage devuelve 0 a la variable RequestWait en UserAgentCyclicBehaviour, estamos haciendo algo mal al enviar???
+	> Hay veces que al introducir una de las ciudades/hoteles/actividades de las que nos muestran en la tabla que se muestra por consola con la disponibilidad de cada caso, 
+	  el programa lo detecta por consola como incorrecta o no perteneciente a la lista de ciudades disponibles. 
+	  Fallo al hacer el recorrido en el for() del metodo printInfoAbout() de UserAgentCyclicBehaviour??
+	> No le llega el mensaje REQUEST al Agente Corte Ingles 
+	> He depurado bastante y hay errores que no consigo ver (aunque hay algunos que seran chorradas increiblemente grandes), 
+	  no se si porque estoy ya cansado o que jajajaj ; en cualquier caso a lo mejor viendolo los dos nos aclaramos mejor y uno lo ve antes que el otro. 
+	  Who knows -.-.
+    > Esto no es un error como tal pero he cambiado cosas menores del paquete utilities que hacian morir a los agentes (al parecer los agentes mueren solos cuando ocurre una excepción
+      y esta no se captura o se atiende XD).

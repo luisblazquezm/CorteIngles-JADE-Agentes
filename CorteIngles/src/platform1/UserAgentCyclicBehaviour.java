@@ -31,18 +31,24 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	{
 		// TODO Auto-generated method stub
 
+		// Messages for Activity And Reservation to be sent
 		String messageContentActivity = new String();
 		String messageContentReservation = new String();
-		Scanner sc = new Scanner(System.in);
-        String answer, behaviourAction = "Default", reserveInfo = "Default";
-        String date1, date2, scheduleStartDate, scheduleEndDate;
-        boolean departureDateIsCorrect = false, returnDateIsCorrect = false, scheduleStartDateIsCorrect = false, scheduleEndDateIsCorrect = false;
-        
         MessageContent<String> msgContentReservation = null;
         MessageContent<String> msgContentActivity = null;
-
+		
+		// Input variables for RESERVATION
+		String cityDestination, hotelDestination;
+		
+		// Input variables for ACTIVITY
+		String city;
+		
+		//
+        String answer, behaviourAction = "Default", reserveInfo = "Default";
         
-        int requestWait = -1; // Number of agents that implement a determined service
+        // Variables used to convert the dates from string to date and to evaluate if they are correct
+        String date1, date2, scheduleStartDate, scheduleEndDate;
+        boolean departureDateIsCorrect = false, returnDateIsCorrect = false, scheduleStartDateIsCorrect = false, scheduleEndDateIsCorrect = false;
         
 		SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
 		Date max1 = new Date();
@@ -69,28 +75,46 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		Date departureDate = new Date();
 		Date returnDate = new Date();
 		Date activityDate = new Date();
+		
+		// Flags that indicate if the parameters the user introduced are valid or not
+        boolean hotelIsCorrect = false, cityIsCorrect = false;
         
-    	// *************************************** RESERVATIONS ************************************************************
+        // Number of agents that implement a determined service
+        int requestWait = -1; 
+		
+		
+		// Other Variables
+		Scanner sc = new Scanner(System.in);
+        
+
 		
 		// Ask the user through the console about the information of the trip is planning to make
         do{
-    		System.out.printf("¿Do you want to make a trip?: ");
+    		System.out.printf("¿Do you want to make a trip?[s/N]: ");
             answer = sc.nextLine();
         } while(!"sSnN".contains(answer));
         System.out.println();
+        
+    	// *************************************** RESERVATIONS ************************************************************
         
         if ("sS".contains(answer)){
         	behaviourAction = "1";
         	
         	this.printInfoAbout("City", null);
         	
-    		System.out.printf("%nIntroduce the city of destination: ");
-    		String cityDestination = sc.nextLine();
+        	do {
+	    		System.out.printf("%nIntroduce the city of destination: ");
+	    		cityDestination = sc.nextLine();
+	    		
+	        	cityIsCorrect = this.printInfoAbout("Hotel", cityDestination);
+        	} while (cityIsCorrect == false);
     		
-        	this.printInfoAbout("Hotel", cityDestination);
-    		
-    		System.out.printf("%nIntroduce the hotel of destination: ");
-    		String hotelDestination = sc.nextLine();
+        	do {
+	    		System.out.printf("%nIntroduce the hotel of destination: ");
+	    		hotelDestination = sc.nextLine();
+	    		
+	    		hotelIsCorrect = this.checkHotel(cityDestination, hotelDestination);
+        	} while (hotelIsCorrect == false);
     		
     		do{
 	    		System.out.printf("%nDeparture date (Available from 01/05/2018 until 30/05/2018): ");
@@ -150,7 +174,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
             	this.printInfoAbout("City", null);
             	
         		System.out.printf("%nIntroduce the city: ");
-        		String city = sc.nextLine();
+        		city = sc.nextLine();
         		
             	this.printInfoAbout("Activity", city);
         		
@@ -205,10 +229,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         
         switch(behaviourAction){
 	        case "1": // Send Message Reservation
+	    		System.out.println("REQUEST Message related to reservation send to CorteInglesAgent");
 	    		requestWait = JadeUtils.sendMessage(this.myAgent, PlatformData.HANDLE_RESERVATION_SER, msgContentReservation);
 	            break;
 	        case "2": // Send Message Activity
-	        	requestWait = JadeUtils.sendMessage(this.myAgent, PlatformData.HANDLE_ACTIVITY_SER, msgContentActivity);
+	    		System.out.println("REQUEST Message related to activity send to CorteInglesAgent");
+	    		requestWait = JadeUtils.sendMessage(this.myAgent, PlatformData.HANDLE_ACTIVITY_SER, msgContentActivity);
 	            break;
 	        default:
 	            System.out.printf("%n%nUserAgentCyclicBehaviour:action: NO AGENTS WORKING%n%n");
@@ -221,6 +247,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		System.out.println("INFORM Message received in CBleer");
+		System.out.printf("RequestWait: %d\n", requestWait);
 		
         if (message == null) {
     		block();
@@ -252,19 +279,37 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 
 	}
 
-	private void printInfoAbout(String info, String additionalInfo) {
+	private boolean checkHotel(String city, String hotelDestination) {
+		for (City c : Data.getListOfCities()) {
+			if (c.getName().equals(city)){
+				for(Hotel h : c.getListOfHotels()) {
+					if (h.getName().equals(hotelDestination))
+						return true;
+				}
+			} 
+		}
+		return false;
+	}
+
+	private boolean printInfoAbout(String info, String additionalInfo) {
 		
 		StringBuilder sb = new StringBuilder();
 		boolean cityFound = false;
 		
+		if (Data.getListOfCities() == null)
+			System.out.printf("printInfoAbout: ERROR list of cities is null.");
+		
+		if (info == null)
+			System.out.printf("printInfoAbout: ERROR info passed is null.");
+		
 		// Prints all the cities available in our application
 		if (info.equals("City")) {
-	    	sb.append(String.format("%s", "\n+---------------------------------+\n"));
+	    	sb.append(String.format("%s", "\n+--------------+\n"));
 	    	sb.append(String.format("| %-12s |\n", "----City----"));
-	    	sb.append(String.format("%s", "+-------------+---------------------+\n"));
+	    	sb.append(String.format("%s", "+--------------+\n"));
 	    	for (City c : Data.getListOfCities()){
 		    	sb.append(String.format("| %-12s |\n", c.getName()));
-		    	sb.append(String.format("%s", "+-----------------------------------+\n"));
+		    	sb.append(String.format("%s", "+--------------+\n"));
 	    	}
 	    	
 		// Prints all the hotels availables in our application related to the city the user chose
@@ -273,23 +318,26 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				for (City c : Data.getListOfCities()) {
 					if (c.getName().equals(additionalInfo)){
 						cityFound = true;
-				    	sb.append(String.format("%s", "\n+---------------------------------+\n"));
+				    	sb.append(String.format("%s", "\n+---------------------------------------------+\n"));
 				    	sb.append(String.format("| %-12s | %-12s |\n", "----Hotel----", "----Number Max Of Rooms----"));
-				    	sb.append(String.format("%s", "+-------------+---------------------+\n"));
+				    	sb.append(String.format("%s", "+---------------+-----------------------------+\n"));
 				    	for (Hotel h : c.getListOfHotels()){
-					    	sb.append(String.format("| %-12s | %-12d |\n", h.getName(), PlatformData.MAX_ROOMS_IN_HOTEL));
-					    	sb.append(String.format("%s", "+-------------+---------------------+\n"));
+					    	sb.append(String.format("| %-13s | %-26d |\n", h.getName(), PlatformData.MAX_ROOMS_IN_HOTEL));
+					    	sb.append(String.format("%s", "+---------------+----------------------------+\n"));
 				    	}
 				    	
 				    	break;
 					} 
 				}
 				
-				if (!cityFound)
-					System.out.printf("printInfoAbout: Non existant city");
+				if (!cityFound) {
+					System.out.printf("\nprintInfoAbout: Non existant city. Please, try again\n");
+					return false;
+				}
 				
 			} else {
 				System.out.printf("printInfoAbout: No city received for searching hotel");
+				return false;
 			}
 
 		// Prints all the activities availables in our application related to the city the user chose
@@ -310,13 +358,20 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 					} 
 				}
 				
-				if (!cityFound)
-					System.out.printf("printInfoAbout: Non existant city");
+				if (!cityFound) {
+					System.out.printf("\nprintInfoAbout: Non existant city. Please, try again\n");
+					return false;
+				}
 				
 			} else {
 				System.out.printf("printInfoAbout: No city received for searching hotel");
+				return false;
 			}
 		}
+		
+		System.out.printf("%s\n", sb.toString());
+		
+		return true;
 	}
 
 	// Receives the message and prints it to the user

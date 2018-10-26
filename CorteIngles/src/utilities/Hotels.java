@@ -57,7 +57,7 @@ public class Hotels {
 	 */
 	public static List<Hotel> randomList() {
     	List<Hotel> list = new ArrayList<>();
-		for (int i = 0; i < random.nextInt() % HOTEL_NAMES.length + 1; ++i) {
+		for (int i = 0; i < Hotels.HOTEL_NAMES.length ; ++i) {
 			list.add(Hotels.instanceWithRandomAttributes());
 		}
 		return list;
@@ -67,7 +67,7 @@ public class Hotels {
 	 * @return Random name from HOTEL_NAMES
 	 */
 	private static String getRandomHotelName() {
-		return Hotels.HOTEL_NAMES[random.nextInt() % Hotels.HOTEL_NAMES.length];	
+		return Hotels.HOTEL_NAMES[random.nextInt(Hotels.HOTEL_NAMES.length)];	
 	}
 	
 	/**

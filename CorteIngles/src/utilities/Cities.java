@@ -52,7 +52,7 @@ public class Cities
 	 */
     public static List<City> randomList() {
     	List<City> list = new ArrayList<>();
-		for (int i = 0; i < random.nextInt() % CITY_NAMES.length + 1; ++i) {
+		for (int i = 0; i < Cities.CITY_NAMES.length ; ++i) {
 			list.add(Cities.instanceWithRandomAttributes());
 		}
 		return list;
@@ -62,6 +62,6 @@ public class Cities
      * @return Random name from CITY_NAMES
      */
     private static String getRandomCityName() {
-		return Cities.CITY_NAMES[random.nextInt() % Cities.CITY_NAMES.length];
+		return Cities.CITY_NAMES[random.nextInt(Cities.CITY_NAMES.length)];
 	}
 }

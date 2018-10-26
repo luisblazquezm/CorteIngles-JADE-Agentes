@@ -39,6 +39,7 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 		// Receive INFORM message from ActivityAgent or ReservationAgent
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
+		System.out.printf("INFORM received in GetInformResponseBehaviour\n");
 		
 		if (message == null) {
 			block();

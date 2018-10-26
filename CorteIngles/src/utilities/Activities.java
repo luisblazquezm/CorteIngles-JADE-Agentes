@@ -65,7 +65,7 @@ public class Activities {
 	 */
 	public static List<Activity> randomList() {
 		List<Activity> list = new ArrayList<>();
-		for (int i = 0; i < random.nextInt() % ACTIVITIES.length + 1; ++i) {
+		for (int i = 0; i < ACTIVITIES.length ; ++i) {
 			list.add(Activities.instanceWithRandomAttributes());
 		}
 		return list;
@@ -75,7 +75,7 @@ public class Activities {
 	 * @return Random activity
 	 */
 	private static String getRandomActivity() {
-		return Activities.ACTIVITIES[random.nextInt() % Activities.ACTIVITIES.length];
+		return Activities.ACTIVITIES[random.nextInt(Activities.ACTIVITIES.length)];
 	}
 	/**
 	 * Returns a random schedule description from the static field SCHEDULE_DESCRIPTIONS

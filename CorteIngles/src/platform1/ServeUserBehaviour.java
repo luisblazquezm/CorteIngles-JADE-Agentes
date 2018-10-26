@@ -40,7 +40,8 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 		// Get REQUEST message from UserAgent
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
-		
+		System.out.printf("REQUEST received in GetInformResponseBehaviour\n");
+
 		if (message == null) {
 			block();
 		} else {

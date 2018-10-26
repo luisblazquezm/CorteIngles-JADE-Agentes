@@ -23,9 +23,11 @@ public class Data {
 	 */
 	private static List<City> listOfCities;
 	
+	/*
 	static {
 		listOfCities = Cities.randomList();
 	}
+	*/
 	
 	/**
 	 * @param citiName Name of the city in which we want to look for activities
@@ -92,6 +94,7 @@ public class Data {
 	}
 
 	public static List<City> getListOfCities() {
+		listOfCities = Cities.randomList();
 		return listOfCities;
 	}
 	
