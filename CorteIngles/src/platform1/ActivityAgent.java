@@ -8,6 +8,7 @@
 package platform1;
 
 import jade.core.Agent;
+import utilities.Debug;
 import utilities.JadeUtils;
 
 public class ActivityAgent extends Agent {
@@ -27,6 +28,8 @@ public class ActivityAgent extends Agent {
 		 *  At least initially, this is not needed, but I just wrote it \_('-')_/
 		 */
 //		JadeUtils.registerService(this, "activity-service", "add-activity");
+		if (Debug.IS_ON)
+			System.out.println("Activity going to register\n");
 		
 		String[][] services = {{PlatformData.RETRIEVE_ACTIVITY_SER,
 				  			   getLocalName()}};

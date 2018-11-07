@@ -1,6 +1,7 @@
 package platform1;
 
 import jade.core.Agent;
+import utilities.Debug;
 import utilities.JadeUtils;
 
 public class UserAgent extends Agent  
@@ -17,7 +18,13 @@ public class UserAgent extends Agent
 				{PlatformData.HANDLE_USER_REQUEST_SER, getLocalName()}
 		};
 		
+		if (Debug.IS_ON)
+			System.out.println("Reservation going to register\n");
+		
 		JadeUtils.registerServices(this, services);
+		
+		if (Debug.IS_ON)
+			System.out.println("Reservation going to register\n");
 		
 		UserAgentCyclicBehaviour userBehaviour = new UserAgentCyclicBehaviour(this);
 		this.addBehaviour(userBehaviour);

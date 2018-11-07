@@ -15,8 +15,12 @@ TODO:
   
 - ERRORES ENCONTRADOS
 	> CORREGIDO ERROR DE NO ENCONTRAR SERVICIO.
+	> CORREGIDO ERROR DE AGENTES NO REGISTRADOS
 	
-	> Salta un NullPointerException en platform1:Data:checkAvailability
+	> El error último que queda es que el corteIngles se queda bloqueado y no logra mandarle el INFORM al UserAgent con la información sobre la que ha hecho la reserva
+	  el resto se envia y recibe todo correctamente. 
+	
+	> (CORREGIDO)Salta un NullPointerException en platform1:Data:checkAvailability
 	
 	> Hay veces que al introducir una de las ciudades/hoteles/actividades de las que nos muestran en la tabla que se muestra por consola con la disponibilidad de cada caso, 
 	  el programa lo detecta por consola como incorrecta o no perteneciente a la lista de ciudades disponibles. 

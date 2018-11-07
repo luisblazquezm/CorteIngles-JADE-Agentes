@@ -91,7 +91,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		
 		// Ask the user through the console about the information of the trip is planning to make
         do{
-    		System.out.printf("¿Do you want to make a trip?[s/N]: ");
+    		System.out.printf("\n¿Do you want to make a trip?[s/N]: ");
             answer = sc.nextLine();
         } while(!"sSnN".contains(answer));
         System.out.println();
@@ -250,11 +250,14 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         
         
 		// Waiting for the INFORM message from AgentCorteIngles in a non-blocking state
-        
+		if (Debug.IS_ON)
+			System.out.printf("UserAgent waiting for INFORM message from CorteInglesAgent\n");
         MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		
         if (message == null) {
+    		if (Debug.IS_ON)
+    			System.out.printf("UserAgent blocked\n");
     		block();
         } else {
         	
@@ -288,7 +291,6 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         	}
     	}
 
-        sc.close();
 	}
 
 	private boolean checkHotel(String city, String hotelDestination) {

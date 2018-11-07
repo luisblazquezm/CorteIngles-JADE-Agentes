@@ -38,8 +38,10 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 	public void action() {
 		
 		// Get REQUEST message from UserAgent
+		System.out.printf("CorteInglesAgent waiting for REQUEST message from UserAgent\n");
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
+		System.out.printf("Message REQUEST received in CorteInglesAgent\n");
 
 		if (message == null) {
 			if (Debug.IS_ON)

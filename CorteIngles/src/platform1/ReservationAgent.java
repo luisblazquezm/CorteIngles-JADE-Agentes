@@ -1,6 +1,7 @@
 package platform1;
 
 import jade.core.Agent;
+import utilities.Debug;
 import utilities.JadeUtils;
 
 public class ReservationAgent extends Agent
@@ -15,7 +16,8 @@ public class ReservationAgent extends Agent
 	{
 		String[][] services = {{PlatformData.MAKE_RESERVATION_SER,
             					getLocalName()}};
-		
+		if (Debug.IS_ON)
+			System.out.println("Reservation going to register\n");
 		JadeUtils.registerServices(this, services);
 		
 		

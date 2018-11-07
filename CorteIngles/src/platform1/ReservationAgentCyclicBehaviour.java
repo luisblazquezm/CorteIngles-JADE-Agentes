@@ -49,7 +49,7 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 						this.myAgent);
 				
 				if (Debug.IS_ON) {
-					System.out.println("(ReservationAgent)REQUEST received from AgentCorteIngles\n");
+					System.out.println("ReservationAgent: REQUEST received from AgentCorteIngles\n");
 				}
 
 				JadeUtils.sendMessage(this.myAgent,

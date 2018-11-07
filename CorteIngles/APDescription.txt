@@ -1,1 +1,1 @@
-( ap-description  :name "172.28.166.26:1099/JADE" :ap-services (set ( ap-service  :name fipa.mts.mtp.http.std :type fipa.mts.mtp.http.std :addresses (sequence http://THE-VOID.wifi.usal.es:7778/acc))))
+( ap-description  :name "192.168.1.35:1099/JADE" :ap-services (set ( ap-service  :name fipa.mts.mtp.http.std :type fipa.mts.mtp.http.std :addresses (sequence http://DESKTOP-71NT1Q2:7778/acc))))
