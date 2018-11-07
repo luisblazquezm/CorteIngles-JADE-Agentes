@@ -23,11 +23,11 @@ public class Data {
 	 */
 	private static List<City> listOfCities;
 	
-	/*
+	
 	static {
 		listOfCities = Cities.randomList();
 	}
-	*/
+	
 	
 	/**
 	 * @param citiName Name of the city in which we want to look for activities
@@ -58,6 +58,7 @@ public class Data {
 		}
 	}
 	
+	// NullPointerException !!
 	public static boolean checkAvailability(String cityName, String hotelName, int departureDay, int returnDay){
 			
 		City city = null;

@@ -12,19 +12,15 @@
 
 package platform1;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.domain.FIPAAgentManagement.Envelope;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import utilities.Debug;
+import utilities.JadeUtils;
 
 /**
  * @author mrhyd
@@ -67,27 +63,21 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 				MessageContent<String> content = (MessageContent<String>) msg.getContentObject();
 				String data = content.getData();
 				answerMessageContentData = this.getActivitiesString(data);
+				IdentifiedMessageContent<String> answerMessageContent =
+						new IdentifiedMessageContent<>(PlatformData.HANDLE_ACTIVITY_SER,
+						answerMessageContentData,
+						this.myAgent);
 				
 		    	//INFORM MESSAGE ELABORATION
 				if (Debug.IS_ON) {
 					System.out.println("ActivityAgent: REQUEST received from AgentCorteIngles\n");
 				}
-				ACLMessage aclMessage = new ACLMessage(ACLMessage.INFORM);    	
-		   		aclMessage.addReceiver(msg.getSender());
-		        aclMessage.setOntology("ontologia");
-		        aclMessage.setLanguage(new SLCodec().getName()); 	       
-		        aclMessage.setEnvelope(new Envelope());                     
-				aclMessage.getEnvelope().setPayloadEncoding("ISO8859_1");   
-		        //aclMessage.getEnvelope().setAclRepresentation(FIPANames.ACLCodec.XML); 
-				try {
-					aclMessage.setContentObject((Serializable) answerMessageContentData); 
-				} catch (IOException e) {
-					System.err.println("ActivityAgentCyclicBehaviour: setContentObject failed");
-					e.printStackTrace();
-				}
 				
 		    	//INFORM MESSAGE SENDING 
-				this.myAgent.send(aclMessage); 
+				JadeUtils.sendMessage(this.myAgent,
+									  PlatformData.HANDLE_ACTIVITY_SER,
+									  ACLMessage.INFORM,
+									  answerMessageContent);
 				if (Debug.IS_ON) {
 					System.out.println("ActivityAgent: INFORM message sent");
 				}

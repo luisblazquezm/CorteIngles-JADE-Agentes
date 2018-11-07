@@ -26,36 +26,44 @@ import java.util.Iterator;
 public class JadeUtils
 {
 
+	// Este método está bien, calcado del manual de JADE
 	/**
 	 * Look for all agents providing a service.
 	 * @param clientAgent Agent that requests service.
 	 * @param serviceType  Required service's type.
 	 * @return DFAgentDescription array of agents which provide the service.
 	 */
-    protected static DFAgentDescription [] findAgentsForService(Agent clientAgent, String serviceType)
+    protected static DFAgentDescription[] findAgentsForService(Agent clientAgent, String serviceType)
     {
-        DFAgentDescription template = new DFAgentDescription();
-        ServiceDescription serviceDescription = new ServiceDescription();
-        serviceDescription.setType(serviceType);
-        template.addServices(serviceDescription);
-        
-        SearchConstraints constraints = new SearchConstraints();
-        constraints.setMaxResults(Long.MAX_VALUE);
-        
-        try {
-            DFAgentDescription [] results = DFService.search(clientAgent, template, constraints);
-            return results;
-        } catch(FIPAException e) {
-//            JOptionPane.showMessageDialog(null, 
-//        								  "findAgentsForService: Agent " + getLocalName() + ": " + e.getMessage(),
-//        	                              "Error",
-//        	                              JOptionPane.ERROR_MESSAGE);
-        	e.printStackTrace();
-        }
+    	DFAgentDescription template = new DFAgentDescription();
+    	ServiceDescription serviceDescription = new ServiceDescription();
+    	serviceDescription.setType(serviceType);
+    	template.addServices(serviceDescription);
+    	
+    	try {
+    		DFAgentDescription[] result = DFService.search(clientAgent, template);
+    		if (Debug.IS_ON) {
+	    		System.out.printf(
+	    				"JadeUtils: findAgentsForService: REQUESTED SERVICE %s by %s -> N_MATCHES %d%n",
+	    				serviceType,
+	    				clientAgent.getLocalName(),
+	    				result.length);
+    		}
+    		return result;
+    	} catch(FIPAException e) {
+    		
+//			JOptionPane.showMessageDialog(null, 
+//				  "findAgentsForService: Agent " + getLocalName() + ": " + e.getMessage(),
+//			"Error",
+//			JOptionPane.ERROR_MESSAGE);
+			
+			e.printStackTrace();
+		}
         
         return null;
     }
     
+    // Este método está bien, calcado del manual de JADE
     /**
      * Look for all agents providing a service and get the first of them.
      * @param clientAgent Agent that requests service.
@@ -111,13 +119,15 @@ public class JadeUtils
         return null;
     }
     
+    // Este método está bien, calcado del manual de JADE
     /**
      * Send an object from agent clientAgent to an agent implementing specified service.
      * @param clientAgent Agent that requests service.
 	 * @param serviceType  Required service's type.
+	 * @param performative ACLMessage performative for the message
 	 * @param object Sent message.
      */
-    public static int sendMessage(Agent clientAgent, String serviceType, Object object)
+    public static int sendMessage(Agent clientAgent, String serviceType, int performative , Object object)
     {
         DFAgentDescription[] dfd;
         dfd = findAgentsForService(clientAgent, serviceType);
@@ -125,7 +135,7 @@ public class JadeUtils
         try {
             if(dfd != null) {
             	
-            	ACLMessage aclMessage = new ACLMessage(ACLMessage.REQUEST);
+            	ACLMessage aclMessage = new ACLMessage(performative);
             	
             	for(int i = 0; i < dfd.length; ++i) {
 	        		aclMessage.addReceiver(dfd[i].getName());
@@ -135,10 +145,11 @@ public class JadeUtils
                 aclMessage.setLanguage(new SLCodec().getName());
                 aclMessage.setEnvelope(new Envelope());
 				aclMessage.getEnvelope().setPayloadEncoding("ISO8859_1");
-                //aclMessage.getEnvelope().setAclRepresentation(FIPANames.ACLCodec.XML); 
-        		aclMessage.setContentObject((Serializable) object);
+                //aclMessage.getEnvelope().setAclRepresentation(FIPANames.ACLCodec.XML);
+				aclMessage.setContentObject((Serializable) object);
         		clientAgent.send(aclMessage);       		
             }
+            
         } catch(IOException e) {
 //            JOptionPane.showMessageDialog(null,
 //                                        "Agente " + getLocalName() + ": " + e.getMessage(),
@@ -150,29 +161,31 @@ public class JadeUtils
         return dfd.length;
     }
     
+    // Este método está bien, calcado del manual de JADE
     /**
      * Defines a service that will be implemented by one or more agents.
      * @param agent Agent that implements the service.
-	 * @param serviceType New service's type.
-	 * @param serviceName New service's name.
+	 * @param services Array of Service's type - Service's name pairs
      */
-    public static void registerService(Agent agent, String serviceType, String serviceName)
+    public static void registerServices(Agent agent, String[][] services)
     	throws NullPointerException
     {
     	
-    	if (agent == null) {
+    	if (agent == null || services == null) {
     		throw new NullPointerException();
     	}
     	
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(agent.getAID());
 		
-		ServiceDescription sd = new ServiceDescription();
-		sd.setName(serviceName);
-		sd.setType(serviceType);
-		sd.addOntologies("ontologia");
-		sd.addLanguages(new SLCodec().getName());
-		dfd.addServices(sd);
+		for (int i = 0; i < services.length; ++i) {
+			ServiceDescription sd = new ServiceDescription();
+			sd.setType(services[i][0]);
+			sd.setName(services[i][1]);
+//			sd.addOntologies("ontologia");
+//			sd.addLanguages(new SLCodec().getName());
+			dfd.addServices(sd);
+		}
 		
 		try {
 			DFService.register(agent, dfd);

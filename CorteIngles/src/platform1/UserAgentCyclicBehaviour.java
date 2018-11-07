@@ -12,6 +12,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import utilities.Debug;
 import utilities.JadeUtils;
 
 public class UserAgentCyclicBehaviour extends CyclicBehaviour
@@ -229,12 +230,18 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         
         switch(behaviourAction){
 	        case "1": // Send Message Reservation
-	    		System.out.println("REQUEST Message related to reservation send to CorteInglesAgent");
-	    		requestWait = JadeUtils.sendMessage(this.myAgent, PlatformData.HANDLE_RESERVATION_SER, msgContentReservation);
+	    		requestWait = JadeUtils.sendMessage(this.myAgent,
+								    				PlatformData.HANDLE_RESERVATION_SER,
+								    				ACLMessage.REQUEST,
+								    				msgContentReservation);
+	    		System.out.println("REQUEST message related to reservation sent to CorteInglesAgent");
 	            break;
 	        case "2": // Send Message Activity
-	    		System.out.println("REQUEST Message related to activity send to CorteInglesAgent");
-	    		requestWait = JadeUtils.sendMessage(this.myAgent, PlatformData.HANDLE_ACTIVITY_SER, msgContentActivity);
+	    		requestWait = JadeUtils.sendMessage(this.myAgent,
+								    				PlatformData.HANDLE_ACTIVITY_SER,
+								    				ACLMessage.REQUEST,
+								    				msgContentActivity);
+	    		System.out.println("REQUEST message related to activity sent to CorteInglesAgent");
 	            break;
 	        default:
 	            System.out.printf("%n%nUserAgentCyclicBehaviour:action: NO AGENTS WORKING%n%n");
@@ -246,12 +253,16 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         
         MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
-		System.out.println("INFORM Message received in CBleer");
-		System.out.printf("RequestWait: %d\n", requestWait);
 		
         if (message == null) {
     		block();
         } else {
+        	
+        	if (Debug.IS_ON) {
+	    		System.out.println("INFORM Message received in UserAgentCyclicBehaviour");
+	    		System.out.printf("RequestWait: %d\n", requestWait);
+        	}
+    		
         	if (requestWait > 0) { 
 				try
 				{
@@ -277,6 +288,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         	}
     	}
 
+        sc.close();
 	}
 
 	private boolean checkHotel(String city, String hotelDestination) {

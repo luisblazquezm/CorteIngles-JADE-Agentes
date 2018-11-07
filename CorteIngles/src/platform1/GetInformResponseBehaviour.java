@@ -39,9 +39,10 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 		// Receive INFORM message from ActivityAgent or ReservationAgent
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
-		System.out.printf("INFORM received in GetInformResponseBehaviour\n");
 		
 		if (message == null) {
+			if (Debug.IS_ON)
+				System.out.println("CorteInglesAgent blocked in ServeUserBehaviour");
 			block();
 		} else {
 			
@@ -72,12 +73,17 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 				
 				// Forward message to UserAgent
 				IdentifiedMessageContent<String> messageContent = (IdentifiedMessageContent<String>) message.getContentObject();
-				JadeUtils.sendMessage(this.myAgent,
-						              PlatformData.HANDLE_USER_REQUEST_SER,
-						              messageContent);
+				int numberOfRecipients = JadeUtils.sendMessage(
+						this.myAgent,
+		                PlatformData.HANDLE_USER_REQUEST_SER,
+		                ACLMessage.INFORM,
+		                messageContent);
 				
 				if (Debug.IS_ON) {
-					System.out.println("GetInformResponseBehaviour: Message was forwarded");
+					System.out.printf(
+							"GetInformResponseBehaviour: Message was forwarded to %d agents%n",
+							numberOfRecipients
+					);
 				}
 				
 			} catch (UnreadableException e) {

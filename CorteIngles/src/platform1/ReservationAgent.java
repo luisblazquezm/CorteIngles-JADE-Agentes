@@ -13,9 +13,11 @@ public class ReservationAgent extends Agent
 	@Override
 	public void setup()
 	{
-		JadeUtils.registerService(this,
-								  PlatformData.RESERVATION_ALIAS,
-								  PlatformData.MAKE_RESERVATION_SER);
+		String[][] services = {{PlatformData.MAKE_RESERVATION_SER,
+            					getLocalName()}};
+		
+		JadeUtils.registerServices(this, services);
+		
 		
 		ReservationAgentCyclicBehaviour reservationBehaviour = new ReservationAgentCyclicBehaviour(this);
 		this.addBehaviour(reservationBehaviour);

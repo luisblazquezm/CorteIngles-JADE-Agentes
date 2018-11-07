@@ -28,9 +28,10 @@ public class ActivityAgent extends Agent {
 		 */
 //		JadeUtils.registerService(this, "activity-service", "add-activity");
 		
-		JadeUtils.registerService(this,
-								  PlatformData.RETRIEVE_ACTIVITY_SER,
-								  getLocalName());
+		String[][] services = {{PlatformData.RETRIEVE_ACTIVITY_SER,
+				  			   getLocalName()}};
+		
+		JadeUtils.registerServices(this, services);
 		
 	}
 

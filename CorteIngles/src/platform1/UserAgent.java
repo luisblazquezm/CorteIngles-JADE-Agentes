@@ -13,9 +13,11 @@ public class UserAgent extends Agent
 	@Override
 	public void setup()
 	{
-		JadeUtils.registerService(this,
-								  PlatformData.USER_ALIAS,
-								  PlatformData.HANDLE_USER_REQUEST_SER);
+		String[][] services = {
+				{PlatformData.HANDLE_USER_REQUEST_SER, getLocalName()}
+		};
+		
+		JadeUtils.registerServices(this, services);
 		
 		UserAgentCyclicBehaviour userBehaviour = new UserAgentCyclicBehaviour(this);
 		this.addBehaviour(userBehaviour);

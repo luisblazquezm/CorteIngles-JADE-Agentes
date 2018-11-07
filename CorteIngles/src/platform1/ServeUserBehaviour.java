@@ -36,16 +36,17 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void action() {
-				
+		
 		// Get REQUEST message from UserAgent
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
-		System.out.printf("REQUEST received in GetInformResponseBehaviour\n");
 
 		if (message == null) {
+			if (Debug.IS_ON)
+				System.out.println("CorteInglesAgent blocked in ServeUserBehaviour");
 			block();
 		} else {
-			
+
 			try {
 				
 				if (Debug.IS_ON) {
@@ -75,7 +76,8 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 					// If reservation request, send REQUEST to ReservationAgent
 					JadeUtils.sendMessage(
 							this.myAgent,
-							PlatformData.MAKE_RESERVATION_SER, 
+							PlatformData.MAKE_RESERVATION_SER,
+							ACLMessage.REQUEST,
 							new IdentifiedMessageContent<String>(
 								PlatformData.MAKE_RESERVATION_SER,
 								messageContent.getData(),
@@ -86,27 +88,31 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				} else if (messageContent.getRequestedService().equals(PlatformData.HANDLE_ACTIVITY_SER)) {
 					
 					if(Debug.IS_ON) {
-						System.out.println(PlatformData.RESERVATION_ALIAS);
+						System.out.println(PlatformData.ACTIVITY_ALIAS);
 					}
 					
 					// If activity request, send REQUEST to ActivityAgent
-					JadeUtils.sendMessage(
-							this.myAgent,
-							PlatformData.RETRIEVE_ACTIVITY_SER, 
-							new IdentifiedMessageContent<String>(
-								PlatformData.RETRIEVE_ACTIVITY_SER,
-								messageContent.getData(),
-								userAid
-							)
+					int numberOfRecipients = JadeUtils.sendMessage(
+						this.myAgent,
+						PlatformData.RETRIEVE_ACTIVITY_SER, 
+						ACLMessage.REQUEST,
+						new IdentifiedMessageContent<String>(
+							PlatformData.RETRIEVE_ACTIVITY_SER,
+							messageContent.getData(),
+							userAid
+						)
 					);
+					
+					if (Debug.IS_ON) {
+						System.out.printf(
+								"ServeUserBehaviour: message was forwarded to %d agents",
+								numberOfRecipients
+						);
+					}
 					
 				} else {
 					// Should not happen but hey, just in case
 					System.err.println("ServeUserBehaviour: unknown request");
-				}
-				
-				if (Debug.IS_ON) {
-					System.out.println("ServeUserBehaviour: Message was forwarded");
 				}
 				
 			} catch (UnreadableException e) {

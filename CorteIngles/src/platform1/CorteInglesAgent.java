@@ -8,6 +8,7 @@
 package platform1;
 
 import jade.core.Agent;
+import utilities.Debug;
 import utilities.JadeUtils;
 import jade.core.behaviours.ParallelBehaviour;
 
@@ -28,12 +29,15 @@ public class CorteInglesAgent extends Agent {
 	@Override
 	protected void setup() {
 		
-		JadeUtils.registerService(this,
-				                  PlatformData.HANDLE_RESERVATION_SER,
-				                  getLocalName());
-		JadeUtils.registerService(this,
-				                  PlatformData.HANDLE_ACTIVITY_SER,
-				                  getLocalName());
+		String[][] services = {
+				{PlatformData.HANDLE_RESERVATION_SER, getLocalName()},
+				{PlatformData.HANDLE_ACTIVITY_SER, getLocalName()}
+		};
+		
+		JadeUtils.registerServices(this, services);
+		
+		if (Debug.IS_ON)
+			System.out.println("CorteInglesAgent services registered");
 		
 		ParallelBehaviour corteInglesBehaviour = 
 				new ParallelBehaviour(this, ParallelBehaviour.WHEN_ANY);

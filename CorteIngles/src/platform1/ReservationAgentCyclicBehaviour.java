@@ -1,15 +1,10 @@
 package platform1;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.regex.Pattern;
-
 import utilities.Debug;
-
-import jade.content.lang.sl.SLCodec;
+import utilities.JadeUtils;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.domain.FIPAAgentManagement.Envelope;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -48,28 +43,20 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 				MessageContent<String> content = (MessageContent<String>) msg.getContentObject();
 				String data = content.getData();
 				answerMessageContentData = this.reserveAccomodation(data);
+				IdentifiedMessageContent<String> answerMessageContent =
+						new IdentifiedMessageContent<>(PlatformData.HANDLE_RESERVATION_SER,
+						answerMessageContentData,
+						this.myAgent);
 				
-		    	//INFORM MESSAGE ELABORATION
 				if (Debug.IS_ON) {
 					System.out.println("(ReservationAgent)REQUEST received from AgentCorteIngles\n");
 				}
-				ACLMessage aclMessage = new ACLMessage(ACLMessage.INFORM);    	
-		   		aclMessage.addReceiver(msg.getSender());
-		   		
-		        aclMessage.setOntology("ontologia");
-		        aclMessage.setLanguage(new SLCodec().getName()); 	       
-		        aclMessage.setEnvelope(new Envelope());                     
-				aclMessage.getEnvelope().setPayloadEncoding("ISO8859_1");   
-		        //aclMessage.getEnvelope().setAclRepresentation(FIPANames.ACLCodec.XML); 
-				try {
-					aclMessage.setContentObject((Serializable)answerMessageContentData); 
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				JadeUtils.sendMessage(this.myAgent,
+									  PlatformData.HANDLE_RESERVATION_SER,
+									  ACLMessage.INFORM,
+									  answerMessageContent);
 				
-		    	//INFORM MESSAGE ELABORATION 
-				this.myAgent.send(aclMessage); 
 				if (Debug.IS_ON) {
 					System.out.println("ReservationAgent: INFORM message sent");
 				}
