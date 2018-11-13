@@ -95,10 +95,21 @@ public class Data {
 	}
 
 	public static List<City> getListOfCities() {
-		listOfCities = Cities.randomList();
 		return listOfCities;
 	}
 	
+	public static List<String> getListOfCityNames() {
+		List<String> list = new ArrayList<>();
+		for (City c : listOfCities) {
+			list.add(c.getName());
+		}
+		return list;
+	}
 	
+	public static String[] getArrayOfCityNames() {
+		String[] array = new String[listOfCities.size()];
+		array = (String[]) getListOfCityNames().toArray();
+		return array;
+	}
 
 }

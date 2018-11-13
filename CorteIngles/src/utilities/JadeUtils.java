@@ -22,10 +22,171 @@ import platform1.MessageContent;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 public class JadeUtils
 {
+	/**
+	 * @param prompt Message to be displayed to user
+	 * @return User input
+	 */
+	public static String getUserInput(String prompt) {
+		return getUserInput(prompt,
+		 				   false,
+	 				       0,
+	 				       null,
+	 				       (String[]) null);
+	}
+	
+	/**
+	 * @param prompt Message to be displayed to user
+	 * @param defaultOption Option to be used if user input is just [RETURN]
+	 * @return User input
+	 */
+	public static String getUserInput(String prompt,
+			  						  String defaultOption)
+	{
+		return getUserInput(prompt,
+					 		false,
+				 			0,
+				 			defaultOption,
+				 			(String[]) null);
+	}
+	
+	/**
+	 * @param prompt Message to be displayed to user
+	 * @param ignoreCase Indicates whether case must be taken into account in relation to options. If options is null, this is ignored
+	 * @param numberOfAttempts Maximum number of attempts to read the input. If options is null, this is ignored
+	 * @param defaultOption Option to be used if user input is just [RETURN]
+	 * @param options Available options. Read input must be one of them. If null, ignored
+	 * @return User input
+	 */
+	public static String getUserInput(String prompt,
+									  boolean ignoreCase,
+									  int numberOfAttempts,
+									  String defaultOption,
+									  String... options)
+	{
+	
+		final String INPUT_ERROR_MESSAGE = "Opción no disponible";
+		final String MAX_ATTEMPTS_REACHED_MESSAGE = "Ha realizado demasiados intentos. Inténtelo más tarde";
+		Scanner scanner = null;
+		String input = null;
+		int attempts = 1;
+		
+		/*
+		 * Si no hay opciones:
+		 * 		Devolver input
+		 * Si hay opciones:
+		 * 		Hacer
+	     *			Leer(input)
+		 * 			Si (Vacio(input))
+		 * 				Si (defaultOption)
+		 * 					input = defaultOption
+		 * 					salirDeBucle
+		 * 				SiNo
+		 * 					imprimirMensajeError
+		 * 					++intentos
+		 * 					Si (intentos > maxIntentos)
+		 * 						salirDeBucle
+		 * 					continuarBucle
+		 * 			SiNo
+		 * 				Si (input in opciones)
+		 * 					salirDeBucle
+		 * 				SiNo
+		 * 					imprimirMensajeError
+		 * 					++intentos
+		 * 					Si (intentos > maxIntentos)
+		 * 						salirDeBucle
+		 * 					continuarBucle
+		 * 		Mientras (NoSeDigaOtraCosa)
+		 * 		
+		 * 		Cerrar(scanner)
+		 * 		Devolver(input)
+		 * 
+		 */
+		
+		scanner = new Scanner(System.in);
+		
+		if (options == null) {
+			if (prompt != null)
+				System.out.print(prompt);
+			input = scanner.nextLine();
+		} else {
+			
+			do {
+				
+				if (prompt != null)
+					System.out.print(prompt);
+				input = scanner.nextLine();
 
+				if (input.equals("")) {
+					
+					if (defaultOption != null) {
+						input = defaultOption;
+						break;
+					} else {
+						System.out.println(INPUT_ERROR_MESSAGE);
+						++attempts;
+						if (attempts > numberOfAttempts) {
+							System.out.println(MAX_ATTEMPTS_REACHED_MESSAGE);
+							break;
+						} else {
+							continue;
+						}
+					}
+					
+				} else {
+					if (input.equals(defaultOption) || isContained(input, ignoreCase, options)) {
+						break;
+					} else {
+						System.out.println(INPUT_ERROR_MESSAGE);
+						++attempts;
+						if (attempts > numberOfAttempts) {
+							System.out.println(MAX_ATTEMPTS_REACHED_MESSAGE);
+							break;
+						} else {
+							continue;
+						}
+					}
+				}
+				
+			} while (true);
+		}
+		
+		scanner.close();
+		return input;
+		
+		
+	}
+
+	/**
+	 * @param option Option to be tested
+	 * @param ignoreCase Indicates whether case must be taken into account in relation to options
+	 * @param options Available options
+	 * @return True if option is contained in options
+	 */
+	private static boolean isContained(String option,
+									   boolean ignoreCase,
+									   String... options)
+	{
+		if (option == null || options == null)
+			return false;
+		
+		for (String s : options) {
+			if (ignoreCase) {
+				if (option.equalsIgnoreCase(s))
+					return true;
+			} else {
+				if (option.equals(s))
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	// Este método está bien, calcado del manual de JADE
 	/**
 	 * Look for all agents providing a service.

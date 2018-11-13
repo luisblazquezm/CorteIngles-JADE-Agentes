@@ -6,14 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-
+import utilities.JadeUtils;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import utilities.Debug;
-import utilities.JadeUtils;
 
 public class UserAgentCyclicBehaviour extends CyclicBehaviour
 {
@@ -26,12 +25,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	{
 		super(agent);
 	}
-
-	@Override
-	public void action()
-	{
-		// TODO Auto-generated method stub
-
+	
+	/* Some code
+	 * (non-Javadoc)
+	 * @see jade.core.behaviours.Behaviour#action()
+	 * 
+	 * 
 		// Messages for Activity And Reservation to be sent
 		String messageContentActivity = new String();
 		String messageContentReservation = new String();
@@ -99,6 +98,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
     	// *************************************** RESERVATIONS ************************************************************
         
         if ("sS".contains(answer)){
+        	
         	behaviourAction = "1";
         	
         	this.printInfoAbout("City", null);
@@ -154,15 +154,28 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 
     		} while(!returnDateIsCorrect);
     		
+    		if(Debug.IS_ON) {
+    			System.out.println("UserAgentCyclicBehaviour: input data tested");
+    		}
+    		
     		
     		messageContentReservation = String.format("%s" + PlatformData.DELIMITER + 
     												  "%s" + PlatformData.DELIMITER + 
     												  "%s" + PlatformData.DELIMITER + 
     												  "%s", cityDestination, hotelDestination, date1, date2);
     		msgContentReservation = new MessageContent<>(PlatformData.HANDLE_RESERVATION_SER, messageContentReservation);
+    		
+    		Debug.message("UserAgentCyclicBehaviour: going to send REQUEST");
+    		requestWait = JadeUtils.sendMessage(this.myAgent,
+    				PlatformData.HANDLE_RESERVATION_SER,
+    				ACLMessage.REQUEST,
+    				msgContentReservation);
+    		Debug.message("UserAgentCyclicBehaviour: REQUEST sent");
+			
+			repeatedCodeReceiveInformMessage(requestWait, reserveInfo);
 	
     	// *************************************** ACTIVITIES ************************************************************
-        } else if ("nN".contains(answer)) {
+        
             do{
         		System.out.printf("¿Desea ver actividades de ocio?: ");
                 answer = sc.nextLine();
@@ -220,35 +233,92 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         											   "%s", city, scheduleStartDate, scheduleEndDate);  
         		msgContentActivity = new MessageContent<>(PlatformData.HANDLE_ACTIVITY_SER, messageContentActivity);
         		// Insert the messageContent into the MessageContent object -> data and requestedService -> PlatformData.HANDLE_ACTIVITY_SER
+        		requestWait = JadeUtils.sendMessage(this.myAgent,
+	    				PlatformData.HANDLE_ACTIVITY_SER,
+	    				ACLMessage.REQUEST,
+	    				msgContentActivity);
+        		System.out.println("REQUEST message related to activity sent to CorteInglesAgent");
+        		
+        		repeatedCodeReceiveInformMessage(requestWait, reserveInfo);
 
             } else if ("nN".contains(answer)) {
             	//exit();
             }
 
         }
+	 */
+
+	@Override
+	public void action()
+	{
+		/*
+		 * Do (adInfinitum) {
+		 * 		1- Ask for reservations' requests
+		 * 		2- Show information
+		 * 			2.1- If reservation not available, repeat reservation option
+		 * 		3- Ask for activities' requests
+		 * 		4- Show information
+		 * }
+		 */
+		
+		processReservationRequest();
+		processActivityRequest();
+		
+	}
+	
+	private void processReservationRequest() {
+		
+		// Constants
+		final int MAX_ATTEMPTS = 5;
+		
+		// For stdin
+		String answer;
         
+		answer = JadeUtils.getUserInput(
+				"¿Desea realizar un viaje? [S/n]: ",
+				true,
+				MAX_ATTEMPTS,
+				"s",
+				"n");
+		
+		System.out.printf("UserAgentCyclicBehaviour: input was '%s'%n", answer);
+		
+		if (answer.contains("sS")) { // Process reservation request
+        	
+        	/*
+        	 * 1- Read input
+        	 * 2- Send message
+        	 */
+
+			answer = JadeUtils.getUserInput("Introduzca la ciudad de destino: ",
+											true,
+											MAX_ATTEMPTS,
+											null,
+											Data.getArrayOfCityNames());
+			
+		}
+		
+	}
+	
+	private void processActivityRequest() {
+		
+		// For stdin
+		String answer;
         
-        switch(behaviourAction){
-	        case "1": // Send Message Reservation
-	    		requestWait = JadeUtils.sendMessage(this.myAgent,
-								    				PlatformData.HANDLE_RESERVATION_SER,
-								    				ACLMessage.REQUEST,
-								    				msgContentReservation);
-	    		System.out.println("REQUEST message related to reservation sent to CorteInglesAgent");
-	            break;
-	        case "2": // Send Message Activity
-	    		requestWait = JadeUtils.sendMessage(this.myAgent,
-								    				PlatformData.HANDLE_ACTIVITY_SER,
-								    				ACLMessage.REQUEST,
-								    				msgContentActivity);
-	    		System.out.println("REQUEST message related to activity sent to CorteInglesAgent");
-	            break;
-	        default:
-	            System.out.printf("%n%nUserAgentCyclicBehaviour:action: NO AGENTS WORKING%n%n");
-	            break;
-        }	
-        
-        
+		answer = JadeUtils.getUserInput(
+				"¿Desea ver actividades de ocio? [S/n]: ",
+				true,
+				3,
+				"s",
+				"n");
+		
+		if (answer.contains("sS")) { // Process reservation request
+			
+		}
+		
+	}
+	
+	private void repeatedCodeReceiveInformMessage(int requestWait, String reserveInfo) {
 		// Waiting for the INFORM message from AgentCorteIngles in a non-blocking state
 		if (Debug.IS_ON)
 			System.out.printf("UserAgent waiting for INFORM message from CorteInglesAgent\n");
@@ -290,7 +360,6 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				System.err.printf("%nUserAgentCyclicBehaviour:action: ERROR:Received information is NULL%n");
         	}
     	}
-
 	}
 
 	private boolean checkHotel(String city, String hotelDestination) {
