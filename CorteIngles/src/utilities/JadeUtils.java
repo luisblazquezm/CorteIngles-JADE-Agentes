@@ -17,16 +17,170 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+import platform1.Data;
 import platform1.MessageContent;
+import platform1.PlatformData;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class JadeUtils
 {
+	/**
+	 * To read input
+	 */
+	private static Scanner scanner = new Scanner(System.in);
+	
+	/**
+	 * @param destinationCity
+	 * @param destinationHotel
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public static MessageContent<String> createReservationRequestMessageContent(String destinationCity, String destinationHotel, String startDate, String endDate) {
+		
+		String reservationMessageContent = String.format(
+				"%s" + PlatformData.DELIMITER + 
+				"%s" + PlatformData.DELIMITER + 
+				"%s" + PlatformData.DELIMITER + 
+				"%s", destinationCity, destinationHotel, startDate, endDate);
+
+		return new MessageContent<>(PlatformData.HANDLE_RESERVATION_SER, reservationMessageContent);
+	}
+	
+	/**
+	 * @param destinationCity
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public static MessageContent<String> createActivityRequestMessageContent(String destinationCity, String startDate, String endDate) {
+		
+		String activityMessageContent = String.format(
+				"%s" + PlatformData.DELIMITER +
+				"%s" + PlatformData.DELIMITER +
+				"%s", destinationCity, startDate, endDate);  
+		
+		return new MessageContent<>(PlatformData.HANDLE_ACTIVITY_SER, activityMessageContent);
+	}
+	
+	public static MessageContent<String> createReservationInformMessageContent(String destinationCity, String startDate, String endDate) {
+		
+		
+	}
+
+	public static MessageContent<String> createActivityInformMessageContent(String destinationCity, String destinationHotel, String startDate, String endDate) {
+	
+	String reservationMessageContent = String.format(
+			"%s" + PlatformData.DELIMITER + 
+			"%s" + PlatformData.DELIMITER + 
+			"%s" + PlatformData.DELIMITER + 
+			"%s", destinationCity, destinationHotel, startDate, endDate);
+
+		return new MessageContent<>(PlatformData.HANDLE_RESERVATION_SER, reservationMessageContent);
+	}
+	
+	/**
+	 * @param receivedData
+	 * @return
+	 */
+	public static String reserveAccomodation(String receivedData)
+	{
+		String[] data = receivedData.split(Pattern.quote(PlatformData.DELIMITER));
+		
+		String city = data[PlatformData.SENDER_CITY_INDEX];
+		String hotel = data[PlatformData.SENDER_HOTEL_INDEX];
+		
+		String departureDate = data[PlatformData.SENDER_DEPARTURE_INDEX];
+		String[] partsOfDate = departureDate.split("/");
+		int departureDay = Integer.parseInt(partsOfDate[0]); // Gets only the day dd from dd/MM/yyyy
+		
+		String returnDate = data[PlatformData.SENDER_RETURN_INDEX];
+		partsOfDate = returnDate.split("/");
+		int returnDay = Integer.parseInt(partsOfDate[0]);
+
+		boolean available = Data.checkAvailability(city, hotel, departureDay, returnDay);
+		
+		return JadeUtils.delimitedStringFromReservation(available);
+	}
+	
+	/**
+	 * @param availability
+	 * @return
+	 */
+	public static String delimitedStringFromReservation(boolean availability) {
+			
+		StringBuilder string = new StringBuilder();
+		
+		string.append(PlatformData.RESERVATION_MESSAGE);
+		string.append(PlatformData.DELIMITER);
+		
+		if (availability){
+			string.append(PlatformData.RESERVATION_AVAILABLE);
+			string.append(PlatformData.DELIMITER);
+		} else {
+			string.append(PlatformData.RESERVATION_NOT_AVAILABLE);
+			string.append(PlatformData.DELIMITER);
+		}
+		
+		string.append(PlatformData.SENDER_CITY_INDEX);
+		string.append(PlatformData.DELIMITER);
+		string.append(PlatformData.SENDER_HOTEL_INDEX);
+		string.append(PlatformData.DELIMITER);
+		string.append(PlatformData.SENDER_DEPARTURE_INDEX);
+		string.append(PlatformData.DELIMITER);
+		string.append(PlatformData.SENDER_RETURN_INDEX); 
+		
+		return new String(string);
+	}
+	
+    /**
+     * @param title Table's title
+     * @param array Content of the table
+     * @param width Table's width
+     */
+    public static void printStringTable(String title, String[] array, int width) {
+    	
+    	String newLine = String.format("%n");
+    	String headerFrame = "=";
+    	String bodyFrame = "-";
+    	String contentFormat = "| %-" + (width - 2) + "s |" + newLine;
+    	String leftBorder = "+";
+    	String rightBorder = "+" + newLine;
+    	    	
+    	StringBuilder stringBuilder = new StringBuilder();
+    	
+    	stringBuilder.append(newLine + leftBorder);
+    	for (int i = 0; i < width; ++i)
+    		stringBuilder.append(headerFrame);
+    	stringBuilder.append(rightBorder);
+    	
+    	stringBuilder.append(String.format(contentFormat, title));
+    	
+    	stringBuilder.append(leftBorder);
+    	for (int i = 0; i < width; ++i)
+    		stringBuilder.append(headerFrame);
+    	stringBuilder.append(rightBorder);
+    	
+    	for (String c : array){
+    		stringBuilder.append(String.format(contentFormat, c));
+    		stringBuilder.append(leftBorder);
+        	for (int i = 0; i < width; ++i)
+        		stringBuilder.append(bodyFrame);
+        	stringBuilder.append(rightBorder);
+    	}
+    	
+    	System.out.println(stringBuilder);
+    }
+		
 	/**
 	 * @param prompt Message to be displayed to user
 	 * @return User input
@@ -71,7 +225,6 @@ public class JadeUtils
 	
 		final String INPUT_ERROR_MESSAGE = "Opción no disponible";
 		final String MAX_ATTEMPTS_REACHED_MESSAGE = "Ha realizado demasiados intentos. Inténtelo más tarde";
-		Scanner scanner = null;
 		String input = null;
 		int attempts = 1;
 		
@@ -106,9 +259,7 @@ public class JadeUtils
 		 * 		Devolver(input)
 		 * 
 		 */
-		
-		scanner = new Scanner(System.in);
-		
+				
 		if (options == null) {
 			if (prompt != null)
 				System.out.print(prompt);
@@ -155,7 +306,6 @@ public class JadeUtils
 			} while (true);
 		}
 		
-		scanner.close();
 		return input;
 		
 		
@@ -377,6 +527,72 @@ public class JadeUtils
     {
     	return (T) message.getContentObject();
     }
+	
 
-
+	/**
+	 * @param prompt
+	 * @param startLimitDate
+	 * @param endLimitDate
+	 * @param dateFormat
+	 * @return
+	 */
+	public static Date getDateFromUser(String prompt, Date startLimitDate, Date endLimitDate,
+			DateFormat dateFormat, int numberOfAttempts) {
+		
+		String userInputString = null;
+		Date userInputDate = null;
+		final String maxAttemptsReachedMessage = "Demasiados intentos. Pruebe de nuevo más tarde.";
+		final String parseErrorMessage = "Introduzca una fecha con formato 'dd/mm/aaaa'.";
+		final String dateOutOfBoundsMessage;
+		final String anyDate = "'cualquiera'";
+		int attempts = 1;
+		
+		if (dateFormat == null)
+			dateFormat = new SimpleDateFormat(); // Default format
+		
+		// Dynamic construction of error message
+		StringBuilder _dateOutOfBoundsMessage = new StringBuilder("Introduzca una fecha entre el ");
+		if (startLimitDate != null)
+			_dateOutOfBoundsMessage.append(dateFormat.format(startLimitDate));
+		else
+			_dateOutOfBoundsMessage.append(anyDate);
+		_dateOutOfBoundsMessage.append(" y el ");
+		if (endLimitDate != null)
+			_dateOutOfBoundsMessage.append(dateFormat.format(endLimitDate));
+		else
+			_dateOutOfBoundsMessage.append(anyDate);
+		_dateOutOfBoundsMessage.append(String.format("%n"));
+		dateOutOfBoundsMessage = new String(_dateOutOfBoundsMessage);
+		
+		while (attempts <= numberOfAttempts) {
+			
+			userInputString = JadeUtils.getUserInput(prompt);
+			
+			try {
+				userInputDate = dateFormat.parse(userInputString);
+			} catch (ParseException e) {
+				userInputDate = null;
+				System.out.println(parseErrorMessage);
+				++attempts;
+				continue;
+			}
+			
+			if (startLimitDate != null && userInputDate.before(startLimitDate)) {
+				System.out.println(dateOutOfBoundsMessage);
+				++attempts;
+				continue;
+			}
+			
+			if (endLimitDate != null && userInputDate.after(endLimitDate)) {
+				System.out.println(dateOutOfBoundsMessage);
+				++attempts;
+				continue;
+			}
+			
+			return userInputDate;
+		}
+		
+		System.out.println(maxAttemptsReachedMessage);
+		return null;
+	}
 }

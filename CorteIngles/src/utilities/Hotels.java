@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import platform1.City;
 import platform1.Hotel;
 import platform1.PlatformData;
 
@@ -84,4 +85,63 @@ public class Hotels {
 		
 		return occupationCalendar;
 	}
+
+
+    /**
+     * @param hotelNames List of hotel names to be printed
+     */
+    public static void printHotelNameList(String[] hotelNames) {
+    	
+    	String title = "HOTEL";
+    	int width = 20;
+
+    	JadeUtils.printStringTable(title, hotelNames, width);
+    }
+    
+    /**
+     * @param hotelNames List of hotel names to be printed
+     */
+    public static void printHotelNameList(List<String> hotelNames) {
+    	
+    	if (hotelNames == null)
+    		return;
+    	
+    	String[] array = new String[hotelNames.size()];
+    	array = hotelNames.toArray(array);
+    	
+    	Hotels.printHotelNameList(array);
+    }
+    
+    /**
+     * @param hotelNames List of hotel names to be printed
+     */
+    public static void printHotelList(List<Hotel> listOfHotels) {
+    	
+    	if (listOfHotels == null)
+    		return;
+    	
+    	String[] array = new String[listOfHotels.size()];
+    	for (int i = 0; i < array.length; ++i) {
+    		array[i] = listOfHotels.get(i).getName();
+    	}
+    	
+    	Hotels.printHotelNameList(array);
+    }
+    
+    /**
+     * @param cityNames List of hotel names to be printed
+     */
+    public static void printHotelList(City[] listOfHotels) {
+    	
+    	if (listOfHotels == null)
+    		return;
+    	
+    	String[] array = new String[listOfHotels.length];
+    	for (int i = 0; i < array.length; ++i) {
+    		array[i] = listOfHotels[i].getName();
+    	}
+    	
+    	Hotels.printHotelNameList(array);
+    }
+    
 }

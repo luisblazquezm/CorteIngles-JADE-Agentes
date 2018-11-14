@@ -1,18 +1,24 @@
 package platform1;
 
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Scanner;
 import java.util.regex.Pattern;
+
+import javax.swing.text.DateFormatter;
+
 import utilities.JadeUtils;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import utilities.Cities;
 import utilities.Debug;
+import utilities.Hotels;
 
 public class UserAgentCyclicBehaviour extends CyclicBehaviour
 {
@@ -50,7 +56,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         String date1, date2, scheduleStartDate, scheduleEndDate;
         boolean departureDateIsCorrect = false, returnDateIsCorrect = false, scheduleStartDateIsCorrect = false, scheduleEndDateIsCorrect = false;
         
-		SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat fmt = d
 		Date max1 = new Date();
 		Date min1 = new Date();
 		Date max2 = new Date();
@@ -270,31 +276,87 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		
 		// Constants
 		final int MAX_ATTEMPTS = 5;
+		final String dateFormatString = "dd/MM/yyyy";
+		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+		Date startLimitDate;
+		Date endLimitDate;
+		try {
+			startLimitDate = dateFormat.parse("01/05/2019");
+			endLimitDate = dateFormat.parse("31/05/2019");
+		} catch (ParseException e) {
+			Debug.message("UserAgentCycliBehaviour: wrong date format");
+			startLimitDate = null;
+			endLimitDate = null;
+		}
 		
-		// For stdin
-		String answer;
+		// For input
+		String userWantsToTravel, destinationCity, destinationHotel;
+		Date startDate, endDate;
+		boolean dateIsCorrect;
+		
+		// ---------------------------------------------------------------------------------------
         
-		answer = JadeUtils.getUserInput(
+		userWantsToTravel = JadeUtils.getUserInput(
 				"¿Desea realizar un viaje? [S/n]: ",
 				true,
 				MAX_ATTEMPTS,
 				"s",
 				"n");
 		
-		System.out.printf("UserAgentCyclicBehaviour: input was '%s'%n", answer);
-		
-		if (answer.contains("sS")) { // Process reservation request
+		if ("sS".contains(userWantsToTravel)) { // Process reservation request
         	
         	/*
         	 * 1- Read input
         	 * 2- Send message
         	 */
+			
+			Cities.printCityNameList(Data.getArrayOfCityNames());
 
-			answer = JadeUtils.getUserInput("Introduzca la ciudad de destino: ",
-											true,
-											MAX_ATTEMPTS,
-											null,
-											Data.getArrayOfCityNames());
+			destinationCity = JadeUtils.getUserInput(
+					"Introduzca la ciudad de destino: ",
+					true,
+					MAX_ATTEMPTS,
+					null,
+					Data.getArrayOfCityNames()
+			);
+			
+			Hotels.printHotelNameList(Data.getArrayOfHotelNames(destinationCity));
+			
+			destinationHotel = JadeUtils.getUserInput(
+					"Introduzca el hotel de destino: ",
+					true,
+					MAX_ATTEMPTS,
+					null,
+					Data.getArrayOfHotelNames(destinationCity));
+			
+			startDate = JadeUtils.getDateFromUser(
+					"Introduzca la fecha de entrada ("
+							+ dateFormat.format(startLimitDate)
+							+ " - "
+							+ dateFormat.format(endLimitDate)
+							+ "): ",
+					startLimitDate,
+					endLimitDate,
+					dateFormat,
+					MAX_ATTEMPTS);
+			
+			endDate = JadeUtils.getDateFromUser(
+					"Introduzca la fecha de salida ("
+							+ dateFormat.format(startLimitDate)
+							+ " - "
+							+ dateFormat.format(endLimitDate)
+							+ "): ",
+					startLimitDate,
+					endLimitDate,
+					dateFormat,
+					MAX_ATTEMPTS);
+			
+			Debug.message("UserAgentCyclicBehaviour: going to send REQUEST");
+			requestWait = JadeUtils.sendMessage(this.myAgent,
+			PlatformData.HANDLE_RESERVATION_SER,
+			ACLMessage.REQUEST,
+			msgContentReservation);
+			
 			
 		}
 		

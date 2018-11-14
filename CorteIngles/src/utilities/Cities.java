@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import platform1.City;
+import platform1.Data;
 
 public class Cities 
 {
@@ -59,9 +60,67 @@ public class Cities
     }
     
     /**
+     * @param cityNames List of city names to be printed
+     */
+    public static void printCityNameList(String[] cityNames) {
+    	
+    	String title = "CITY";
+    	int width = 20;
+
+    	JadeUtils.printStringTable(title, cityNames, width);
+    }
+    
+    /**
+     * @param cityNames List of city names to be printed
+     */
+    public static void printCityNameList(List<String> cityNames) {
+    	
+    	if (cityNames == null)
+    		return;
+    	
+    	String[] array = new String[cityNames.size()];
+    	array = cityNames.toArray(array);
+    	
+    	Cities.printCityNameList(array);
+    }
+    
+    /**
+     * @param cityNames List of city names to be printed
+     */
+    public static void printCityList(List<City> listOfCities) {
+    	
+    	if (listOfCities == null)
+    		return;
+    	
+    	String[] array = new String[listOfCities.size()];
+    	for (int i = 0; i < array.length; ++i) {
+    		array[i] = listOfCities.get(i).getName();
+    	}
+    	
+    	Cities.printCityNameList(array);
+    }
+    
+    /**
+     * @param cityNames List of city names to be printed
+     */
+    public static void printCityList(City[] listOfCities) {
+    	
+    	if (listOfCities == null)
+    		return;
+    	
+    	String[] array = new String[listOfCities.length];
+    	for (int i = 0; i < array.length; ++i) {
+    		array[i] = listOfCities[i].getName();
+    	}
+    	
+    	Cities.printCityNameList(array);
+    }
+    
+    /**
      * @return Random name from CITY_NAMES
      */
     private static String getRandomCityName() {
 		return Cities.CITY_NAMES[random.nextInt(Cities.CITY_NAMES.length)];
 	}
+
 }

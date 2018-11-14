@@ -42,7 +42,7 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 				@SuppressWarnings("unchecked")
 				MessageContent<String> content = (MessageContent<String>) msg.getContentObject();
 				String data = content.getData();
-				answerMessageContentData = this.reserveAccomodation(data);
+				answerMessageContentData = JadeUtils.reserveAccomodation(data);
 				IdentifiedMessageContent<String> answerMessageContent =
 						new IdentifiedMessageContent<>(PlatformData.HANDLE_RESERVATION_SER,
 						answerMessageContentData,
@@ -70,52 +70,4 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 		}
 
 	}
-	
-	private String reserveAccomodation(String receivedData)
-	{
-		String[] data = receivedData.split(Pattern.quote(PlatformData.DELIMITER));
-		
-		String city = data[PlatformData.SENDER_CITY_INDEX];
-		String hotel = data[PlatformData.SENDER_HOTEL_INDEX];
-		
-		String departureDate = data[PlatformData.SENDER_DEPARTURE_INDEX];
-		String[] partsOfDate = departureDate.split("/");
-		int departureDay = Integer.parseInt(partsOfDate[0]); // Gets only the day dd from dd/MM/yyyy
-		
-		String returnDate = data[PlatformData.SENDER_RETURN_INDEX];
-		partsOfDate = returnDate.split("/");
-		int returnDay = Integer.parseInt(partsOfDate[0]);
-
-		boolean available = Data.checkAvailability(city, hotel, departureDay, returnDay);
-		
-		return this.delimitedStringFromReservation(available);
-	}
-	
-	private String delimitedStringFromReservation(boolean availability) {
-			
-		StringBuilder string = new StringBuilder();
-		
-		string.append(PlatformData.RESERVATION_MESSAGE);
-		string.append(PlatformData.DELIMITER);
-		
-		if (availability){
-			string.append(PlatformData.RESERVATION_AVAILABLE);
-			string.append(PlatformData.DELIMITER);
-		} else {
-			string.append(PlatformData.RESERVATION_NOT_AVAILABLE);
-			string.append(PlatformData.DELIMITER);
-		}
-		
-		string.append(PlatformData.SENDER_CITY_INDEX);
-		string.append(PlatformData.DELIMITER);
-		string.append(PlatformData.SENDER_HOTEL_INDEX);
-		string.append(PlatformData.DELIMITER);
-		string.append(PlatformData.SENDER_DEPARTURE_INDEX);
-		string.append(PlatformData.DELIMITER);
-		string.append(PlatformData.SENDER_RETURN_INDEX); 
-		
-		return new String(string);
-	}
-
-
 }

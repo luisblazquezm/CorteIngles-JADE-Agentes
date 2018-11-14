@@ -108,7 +108,43 @@ public class Data {
 	
 	public static String[] getArrayOfCityNames() {
 		String[] array = new String[listOfCities.size()];
-		array = (String[]) getListOfCityNames().toArray();
+		array = getListOfCityNames().toArray(array);
+		return array;
+	}
+	
+	public static List<Hotel> getListOfHotels(String cityName) {
+
+		City city = null;
+		
+		if (cityName == null)
+			return null;
+		
+		for (City c : listOfCities) {
+			if (c.getName().equals(cityName)) {
+				city = c;
+				break;
+			}
+		}
+		
+		if (city == null)
+			return null;
+		
+		return city.getListOfHotels();
+	}
+	
+	public static List<String> getListOfHotelNames(String cityName) {
+		List<String> list = new ArrayList<>();
+		for (Hotel c : Data.getListOfHotels(cityName)) {
+			list.add(c.getName());
+		}
+		return list;
+	}
+	
+	public static String[] getArrayOfHotelNames(String cityName) {
+		
+		List<String> list = Data.getListOfHotelNames(cityName);
+		String[] array = new String[list.size()];
+		array = list.toArray(array);
 		return array;
 	}
 
