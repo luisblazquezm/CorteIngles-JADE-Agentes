@@ -17,9 +17,8 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-import platform1.Data;
-import platform1.MessageContent;
-import platform1.PlatformData;
+import messages.IdentifiedMessageContent;
+import messages.MessageContent;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,6 +29,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
+import data.Data;
 
 public class JadeUtils
 {
@@ -48,12 +49,12 @@ public class JadeUtils
 	public static MessageContent<String> createReservationRequestMessageContent(String destinationCity, String destinationHotel, String startDate, String endDate) {
 		
 		String reservationMessageContent = String.format(
-				"%s" + PlatformData.DELIMITER + 
-				"%s" + PlatformData.DELIMITER + 
-				"%s" + PlatformData.DELIMITER + 
+				"%s" + PlatformUtils.DELIMITER + 
+				"%s" + PlatformUtils.DELIMITER + 
+				"%s" + PlatformUtils.DELIMITER + 
 				"%s", destinationCity, destinationHotel, startDate, endDate);
 
-		return new MessageContent<>(PlatformData.HANDLE_RESERVATION_SER, reservationMessageContent);
+		return new MessageContent<>(PlatformUtils.HANDLE_RESERVATION_SER, reservationMessageContent);
 	}
 	
 	/**
@@ -65,53 +66,52 @@ public class JadeUtils
 	public static MessageContent<String> createActivityRequestMessageContent(String destinationCity, String startDate, String endDate) {
 		
 		String activityMessageContent = String.format(
-				"%s" + PlatformData.DELIMITER +
-				"%s" + PlatformData.DELIMITER +
+				"%s" + PlatformUtils.DELIMITER +
+				"%s" + PlatformUtils.DELIMITER +
 				"%s", destinationCity, startDate, endDate);  
 		
-		return new MessageContent<>(PlatformData.HANDLE_ACTIVITY_SER, activityMessageContent);
+		return new MessageContent<>(PlatformUtils.HANDLE_ACTIVITY_SER, activityMessageContent);
 	}
 	
-	public static MessageContent<String> createReservationInformMessageContent(String destinationCity, String startDate, String endDate) {
+	public static IdentifiedMessageContent<String> createReservationInformMessageContent(String[] reservationData, boolean availability) {
+				
+		String reservationMessageContentData = String.format(
+				"%s" + PlatformUtils.DELIMITER
+				+ "%s" + PlatformUtils.DELIMITER
+				+ "%s" + PlatformUtils.DELIMITER
+				+ "%s",
+				reservationData[PlatformUtils.SENDER_CITY_INDEX],
+				reservationData[PlatformUtils.SENDER_HOTEL_INDEX],
+				reservationData[PlatformUtils.SENDER_DEPARTURE_INDEX],
+				reservationData[PlatformUtils.SENDER_RETURN_INDEX]);
+		
+		return new IdentifiedMessageContent<>(PlatformUtils.HANDLE_RESERVATION_SER,
+				answerMessageContentData,
+				this.myAgent);
 		
 		
 	}
 
-	public static MessageContent<String> createActivityInformMessageContent(String destinationCity, String destinationHotel, String startDate, String endDate) {
+	public static IdentifiedMessageContent<String> createActivityInformMessageContent(String destinationCity, String destinationHotel, String startDate, String endDate) {
 	
 	String reservationMessageContent = String.format(
-			"%s" + PlatformData.DELIMITER + 
-			"%s" + PlatformData.DELIMITER + 
-			"%s" + PlatformData.DELIMITER + 
+			"%s" + PlatformUtils.DELIMITER + 
+			"%s" + PlatformUtils.DELIMITER + 
+			"%s" + PlatformUtils.DELIMITER + 
 			"%s", destinationCity, destinationHotel, startDate, endDate);
 
-		return new MessageContent<>(PlatformData.HANDLE_RESERVATION_SER, reservationMessageContent);
+		return new MessageContent<>(PlatformUtils.HANDLE_RESERVATION_SER, reservationMessageContent);
 	}
 	
 	/**
-	 * @param receivedData
+	 * @param data
 	 * @return
 	 */
-	public static String reserveAccomodation(String receivedData)
-	{
-		String[] data = receivedData.split(Pattern.quote(PlatformData.DELIMITER));
+	public static String[] getReservationData(String data) {
 		
-		String city = data[PlatformData.SENDER_CITY_INDEX];
-		String hotel = data[PlatformData.SENDER_HOTEL_INDEX];
-		
-		String departureDate = data[PlatformData.SENDER_DEPARTURE_INDEX];
-		String[] partsOfDate = departureDate.split("/");
-		int departureDay = Integer.parseInt(partsOfDate[0]); // Gets only the day dd from dd/MM/yyyy
-		
-		String returnDate = data[PlatformData.SENDER_RETURN_INDEX];
-		partsOfDate = returnDate.split("/");
-		int returnDay = Integer.parseInt(partsOfDate[0]);
-
-		boolean available = Data.checkAvailability(city, hotel, departureDay, returnDay);
-		
-		return JadeUtils.delimitedStringFromReservation(available);
+		return data.split(Pattern.quote(PlatformUtils.DELIMITER));
 	}
-	
+		
 	/**
 	 * @param availability
 	 * @return
@@ -120,24 +120,24 @@ public class JadeUtils
 			
 		StringBuilder string = new StringBuilder();
 		
-		string.append(PlatformData.RESERVATION_MESSAGE);
-		string.append(PlatformData.DELIMITER);
+		string.append(PlatformUtils.RESERVATION_MESSAGE);
+		string.append(PlatformUtils.DELIMITER);
 		
 		if (availability){
-			string.append(PlatformData.RESERVATION_AVAILABLE);
-			string.append(PlatformData.DELIMITER);
+			string.append(PlatformUtils.RESERVATION_AVAILABLE);
+			string.append(PlatformUtils.DELIMITER);
 		} else {
-			string.append(PlatformData.RESERVATION_NOT_AVAILABLE);
-			string.append(PlatformData.DELIMITER);
+			string.append(PlatformUtils.RESERVATION_NOT_AVAILABLE);
+			string.append(PlatformUtils.DELIMITER);
 		}
 		
-		string.append(PlatformData.SENDER_CITY_INDEX);
-		string.append(PlatformData.DELIMITER);
-		string.append(PlatformData.SENDER_HOTEL_INDEX);
-		string.append(PlatformData.DELIMITER);
-		string.append(PlatformData.SENDER_DEPARTURE_INDEX);
-		string.append(PlatformData.DELIMITER);
-		string.append(PlatformData.SENDER_RETURN_INDEX); 
+		string.append(PlatformUtils.SENDER_CITY_INDEX);
+		string.append(PlatformUtils.DELIMITER);
+		string.append(PlatformUtils.SENDER_HOTEL_INDEX);
+		string.append(PlatformUtils.DELIMITER);
+		string.append(PlatformUtils.SENDER_DEPARTURE_INDEX);
+		string.append(PlatformUtils.DELIMITER);
+		string.append(PlatformUtils.SENDER_RETURN_INDEX); 
 		
 		return new String(string);
 	}
@@ -595,4 +595,6 @@ public class JadeUtils
 		System.out.println(maxAttemptsReachedMessage);
 		return null;
 	}
+
+	
 }

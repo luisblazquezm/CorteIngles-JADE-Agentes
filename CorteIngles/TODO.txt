@@ -30,6 +30,3 @@ TODO:
 	  no se si porque estoy ya cansado o que jajajaj ; en cualquier caso a lo mejor viendolo los dos nos aclaramos mejor y uno lo ve antes que el otro. 
 	  Who knows -.-.
 	  
-	> Los agentes Activity y Reservation no deberían saber nada de los datos dentro de City, Hotel, y Activity. La construcción de mensajes debería estar
-	  encapsulada en JadeUtils (aunque idealmente el modelo sería más complejo con un DataAccessObject, pero no es necesario). El agente User sólo debería
-	  saber qué información mandar, y que información recibe. Asimismo, las clases de mensajes deberían encapsular la obtención de los campos que contienen.
