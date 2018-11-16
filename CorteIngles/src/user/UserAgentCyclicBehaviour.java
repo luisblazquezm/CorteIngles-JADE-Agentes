@@ -396,10 +396,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 					messageContent
 			);
 			
-			if (numberOfServers <= 0)
+			if (numberOfServers <= 0) {
         		Debug.message("UserAgentCyclicBehaviour: no agents implementing requested service");
-        	else
-        		waitAndProcessResponse();
+        		return false;
+			} else {
+        		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
+			}
 		}
 	}
 
@@ -423,9 +425,11 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		// For input
 		String userWantsToSeeActivities;
 		
-		// To send message
+		// For message communication
+		int numberOfServers = 0;
 		ActivityRequestData activityData = new ActivityRequestData();
-		MessageContent<ActivityRequestData> messageContent;
+		MessageContent messageContent;
+		
 		
 		// ---------------------------------------------------------------------------------------
         
@@ -478,11 +482,20 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 					ACLMessage.REQUEST,
 					messageContent
 			);
+			
+			if (numberOfServers <= 0) {
+        		Debug.message("UserAgentCyclicBehaviour: no agents implementing requested service");
+        		return false;
+			} else {
+        		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
+			}
 		}
 		
 	}
 	
-	private void waitAndProcessResponse() {
+	private boolean waitAndProcessResponse() {
+		
+		// TODO Parse data and return true or false depending on conditions
 		
 		Debug.formattedMessage("UserAgentCyclicBehaviour: waiting for INFORM message from %s%n", PlatformUtils.CORTE_INGLES_ALIAS);
 		
@@ -515,10 +528,14 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	private void processReservationData(ReservationInformData data) {
 		// TODO Auto-generated method stub
 		
+		// Basically, print data
+		
 	}
 	
 	private void processActivityData(ActivityInformData data) {
 		// TODO Auto-generated method stub
+		
+		// Basically, print data
 		
 	}
 	 

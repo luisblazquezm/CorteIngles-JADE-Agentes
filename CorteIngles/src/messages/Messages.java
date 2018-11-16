@@ -8,9 +8,7 @@ import jade.core.AID;
 import utilities.PlatformUtils;
 
 public class Messages {
-	
-	public static 
-		
+			
 	/**
 	 * @param data
 	 * @return
