@@ -164,5 +164,45 @@ public class Data {
 		array = list.toArray(array);
 		return array;
 	}
+	
+	/*
+	 * I think this won't be used
+	 * 
+	public static List<Activity> getListOfActivities(String cityName) {
+
+		City city = null;
+		
+		if (cityName == null)
+			return null;
+		
+		for (City c : listOfCities) {
+			if (c.getName().equals(cityName)) {
+				city = c;
+				break;
+			}
+		}
+		
+		if (city == null)
+			return null;
+		
+		return city.getListOfActivities();
+	}
+	
+	public static List<String> getListOfActivityNames(String cityName) {
+		List<String> list = new ArrayList<>();
+		for (Activity c : Data.getListOfActivities(cityName)) {
+			list.add(c.getName());
+		}
+		return list;
+	}
+
+	public static String[] getArrayOfActivityNames(String cityName) {
+		List<String> list = Data.getListOfActivityNames(cityName);
+		String[] array = new String[list.size()];
+		array = list.toArray(array);
+		return array;
+	}
+	
+	*/
 
 }

@@ -10,20 +10,28 @@ import java.util.regex.Pattern;
 
 import javax.swing.text.DateFormatter;
 
+import data.Activities;
 import data.Activity;
+import data.ActivityInformData;
+import data.ActivityRequestData;
 import data.Cities;
 import data.City;
 import data.Data;
 import data.Hotel;
 import data.Hotels;
+import data.ReservationInformData;
+import data.ReservationRequestData;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
+import utilities.Utils;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import messages.MessageContent;
+import messages.Messages;
 import utilities.Debug;
 
 public class UserAgentCyclicBehaviour extends CyclicBehaviour
@@ -265,20 +273,27 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	{
 		/*
 		 * Do (adInfinitum) {
-		 * 		1- Ask for reservations' requests
+		 * 		1- Make reservations' requests
 		 * 		2- Show information
 		 * 			2.1- If reservation not available, repeat reservation option
-		 * 		3- Ask for activities' requests
+		 * 		3- Make activities' requests
 		 * 		4- Show information
+		 * 			4.1- If no activities were found, repeat reservation option
 		 * }
 		 */
 		
-		processReservationRequest();
-		processActivityRequest();
+		boolean reservationIsAvailable, activitiesWereFound;
 		
+		do {
+			reservationIsAvailable = processReservationRequest();
+		} while (!reservationIsAvailable);
+		
+		do {
+			activitiesWereFound = processActivityRequest();
+		} while (!activitiesWereFound);
 	}
 	
-	private void processReservationRequest() {
+	private boolean processReservationRequest() {
 		
 		// Constants
 		final int MAX_ATTEMPTS = 5;
@@ -296,13 +311,16 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		}
 		
 		// For input
-		String userWantsToTravel, destinationCity, destinationHotel;
-		Date startDate, endDate;
-		boolean dateIsCorrect;
+		String userWantsToTravel;
+		
+		// For message communication
+		int numberOfServers = 0;
+		ReservationRequestData reservationData = new ReservationRequestData();
+		MessageContent messageContent;
 		
 		// ---------------------------------------------------------------------------------------
         
-		userWantsToTravel = JadeUtils.getUserInput(
+		userWantsToTravel = Utils.getUserInput(
 				"¿Desea realizar un viaje? [S/n]: ",
 				true,
 				MAX_ATTEMPTS,
@@ -314,122 +332,196 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         	/*
         	 * 1- Read input
         	 * 2- Send message
+        	 * 3- Wait for answer
         	 */
 			
 			Cities.printCityNameList(Data.getArrayOfCityNames());
 
-			destinationCity = JadeUtils.getUserInput(
-					"Introduzca la ciudad de destino: ",
-					true,
-					MAX_ATTEMPTS,
-					null,
-					Data.getArrayOfCityNames()
+			reservationData.setDestinationCity(
+					Utils.getUserInput(
+						"Introduzca la ciudad de destino: ",
+						true,
+						MAX_ATTEMPTS,
+						null,
+						Data.getArrayOfCityNames()
+					)
 			);
 			
-			Hotels.printHotelNameList(Data.getArrayOfHotelNames(destinationCity));
+			Hotels.printHotelNameList(Data.getArrayOfHotelNames(reservationData.getDestinationCity()));
 			
-			destinationHotel = JadeUtils.getUserInput(
-					"Introduzca el hotel de destino: ",
-					true,
-					MAX_ATTEMPTS,
-					null,
-					Data.getArrayOfHotelNames(destinationCity));
+			reservationData.setDestinationHotel(
+					Utils.getUserInput(
+						"Introduzca el hotel de destino: ",
+						true,
+						MAX_ATTEMPTS,
+						null,
+						Data.getArrayOfHotelNames(reservationData.getDestinationCity())
+					)
+			);
 			
-			startDate = JadeUtils.getDateFromUser(
-					"Introduzca la fecha de entrada ("
-							+ dateFormat.format(startLimitDate)
-							+ " - "
-							+ dateFormat.format(endLimitDate)
-							+ "): ",
-					startLimitDate,
-					endLimitDate,
-					dateFormat,
-					MAX_ATTEMPTS);
+			reservationData.setStartDate(
+					Utils.getDateFromUser(
+						"Introduzca la fecha de entrada ("
+								+ dateFormat.format(startLimitDate)
+								+ " - "
+								+ dateFormat.format(endLimitDate)
+								+ "): ",
+						startLimitDate,
+						endLimitDate,
+						dateFormat,
+						MAX_ATTEMPTS
+					)
+			);
 			
-			endDate = JadeUtils.getDateFromUser(
-					"Introduzca la fecha de salida ("
-							+ dateFormat.format(startLimitDate)
-							+ " - "
-							+ dateFormat.format(endLimitDate)
-							+ "): ",
-					startLimitDate,
-					endLimitDate,
-					dateFormat,
-					MAX_ATTEMPTS);
+			reservationData.setEndDate(
+					Utils.getDateFromUser(
+						"Introduzca la fecha de salida ("
+								+ dateFormat.format(startLimitDate)
+								+ " - "
+								+ dateFormat.format(endLimitDate)
+								+ "): ",
+						startLimitDate,
+						endLimitDate,
+						dateFormat,
+						MAX_ATTEMPTS
+					)
+			);
 			
-			Debug.message("UserAgentCyclicBehaviour: going to send REQUEST");
-			requestWait = JadeUtils.sendMessage(this.myAgent,
-			PlatformUtils.HANDLE_RESERVATION_SER,
-			ACLMessage.REQUEST,
-			msgContentReservation);
+			messageContent = Messages.createReservationRequestMessageContent(reservationData);
+			Debug.message("UserAgentCyclicBehaviour: going to send reservation REQUEST");
+			numberOfServers = JadeUtils.sendMessage(
+					this.myAgent,
+					PlatformUtils.HANDLE_RESERVATION_SER,
+					ACLMessage.REQUEST,
+					messageContent
+			);
 			
-			
+			if (numberOfServers <= 0)
+        		Debug.message("UserAgentCyclicBehaviour: no agents implementing requested service");
+        	else
+        		waitAndProcessResponse();
+		}
+	}
+
+	private boolean processActivityRequest() {
+		
+		// Constants
+		final int MAX_ATTEMPTS = 5;
+		final String dateFormatString = "dd/MM/yyyy";
+		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+		Date startLimitDate;
+		Date endLimitDate;
+		try {
+			startLimitDate = dateFormat.parse("01/05/2019");
+			endLimitDate = dateFormat.parse("31/05/2019");
+		} catch (ParseException e) {
+			Debug.message("UserAgentCycliBehaviour: wrong date format");
+			startLimitDate = null;
+			endLimitDate = null;
 		}
 		
-	}
-	
-	private void processActivityRequest() {
+		// For input
+		String userWantsToSeeActivities;
 		
-		// For stdin
-		String answer;
+		// To send message
+		ActivityRequestData activityData = new ActivityRequestData();
+		MessageContent<ActivityRequestData> messageContent;
+		
+		// ---------------------------------------------------------------------------------------
         
-		answer = JadeUtils.getUserInput(
-				"¿Desea ver actividades de ocio? [S/n]: ",
+		userWantsToSeeActivities = Utils.getUserInput(
+				"¿Desea ver información sobre actividades de ocio? [S/n]: ",
 				true,
-				3,
+				MAX_ATTEMPTS,
 				"s",
 				"n");
 		
-		if (answer.contains("sS")) { // Process reservation request
+		if ("sS".contains(userWantsToSeeActivities)) { // Process reservation request
+        	
+        	/*
+        	 * 1- Read input
+        	 * 2- Send message
+        	 * 3- Wait for answer
+        	 */
 			
+			Cities.printCityNameList(Data.getArrayOfCityNames());
+
+			activityData.setCity(
+					Utils.getUserInput(
+						"Introduzca la ciudad donde desea buscar actividades: ",
+						true,
+						MAX_ATTEMPTS,
+						null,
+						Data.getArrayOfCityNames()
+					)
+			);
+						
+			activityData.setStartDate(
+					Utils.getDateFromUser(
+						"Introduzca la fecha de inicio de la actividad ("
+								+ dateFormat.format(startLimitDate)
+								+ " - "
+								+ dateFormat.format(endLimitDate)
+								+ "): ",
+						startLimitDate,
+						endLimitDate,
+						dateFormat,
+						MAX_ATTEMPTS
+					)
+			);
+						
+			messageContent = Messages.createActivityRequestMessageContent(activityData);
+			Debug.message("UserAgentCyclicBehaviour: going to send activity REQUEST");
+			JadeUtils.sendMessage(
+					this.myAgent,
+					PlatformUtils.HANDLE_ACTIVITY_SER,
+					ACLMessage.REQUEST,
+					messageContent
+			);
 		}
 		
 	}
 	
-	private void repeatedCodeReceiveInformMessage(int requestWait, String reserveInfo) {
-		// Waiting for the INFORM message from AgentCorteIngles in a non-blocking state
-		if (Debug.IS_ON)
-			System.out.printf("UserAgent waiting for INFORM message from CorteInglesAgent\n");
+	private void waitAndProcessResponse() {
+		
+		Debug.formattedMessage("UserAgentCyclicBehaviour: waiting for INFORM message from %s%n", PlatformUtils.CORTE_INGLES_ALIAS);
+		
         MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		
         if (message == null) {
-    		if (Debug.IS_ON)
-    			System.out.printf("UserAgent blocked\n");
+    		Debug.formattedMessage("UserAgentCyclicBehaviour: %s blocked%n", PlatformUtils.USER_ALIAS);
     		block();
         } else {
-        	
-        	if (Debug.IS_ON) {
-	    		System.out.println("INFORM Message received in UserAgentCyclicBehaviour");
-	    		System.out.printf("RequestWait: %d\n", requestWait);
-        	}
+
+    		Debug.message("UserAgentCyclicBehaviour: INFORM Message received");
     		
-        	if (requestWait > 0) { 
-				try
-				{
-					@SuppressWarnings("unchecked")
-					MessageContent<String> content = (MessageContent<String>) message.getContentObject();
-					String data = content.getData();
-					reserveInfo = this.printInfoMessage(data); // reserveInfo as sBAppend if it returns a table
-				}
-				catch (UnreadableException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				if (reserveInfo != null) {
-					System.out.printf("%s", reserveInfo);
-					(requestWait)--;
+			try {
+				MessageContent content = (MessageContent) message.getContentObject();
+				if (PlatformUtils.identifyAid(content.getRequester()).equals(PlatformUtils.RESERVATION_ALIAS)) {
+					processReservationData((ReservationInformData) content.getData());
+				} else if (PlatformUtils.identifyAid(content.getRequester()).equals(PlatformUtils.ACTIVITY_ALIAS)) {
+					processActivityData((ActivityInformData) content.getData());
 				} else {
-					System.err.printf("%nUserAgentCyclicBehaviour:action: ERROR:Request Wait < 0%n");
+					Debug.message("UserAgentCyclicBehaviour: where does this message come from?");
 				}
-        	} else {
-				System.err.printf("%nUserAgentCyclicBehaviour:action: ERROR:Received information is NULL%n");
-        	}
+			} catch (UnreadableException e) {
+				Debug.message("UserAgentCyclicBehaviour: error converting message's content");
+				e.printStackTrace();
+			}
     	}
 	}
 
+	private void processReservationData(ReservationInformData data) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private void processActivityData(ActivityInformData data) {
+		// TODO Auto-generated method stub
+		
+	}
+	 
 	private boolean checkHotel(String city, String hotelDestination) {
 		for (City c : Data.getListOfCities()) {
 			if (c.getName().equals(city)){

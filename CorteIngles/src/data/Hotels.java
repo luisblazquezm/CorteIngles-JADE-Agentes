@@ -13,6 +13,7 @@ import java.util.Random;
 
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
+import utilities.Utils;
 
 /**
  * @author mrhyd
@@ -94,7 +95,7 @@ public class Hotels {
     	String title = "HOTEL";
     	int width = 20;
 
-    	JadeUtils.printStringTable(title, hotelNames, width);
+    	Utils.printStringTable(title, hotelNames, width);
     }
     
     /**
@@ -142,5 +143,4 @@ public class Hotels {
     	
     	Hotels.printHotelNameList(array);
     }
-    
 }

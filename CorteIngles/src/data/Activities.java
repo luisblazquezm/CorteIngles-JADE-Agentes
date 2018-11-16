@@ -85,5 +85,4 @@ public class Activities {
 		end = start + random.nextInt(31 - start);	// start - 31
 		return new int[] {start, end};
 	}
-
 }

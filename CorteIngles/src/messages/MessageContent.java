@@ -10,11 +10,14 @@ package messages;
 
 import java.io.Serializable;
 
+import jade.core.AID;
+import jade.core.Agent;
+
 /**
  * @author mrhyd
  *
  */
-public class MessageContent<T>
+public class MessageContent
 	implements Serializable {
 	
 	/**
@@ -30,16 +33,35 @@ public class MessageContent<T>
 	/**
 	 * Service's associated data
 	 */
-	private T data;
+	private Object data;
+	
+	/**
+	 * 
+	 */
+	private AID requester;
 
 	/**
 	 * @param service
 	 * @param data
+	 * @param requester
 	 */
-	public MessageContent(String service, T data) {
+	public MessageContent(String service, Object data, AID requester) {
 		super();
 		this.service = service;
 		this.data = data;
+		this.requester = requester;
+	}
+	
+	/**
+	 * @param service
+	 * @param data
+	 * @param requester
+	 */
+	public MessageContent(String service, Object data, Agent requester) {
+		super();
+		this.service = service;
+		this.data = data;
+		this.requester = requester.getAID();
 	}
 
 	/**
@@ -50,26 +72,34 @@ public class MessageContent<T>
 	}
 
 	/**
-	 * @param service the service to set
-	 */
-	public void setService(String service) {
-		this.service = service;
-	}
-
-	/**
 	 * @return the data
 	 */
-	public T getData() {
+	public Object getData() {
 		return data;
 	}
 
 	/**
-	 * @param data the data to set
+	 * @return the requester
 	 */
-	public void setData(T data) {
-		this.data = data;
+	public AID getRequester() {
+		return requester;
+	}
+
+	/**
+	 * @param sender The sender of the message
+	 */
+	public void identify(AID sender) {
+		this.requester = sender;
+	}
+	
+	/**
+	 * @param sender The sender of the message
+	 */
+	public void identify(Agent sender) {
+		this.requester = sender.getAID();
 	}
 	
 	
-
+	
+	
 }

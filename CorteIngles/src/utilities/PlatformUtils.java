@@ -8,6 +8,8 @@
 
 package utilities;
 
+import jade.core.AID;
+
 /**
  * @author mrhyd
  *
@@ -72,5 +74,23 @@ public class PlatformUtils {
 	// Others
 	public static final int DAYS_OF_MAY = 31;
 	public static final int MAX_ROOMS_IN_HOTEL = 5;
+	
+	/**
+	 * @param agentAid
+	 * @return
+	 */
+	public static String identifyAid(AID agentAid) {
+		
+		AID userAid = new AID(PlatformUtils.USER_ALIAS, AID.ISLOCALNAME);
+		AID corteInglesAid = new AID(PlatformUtils.CORTE_INGLES_ALIAS, AID.ISLOCALNAME);
+		AID reservationAid = new AID(PlatformUtils.RESERVATION_ALIAS, AID.ISLOCALNAME);
+		AID activityAid = new AID(PlatformUtils.ACTIVITY_ALIAS, AID.ISLOCALNAME);
+		
+		if (agentAid.equals(userAid)) return PlatformUtils.USER_ALIAS;
+		else if (agentAid.equals(corteInglesAid)) return PlatformUtils.CORTE_INGLES_ALIAS;
+		else if (agentAid.equals(reservationAid)) return PlatformUtils.RESERVATION_ALIAS;
+		else if (agentAid.equals(activityAid)) return PlatformUtils.ACTIVITY_ALIAS;
+		else return null;
+	}
 
 }
