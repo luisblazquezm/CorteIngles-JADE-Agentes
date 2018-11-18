@@ -4,27 +4,22 @@ package user;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.regex.Pattern;
+//import java.util.regex.Pattern;
 
-import javax.swing.text.DateFormatter;
-
-import data.Activities;
-import data.Activity;
+//import data.Activity;
 import data.ActivityInformData;
 import data.ActivityRequestData;
 import data.Cities;
-import data.City;
+//import data.City;
 import data.Data;
-import data.Hotel;
+//import data.Hotel;
 import data.Hotels;
 import data.ReservationInformData;
 import data.ReservationRequestData;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 import utilities.Utils;
-import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -389,6 +384,16 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			messageContent = Messages.createReservationRequestMessageContent(reservationData);
 			Debug.message("UserAgentCyclicBehaviour: going to send reservation REQUEST");
+			
+			// I don´t know if you didn´t add this variable for any reason but, anyway, I will comment it XD. <-------------------------------------------------------------------
+			/* numberOfServers = JadeUtils.sendMessage(
+					this.myAgent,
+					PlatformUtils.HANDLE_RESERVATION_SER,
+					ACLMessage.REQUEST,
+					messageContent
+			);
+			*/
+			
 			numberOfServers = JadeUtils.sendMessage(
 					this.myAgent,
 					PlatformUtils.HANDLE_RESERVATION_SER,
@@ -402,7 +407,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			} else {
         		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
 			}
-		}
+		}// End of process reservation request
+		
+		return true; // <-------------------------------------------------------------------------------------------------------------------------- Just to calm down the compiler
 	}
 
 	private boolean processActivityRequest() {
@@ -476,6 +483,16 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 						
 			messageContent = Messages.createActivityRequestMessageContent(activityData);
 			Debug.message("UserAgentCyclicBehaviour: going to send activity REQUEST");
+			
+			// I don´t know if you didn´t add this variable for any reason but, anyway, I will comment it XD. <-------------------------------------------------------------------
+			/* numberOfServers = JadeUtils.sendMessage(
+					this.myAgent,
+					PlatformUtils.HANDLE_ACTIVITY_SER,
+					ACLMessage.REQUEST,
+					messageContent
+			);
+			*/
+			
 			JadeUtils.sendMessage(
 					this.myAgent,
 					PlatformUtils.HANDLE_ACTIVITY_SER,
@@ -489,8 +506,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			} else {
         		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
 			}
-		}
+		}// End of Process Reservation Request
 		
+		return true; // <-------------------------------------------------------------------------------------------------------------------------- Just to calm down the compiler
 	}
 	
 	private boolean waitAndProcessResponse() {
@@ -523,6 +541,8 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				e.printStackTrace();
 			}
     	}
+        
+        return true; // <-------------------------------------------------------------------------------------------------------------------------- Just to calm down the compiler
 	}
 
 	private void processReservationData(ReservationInformData data) {
@@ -539,6 +559,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		
 	}
 	 
+	/*
 	private boolean checkHotel(String city, String hotelDestination) {
 		for (City c : Data.getListOfCities()) {
 			if (c.getName().equals(city)){
@@ -687,4 +708,5 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		
 		return sb.toString();
 	}
+	*/
 }

@@ -1,6 +1,6 @@
 package reservation;
 
-import java.util.regex.Pattern;
+//import java.util.regex.Pattern;
 
 import data.Data;
 import utilities.Debug;
@@ -11,8 +11,9 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.IdentifiedMessageContent;
+//import messages.IdentifiedMessageContent;
 import messages.MessageContent;
+import messages.ResponseMessageContent;
 
 
 public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
@@ -45,12 +46,16 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 			
 			try
 			{
-				@SuppressWarnings("unchecked")
-				MessageContent<String> content = (MessageContent<String>) msg.getContentObject();
-				String[] reservationData = JadeUtils.getReservationData(content.getData());
+				//@SuppressWarnings("unchecked")<---------------------------------------------------------------------------------------------------------------------------------
+				//MessageContent<String> content = (MessageContent<String>) msg.getContentObject();<------------------------------------------------------------------------------
+				MessageContent content = (MessageContent) msg.getContentObject();
+				//String[] reservationData = JadeUtils.getReservationData(content.getData());<------------------------------------------------------------------------------------
+				String[] reservationData = JadeUtils.getReservationData((String)content.getData());
 				boolean availability = Data.reservationRequestIsAvailable(reservationData);
-				IdentifiedMessageContent<String> answerMessageContent =
-						JadeUtils.createReservationInformMessageContent(reservationData, availability);
+				ResponseMessageContent answerMessageContent =
+						JadeUtils.createReservationInformMessageContent(reservationData, availability); // Requester and sender missing
+				//IdentifiedMessageContent<String> answerMessageContent =
+						//JadeUtils.createReservationInformMessageContent(reservationData, availability); <------------------------------------------------------------------------------
 
 				JadeUtils.sendMessage(this.myAgent,
 									  PlatformUtils.HANDLE_RESERVATION_SER,

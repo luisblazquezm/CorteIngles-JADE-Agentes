@@ -9,8 +9,8 @@ package utilities;
 
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.CyclicBehaviour;
+//import jade.core.behaviours.Behaviour;
+//import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -18,22 +18,33 @@ import jade.domain.FIPAAgentManagement.Envelope;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
-import messages.IdentifiedMessageContent;
-import messages.MessageContent;
+//import jade.lang.acl.MessageTemplate;
+//import jade.lang.acl.UnreadableException;
+//import messages.IdentifiedMessageContent;
+//import messages.MessageContent;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+//import java.text.DateFormat;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
 import java.util.Iterator;
-import java.util.Scanner;
+//import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import data.Data;
+import data.ReservationInformData;
+import data.ReservationRequestData;
+
+import messages.MessageContent;
+import messages.ResponseMessageContent;
+
+//import data.City;
+//import data.Data;
+//import data.Hotel;
 
 public class JadeUtils
 {
@@ -259,6 +270,90 @@ public class JadeUtils
     	}
     		
     }
+
+    /**
+     * Prompts a table of available cities
+     * @param title Header of the table 
+	 * @param cityNames Array of city names
+	 * @param width Size of width of the table.
+     */
+	public static void printStringTable(String title, String[] cityNames, int width) {
+		final String CITY_NAMES_AVAILABILITY_ERROR = "No hay ciudades disponibles";
+		final String NEW_LINE = "\n";
+		final String TABLE_JOINT_SYMBOL = "+";
+		final String TABLE_V_SPLIT_SYMBOL = "|";
+		final String TABLE_H_SPLIT_SYMBOL = "-";
+		final String TABLE_H_SPACE_SYMBOL = " ";
+		StringBuilder sb = new StringBuilder();
+		
+		if (cityNames == null) {
+			System.out.println(CITY_NAMES_AVAILABILITY_ERROR);
+		} else {
+			
+			if (width <= 0) {
+				System.out.println("JadeUtils: incorrect table width");
+			} else {
+				
+				if (title == null) {
+					System.out.println("JadeUtils: table header is empty");
+				} else {
+					sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+			    	for (int i = 0 ; i < width ; i++)
+				    	sb.append(TABLE_H_SPLIT_SYMBOL);
+				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
+				    
+				    sb.append(TABLE_V_SPLIT_SYMBOL + title);
+				    for (int i = title.length() ; i < width ; i++)
+				    	sb.append(TABLE_H_SPACE_SYMBOL);
+				    sb.append(TABLE_V_SPLIT_SYMBOL + NEW_LINE);
+				    
+					sb.append(TABLE_JOINT_SYMBOL);
+			    	for (int i = 0 ; i < width ; i++)
+				    	sb.append(TABLE_H_SPLIT_SYMBOL);
+				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
+				    
+				    for(String c : cityNames) {
+						sb.append(TABLE_V_SPLIT_SYMBOL + c);
+				    	for (int i = c.length() ; i < width ; i++)
+					    	sb.append(TABLE_H_SPACE_SYMBOL);
+					    sb.append(TABLE_V_SPLIT_SYMBOL + NEW_LINE);
+				    }
+				    
+				    sb.append(TABLE_JOINT_SYMBOL);
+			    	for (int i = 0 ; i < width ; i++)
+				    	sb.append(TABLE_H_SPLIT_SYMBOL);
+				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
+				    
+				    System.out.printf(sb.toString());
+				}
+			}
+		}
+	}
+
+	public static ResponseMessageContent createReservationInformMessageContent(
+			String[] reservationData, boolean availability) {
+		
+		ReservationInformData reservationDataObject = new ReservationInformData();
+		final String dateFormatString = "dd/MM/yyyy";
+		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+		
+		if (dateFormat == null)
+			dateFormat = new SimpleDateFormat(); // Default format
+		
+		Date departureDate = dateFormat.parse(reservationData[PlatformUtils.SENDER_DEPARTURE_INDEX]);
+		Date returnDate = dateFormat.parse(reservationData[PlatformUtils.SENDER_RETURN_INDEX]);
+		
+		// Requester and sender AID missing
+		return new ResponseMessageContent(
+				PlatformUtils.MAKE_RESERVATION_SER,
+				new ReservationInformData(
+						reservationData[PlatformUtils.SENDER_CITY_INDEX], 
+						reservationData[PlatformUtils.SENDER_HOTEL_INDEX],
+						departureDate, 
+						returnDate,
+						availability),
+				userAid
+			);
+	}
     	
-	
 }

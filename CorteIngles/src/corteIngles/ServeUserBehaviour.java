@@ -16,7 +16,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.IdentifiedMessageContent;
+//import messages.IdentifiedMessageContent;
 import messages.MessageContent;
 import utilities.Debug;
 import utilities.JadeUtils;
@@ -36,7 +36,7 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")<----------------------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public void action() {
 		
@@ -66,32 +66,43 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				}
 
 				// Unwrap message content
-				MessageContent<String> messageContent;
+				MessageContent messageContent;
+				//MessageContent<String> messageContent;<-------------------------------------------------------------------------------------------------------------------------
 				AID userAid = message.getSender();
 				
-				messageContent = (MessageContent<String>) message.getContentObject();
+				messageContent = (MessageContent) message.getContentObject();
+				//messageContent = (MessageContent<String>) message.getContentObject();<-------------------------------------------------------------------------------------------------------------------------
 				
 				// Differentiate between reservation requests and activities requests
-				if (messageContent.getRequestedService().equals(PlatformUtils.HANDLE_RESERVATION_SER)) {
+				if (messageContent.getService().equals(PlatformUtils.HANDLE_RESERVATION_SER)) {
+				//if (messageContent.getRequestedService().equals(PlatformUtils.HANDLE_RESERVATION_SER)) {<--------------------------------------------------------------------------
 					
 					if(Debug.IS_ON) {
 						System.out.println(PlatformUtils.RESERVATION_ALIAS);
 					}
 					
 					// If reservation request, send REQUEST to ReservationAgent
+					// int numberOfRecipients = JadeUtils.sendMessage( <-------------------------------------------------------------------------------------------------------
 					JadeUtils.sendMessage(
 							this.myAgent,
 							PlatformUtils.MAKE_RESERVATION_SER,
 							ACLMessage.REQUEST,
+							new MessageContent(
+									PlatformUtils.MAKE_RESERVATION_SER,
+									messageContent.getData(),
+									userAid
+								)
+							/*<-------------------------------------------------------------------------------------------------------------------------------------------------
 							new IdentifiedMessageContent<String>(
 								PlatformUtils.MAKE_RESERVATION_SER,
 								messageContent.getData(),
 								userAid
 							)
+							*/
 					);
 					
-				} else if (messageContent.getRequestedService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {
-					
+				} else if (messageContent.getService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {
+			   // else if (messageContent.getRequestedService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {<--------------------------------------------------------------------------
 					if(Debug.IS_ON) {
 						System.out.println(PlatformUtils.ACTIVITY_ALIAS);
 					}
@@ -101,11 +112,18 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 						this.myAgent,
 						PlatformUtils.RETRIEVE_ACTIVITY_SER, 
 						ACLMessage.REQUEST,
+						new MessageContent(
+								PlatformUtils.RETRIEVE_ACTIVITY_SER,
+								messageContent.getData(),
+								userAid
+							)
+						/*<------------------------------------------------------------------------------------------------------------------------------------------------------------
 						new IdentifiedMessageContent<String>(
 							PlatformUtils.RETRIEVE_ACTIVITY_SER,
 							messageContent.getData(),
 							userAid
 						)
+						*/
 					);
 					
 					if (Debug.IS_ON) {

@@ -10,12 +10,13 @@
 
 package corteIngles;
 
+import messages.MessageContent;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.IdentifiedMessageContent;
+//import messages.IdentifiedMessageContent;
 import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
@@ -34,7 +35,7 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
 	@Override
 	public void action() {
 
@@ -74,7 +75,8 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 				}
 				
 				// Forward message to UserAgent
-				IdentifiedMessageContent<String> messageContent = (IdentifiedMessageContent<String>) message.getContentObject();
+				MessageContent messageContent = (MessageContent) message.getContentObject();
+				//IdentifiedMessageContent<String> messageContent = (IdentifiedMessageContent<String>) message.getContentObject();<------------------------------------------------------
 				int numberOfRecipients = JadeUtils.sendMessage(
 						this.myAgent,
 		                PlatformUtils.HANDLE_USER_REQUEST_SER,

@@ -22,7 +22,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.IdentifiedMessageContent;
+//import messages.IdentifiedMessageContent;
 import messages.MessageContent;
 import utilities.Debug;
 import utilities.JadeUtils;
@@ -66,7 +66,8 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 			try
 			{
 				@SuppressWarnings("unchecked")
-				MessageContent<String> content = (MessageContent<String>) msg.getContentObject();
+				MessageContent content = (MessageContent) msg.getContentObject();
+				//MessageContent<String> content = (MessageContent<String>) msg.getContentObject();
 				String data = content.getData();
 				answerMessageContentData = this.getActivitiesString(data);
 				IdentifiedMessageContent<String> answerMessageContent =

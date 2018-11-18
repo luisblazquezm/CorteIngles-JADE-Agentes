@@ -143,6 +143,7 @@ public class Utils {
 					System.out.print(prompt);
 				input = scanner.nextLine();
 
+				// User input is just [RETURN]
 				if (input.equals("")) {
 					
 					if (defaultOption != null) {
