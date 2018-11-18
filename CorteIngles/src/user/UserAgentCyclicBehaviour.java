@@ -553,18 +553,87 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		// Basically, print data
 		StringBuilder sb = new StringBuilder();
 		final String dateFormatString = "dd/MM/yyyy";
-		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);			
+		final String NEW_LINE = "\n";
+        final String TABLE_JOINT_SYMBOL = "+";
+        final String TABLE_V_SPLIT_SYMBOL = "|";
+        final String TABLE_H_SPLIT_SYMBOL = "-";
+        final String TABLE_H_SPACE_SYMBOL = " ";
+        int width = 20;
+        String title1 = "CITY";
+        String title2 = "HOTEL";
+        String title3 = "START DATE";
+        String title4 = "END DATE";
+        int NUM_PARAMS = 4;
+        
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < NUM_PARAMS ; i++){
+            for (int j = 0 ; j < width ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        sb.append(NEW_LINE);
+        
 
+        sb.append(TABLE_V_SPLIT_SYMBOL + title1);
+        for (int i = title1.length() ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+        
+        sb.append(TABLE_V_SPLIT_SYMBOL + title2);
+        for (int i = title2.length() ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+        
+        sb.append(TABLE_V_SPLIT_SYMBOL + title3);
+        for (int i = title3.length() ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+        sb.append(TABLE_V_SPLIT_SYMBOL);
+        
+        sb.append(TABLE_V_SPLIT_SYMBOL + title4);
+        for (int i = title4.length() ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+        sb.append(TABLE_V_SPLIT_SYMBOL);
+
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < NUM_PARAMS ; i++){
+            for (int j = 0 ; j < width ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        sb.append(NEW_LINE);
+        
 		String city = data.getDestinationCity();
 		String hotel = data.getDestinationHotel();
 		String departureDate = dateFormat.format(data.getStartDate());
 		String returnDate = dateFormat.format(data.getEndDate());
-						
-    	sb.append(String.format("%s", "\n+-----+----------------+------+-----+\n"));
-    	sb.append(String.format("| %s | %s | %s | %s |\n", "City", "Hotel Name" , "DepartureDate", "ReturnDate"));
-    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
-	    sb.append(String.format("| %s | %s | %s | %s | %s |\n", city, hotel , departureDate, returnDate));
-    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
+		
+        sb.append(TABLE_V_SPLIT_SYMBOL + city);
+        for (int i = city.length() ; i < width ; i++)
+        sb.append(TABLE_H_SPACE_SYMBOL);
+        
+        sb.append(TABLE_V_SPLIT_SYMBOL + hotel);
+        for (int i = hotel.length() ; i < width ; i++)
+        sb.append(TABLE_H_SPACE_SYMBOL);
+        
+        sb.append(TABLE_V_SPLIT_SYMBOL + departureDate);
+        for (int i = departureDate.length() ; i < width ; i++)
+                sb.append(TABLE_H_SPACE_SYMBOL);
+        sb.append(TABLE_V_SPLIT_SYMBOL);
+        
+        sb.append(TABLE_V_SPLIT_SYMBOL + returnDate);
+        for (int i = returnDate.length() ; i < width ; i++)
+                sb.append(TABLE_H_SPACE_SYMBOL);
+        sb.append(TABLE_V_SPLIT_SYMBOL);
+    	
+        
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < NUM_PARAMS ; i++){
+            for (int j = 0 ; j < width ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        sb.append(NEW_LINE);
+            
+        System.out.printf(sb.toString());
 		
 	}
 	
@@ -573,19 +642,75 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		// TODO Auto-generated method stub
 		
 		// Basically, print data
-		StringBuilder sb = new StringBuilder();
-			
-    	sb.append(String.format("%s", "\n+-----+----------------+------+-----+\n"));
-    	sb.append(String.format("| %s | %s | %s | %s |\n", "Activity" , "Start of Activity", "End of Activity"));
-    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
-    	
+    	final String NEW_LINE = "\n";
+        final String TABLE_JOINT_SYMBOL = "+";
+        final String TABLE_V_SPLIT_SYMBOL = "|";
+        final String TABLE_H_SPLIT_SYMBOL = "-";
+        final String TABLE_H_SPACE_SYMBOL = " ";
+        StringBuilder sb = new StringBuilder();
+        int width = 20;
+        String title1 = "ACTIVITY";
+        String title2 = "START DATE";
+        String title3 = "END DATE";
+        int NUM_PARAMS = 3;
+        
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < NUM_PARAMS ; i++){
+            for (int j = 0 ; j < width ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        sb.append(NEW_LINE);
+        
+
+        sb.append(TABLE_V_SPLIT_SYMBOL + title1);
+        for (int i = title1.length() ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+        
+        sb.append(TABLE_V_SPLIT_SYMBOL + title2);
+        for (int i = title2.length() ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+        
+        sb.append(TABLE_V_SPLIT_SYMBOL + title3);
+        for (int i = title3.length() ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+        sb.append(TABLE_V_SPLIT_SYMBOL);
+
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < NUM_PARAMS ; i++){
+            for (int j = 0 ; j < width ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        sb.append(NEW_LINE);
+        
     	for (Activity a : data.getArrayOfActivities()) {
     		String activity = a.getName();
     		int []scheduleDescription = a.getScheduleDescription();
     		
-    	    sb.append(String.format("| %s | %s | %s |\n", activity , scheduleDescription[PlatformUtils.SENDER_START_OF_ACTIVITY_INDEX],  scheduleDescription[PlatformUtils.SENDER_END_OF_ACTIVITY_INDEX]));
-        	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
+            sb.append(TABLE_V_SPLIT_SYMBOL + activity);
+            for (int i = activity.length() ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+            
+            sb.append(TABLE_V_SPLIT_SYMBOL + scheduleDescription[PlatformUtils.SENDER_START_OF_ACTIVITY_INDEX]);
+            for (int i = 2 ; i < width ; i++)
+            sb.append(TABLE_H_SPACE_SYMBOL);
+            
+            sb.append(TABLE_V_SPLIT_SYMBOL + scheduleDescription[PlatformUtils.SENDER_START_OF_ACTIVITY_INDEX]);
+            for (int i = 2 ; i < width ; i++)
+                    sb.append(TABLE_H_SPACE_SYMBOL);
+            sb.append(TABLE_V_SPLIT_SYMBOL);
     	}
+        
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < NUM_PARAMS ; i++){
+            for (int j = 0 ; j < width ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        sb.append(NEW_LINE);
+            
+        System.out.printf(sb.toString());
 
 	}
 	 
