@@ -49,8 +49,8 @@ public class PlatformUtils {
 	
 	// Indexes from activity message object
 	//public static final int SENDER_CITY_INDEX = 0;
-	public static final int SENDER_START_OF_ACTIVITY_INDEX = 1;
-	public static final int SENDER_END_OF_ACTIVITY_INDEX = 2;
+	public static final int SENDER_START_OF_ACTIVITY_INDEX = 0;
+	public static final int SENDER_END_OF_ACTIVITY_INDEX = 1;
 	
 	// Indexes from receiving message the userAgent has to show the real user (RESERVATION)
 	public static final int RECEIVER_TYPE_INDEX = 0;

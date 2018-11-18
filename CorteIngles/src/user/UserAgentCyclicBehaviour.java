@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 //import java.util.regex.Pattern;
 
+import data.Activity;
 //import data.Activity;
 import data.ActivityInformData;
 import data.ActivityRequestData;
@@ -545,18 +546,47 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         return true; // <-------------------------------------------------------------------------------------------------------------------------- Just to calm down the compiler
 	}
 
+	// This could be in JadeUtils
 	private void processReservationData(ReservationInformData data) {
 		// TODO Auto-generated method stub
 		
 		// Basically, print data
+		StringBuilder sb = new StringBuilder();
+		final String dateFormatString = "dd/MM/yyyy";
+		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+
+		String city = data.getDestinationCity();
+		String hotel = data.getDestinationHotel();
+		String departureDate = dateFormat.format(data.getStartDate());
+		String returnDate = dateFormat.format(data.getEndDate());
+						
+    	sb.append(String.format("%s", "\n+-----+----------------+------+-----+\n"));
+    	sb.append(String.format("| %s | %s | %s | %s |\n", "City", "Hotel Name" , "DepartureDate", "ReturnDate"));
+    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
+	    sb.append(String.format("| %s | %s | %s | %s | %s |\n", city, hotel , departureDate, returnDate));
+    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
 		
 	}
 	
+	// This could be in JadeUtils
 	private void processActivityData(ActivityInformData data) {
 		// TODO Auto-generated method stub
 		
 		// Basically, print data
-		
+		StringBuilder sb = new StringBuilder();
+			
+    	sb.append(String.format("%s", "\n+-----+----------------+------+-----+\n"));
+    	sb.append(String.format("| %s | %s | %s | %s |\n", "Activity" , "Start of Activity", "End of Activity"));
+    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
+    	
+    	for (Activity a : data.getArrayOfActivities()) {
+    		String activity = a.getName();
+    		int []scheduleDescription = a.getScheduleDescription();
+    		
+    	    sb.append(String.format("| %s | %s | %s |\n", activity , scheduleDescription[PlatformUtils.SENDER_START_OF_ACTIVITY_INDEX],  scheduleDescription[PlatformUtils.SENDER_END_OF_ACTIVITY_INDEX]));
+        	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
+    	}
+
 	}
 	 
 	/*
