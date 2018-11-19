@@ -7,11 +7,13 @@
 
 package data;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import utilities.Debug;
-import utilities.PlatformUtils;
 
 /**
  * @author mrhyd
@@ -35,7 +37,23 @@ public class Data {
 	 * @param day Day in which we want to carry out the activity
 	 * @return List of activities which comply with the requirements (city and dates)
 	 */
-	public static List<Activity> getActivities(String cityName, int day) {
+	public static List<Activity> getActivities(String cityName, Date day) {
+		
+		if (cityName == null){
+			System.err.println("Data: invalid cityName");
+			return null;
+		}
+		
+		if (day == null){
+			System.err.println("Data: invalid day");
+			return null;
+		}
+		
+		final String dateFormatString = "dd/MM/yyyy";
+		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+		String activityDate = dateFormat.format(day);
+		String[] partsOfDate = activityDate.split("/");
+		int departureDay = Integer.parseInt(partsOfDate[0]); // Gets only the day dd from dd/MM/yyyy
 		
 		List<Activity> list = new ArrayList<>();
 		
@@ -50,7 +68,7 @@ public class Data {
 		} else {
 			
 			for (Activity a : city.getListOfActivities()) {
-				if (a.getScheduleDescription()[0] <= day && a.getScheduleDescription()[1] >= day) {
+				if (a.getScheduleDescription()[0] <= departureDay && a.getScheduleDescription()[1] >= departureDay) {
 					list.add(a);
 				}
 			}
@@ -64,16 +82,29 @@ public class Data {
 	 * @param reservationData
 	 * @return
 	 */
-	public static boolean reservationRequestIsAvailable(String[] reservationData){
+	public static boolean reservationRequestIsAvailable(ReservationRequestData reservationData){
 		
-		String cityName = reservationData[PlatformUtils.SENDER_CITY_INDEX];
-		String hotelName = reservationData[PlatformUtils.SENDER_HOTEL_INDEX];
+		//String cityName = reservationData[PlatformUtils.SENDER_CITY_INDEX];
+		//String hotelName = reservationData[PlatformUtils.SENDER_HOTEL_INDEX];
+		//String departureDate = reservationData[PlatformUtils.SENDER_DEPARTURE_INDEX];
+		//String returnDate = reservationData[PlatformUtils.SENDER_RETURN_INDEX];
 		
-		String departureDate = reservationData[PlatformUtils.SENDER_DEPARTURE_INDEX];
+		final String dateFormatString = "dd/MM/yyyy";
+		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+		
+		if (reservationData == null){
+			System.err.println("Data: invalid reservationData");
+			return false;
+		}
+		
+		String cityName = reservationData.getDestinationCity();
+		String hotelName = reservationData.getDestinationHotel();
+		String departureDate = dateFormat.format(reservationData.getStartDate());
+		String returnDate = dateFormat.format(reservationData.getEndDate());
+		
 		String[] partsOfDate = departureDate.split("/");
 		int departureDay = Integer.parseInt(partsOfDate[0]); // Gets only the day dd from dd/MM/yyyy
-		
-		String returnDate = reservationData[PlatformUtils.SENDER_RETURN_INDEX];
+
 		partsOfDate = returnDate.split("/");
 		int returnDay = Integer.parseInt(partsOfDate[0]);
 			

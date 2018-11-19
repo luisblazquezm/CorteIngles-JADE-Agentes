@@ -35,13 +35,11 @@ public class CorteInglesAgent extends Agent {
 				{PlatformUtils.HANDLE_ACTIVITY_SER, getLocalName()}
 		};
 		
-		if (Debug.IS_ON)
-			System.out.println("CorteInglesAgent going to register\n");
+		Debug.message("CorteInglesAgent going to register\n");
 		
 		JadeUtils.registerServices(this, services);
 		
-		if (Debug.IS_ON)
-			System.out.println("CorteInglesAgent services registered");
+		Debug.message("CorteInglesAgent services registered");
 		
 		ParallelBehaviour corteInglesBehaviour = 
 				new ParallelBehaviour(this, ParallelBehaviour.WHEN_ANY);

@@ -17,8 +17,7 @@ public class ReservationAgent extends Agent
 	{
 		String[][] services = {{PlatformUtils.MAKE_RESERVATION_SER,
             					getLocalName()}};
-		if (Debug.IS_ON)
-			System.out.println("Reservation going to register\n");
+		Debug.message("Reservation going to register\n");
 		JadeUtils.registerServices(this, services);
 		
 		

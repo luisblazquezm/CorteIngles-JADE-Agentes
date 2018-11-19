@@ -74,4 +74,32 @@ public class Messages {
 				requestMessageContent.getRequester(),
 				aid);
 	}
+	
+	/**
+	 * @param data
+	 * @return
+	 */
+	public static MessageContent createCorteInglesToReservationMessageContent(ReservationRequestData data) {
+		
+		AID aid = null;
+		
+		return new MessageContent(
+				PlatformUtils.MAKE_RESERVATION_SER,
+				data,
+				aid);
+	}
+	
+	/**
+	 * @param data
+	 * @return
+	 */
+	public static MessageContent createCorteInglesToActivityMessageContent(ActivityRequestData data) {
+		
+		AID aid = null;
+		
+		return new MessageContent(
+				PlatformUtils.RETRIEVE_ACTIVITY_SER,
+				data,
+				aid);
+	}
 }

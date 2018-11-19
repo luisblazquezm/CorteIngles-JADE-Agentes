@@ -29,8 +29,7 @@ public class ActivityAgent extends Agent {
 		 *  At least initially, this is not needed, but I just wrote it \_('-')_/
 		 */
 //		JadeUtils.registerService(this, "activity-service", "add-activity");
-		if (Debug.IS_ON)
-			System.out.println("Activity going to register\n");
+		Debug.message("Activity going to register\n");
 		
 		String[][] services = {{PlatformUtils.RETRIEVE_ACTIVITY_SER,
 				  			   getLocalName()}};

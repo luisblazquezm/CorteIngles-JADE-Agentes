@@ -11,13 +11,14 @@
 
 package corteIngles;
 
-import jade.core.AID;
+import data.ActivityRequestData;
+import data.ReservationRequestData;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-//import messages.IdentifiedMessageContent;
 import messages.MessageContent;
+import messages.Messages;
 import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
@@ -36,102 +37,54 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
-	//@SuppressWarnings("unchecked")<----------------------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public void action() {
 		
 		// Get REQUEST message from UserAgent
-		System.out.printf("CorteInglesAgent waiting for REQUEST message from UserAgent\n");
+		Debug.message("CorteInglesAgent waiting for REQUEST message from UserAgent\n");
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
-		System.out.printf("Message REQUEST received in CorteInglesAgent\n");
+		Debug.message("Message REQUEST received in CorteInglesAgent\n");
 
 		if (message == null) {
-			if (Debug.IS_ON)
-				System.out.println("CorteInglesAgent blocked in ServeUserBehaviour");
+			Debug.message("CorteInglesAgent blocked in ServeUserBehaviour");
 			block();
 		} else {
 
 			try {
 				
-				if (Debug.IS_ON) {
-					System.out.println(
-						"ServeUserBehaviour: Message from "
-						+ PlatformUtils.USER_ALIAS
-						+ " was received at "
-						+ PlatformUtils.CORTE_INGLES_ALIAS
-					);
-					
-					System.out.print("ServeUserBehaviour: Request will be forwarded to ");
-				}
-
-				// Unwrap message content
-				MessageContent messageContent;
-				//MessageContent<String> messageContent;<-------------------------------------------------------------------------------------------------------------------------
-				AID userAid = message.getSender();
+				Debug.message(
+					"ServeUserBehaviour: Message from "
+					+ PlatformUtils.USER_ALIAS
+					+ " was received at "
+					+ PlatformUtils.CORTE_INGLES_ALIAS
+				);
 				
-				messageContent = (MessageContent) message.getContentObject();
-				//messageContent = (MessageContent<String>) message.getContentObject();<-------------------------------------------------------------------------------------------------------------------------
+				Debug.message("ServeUserBehaviour: Request will be forwarded to ");
+				
+				// Unwrap message content
+				MessageContent messageContent = (MessageContent) message.getContentObject();
+				
+				// Identify the receiver of this message (Reservation or Activity)
+				messageContent.identify(message.getSender());
 				
 				// Differentiate between reservation requests and activities requests
 				if (messageContent.getService().equals(PlatformUtils.HANDLE_RESERVATION_SER)) {
-				//if (messageContent.getRequestedService().equals(PlatformUtils.HANDLE_RESERVATION_SER)) {<--------------------------------------------------------------------------
-					
-					if(Debug.IS_ON) {
-						System.out.println(PlatformUtils.RESERVATION_ALIAS);
-					}
 					
 					// If reservation request, send REQUEST to ReservationAgent
-					// int numberOfRecipients = JadeUtils.sendMessage( <-------------------------------------------------------------------------------------------------------
-					JadeUtils.sendMessage(
-							this.myAgent,
-							PlatformUtils.MAKE_RESERVATION_SER,
-							ACLMessage.REQUEST,
-							new MessageContent(
-									PlatformUtils.MAKE_RESERVATION_SER,
-									messageContent.getData(),
-									userAid
-								)
-							/*<-------------------------------------------------------------------------------------------------------------------------------------------------
-							new IdentifiedMessageContent<String>(
-								PlatformUtils.MAKE_RESERVATION_SER,
-								messageContent.getData(),
-								userAid
-							)
-							*/
-					);
-					
+					Debug.message(PlatformUtils.RESERVATION_ALIAS);
+					sendReservationDataMessage((ReservationRequestData) messageContent.getData());
+
 				} else if (messageContent.getService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {
-			   // else if (messageContent.getRequestedService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {<--------------------------------------------------------------------------
-					if(Debug.IS_ON) {
-						System.out.println(PlatformUtils.ACTIVITY_ALIAS);
-					}
 					
 					// If activity request, send REQUEST to ActivityAgent
-					int numberOfRecipients = JadeUtils.sendMessage(
-						this.myAgent,
-						PlatformUtils.RETRIEVE_ACTIVITY_SER, 
-						ACLMessage.REQUEST,
-						new MessageContent(
-								PlatformUtils.RETRIEVE_ACTIVITY_SER,
-								messageContent.getData(),
-								userAid
-							)
-						/*<------------------------------------------------------------------------------------------------------------------------------------------------------------
-						new IdentifiedMessageContent<String>(
-							PlatformUtils.RETRIEVE_ACTIVITY_SER,
-							messageContent.getData(),
-							userAid
-						)
-						*/
+					Debug.message(PlatformUtils.ACTIVITY_ALIAS);
+					int numberOfRecipients = sendActivityReservationDataMessage((ActivityRequestData) messageContent.getData());
+
+					Debug.message(String.format(
+							"ServeUserBehaviour: message was forwarded to %d agents",
+							numberOfRecipients)
 					);
-					
-					if (Debug.IS_ON) {
-						System.out.printf(
-								"ServeUserBehaviour: message was forwarded to %d agents",
-								numberOfRecipients
-						);
-					}
 					
 				} else {
 					// Should not happen but hey, just in case
@@ -144,5 +97,27 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 			}
 		}
 	}
+
+	private void sendReservationDataMessage(ReservationRequestData data) {
+		JadeUtils.sendMessage(
+				this.myAgent,
+				PlatformUtils.MAKE_RESERVATION_SER,
+				ACLMessage.REQUEST,
+				Messages.createCorteInglesToReservationMessageContent(data)
+		);
+		
+	}
+	
+	private int sendActivityReservationDataMessage(ActivityRequestData data) {
+		return JadeUtils.sendMessage(
+						this.myAgent,
+						PlatformUtils.RETRIEVE_ACTIVITY_SER, 
+						ACLMessage.REQUEST,
+						Messages.createCorteInglesToActivityMessageContent(data)
+		);
+		
+	}
+	
+	
 
 }

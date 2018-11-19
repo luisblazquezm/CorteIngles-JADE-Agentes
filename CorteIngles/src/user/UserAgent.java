@@ -19,13 +19,11 @@ public class UserAgent extends Agent
 				{PlatformUtils.HANDLE_USER_REQUEST_SER, getLocalName()}
 		};
 		
-		if (Debug.IS_ON)
-			System.out.println("Reservation going to register\n");
+		Debug.message("Reservation going to register\n");
 		
 		JadeUtils.registerServices(this, services);
 		
-		if (Debug.IS_ON)
-			System.out.println("Reservation going to register\n");
+		Debug.message("Reservation going to register\n");
 		
 		UserAgentCyclicBehaviour userBehaviour = new UserAgentCyclicBehaviour(this);
 		this.addBehaviour(userBehaviour);

@@ -13,17 +13,18 @@
 package activity;
 
 import java.util.List;
-import java.util.regex.Pattern;
-
 import data.Activity;
+import data.ActivityInformData;
+import data.ActivityRequestData;
 import data.Data;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-//import messages.IdentifiedMessageContent;
 import messages.MessageContent;
+import messages.Messages;
+import messages.ResponseMessageContent;
 import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
@@ -54,8 +55,6 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	public void action() 
 	{
 		
-		String answerMessageContentData;
-
 		// Waiting for a REQUEST message from AgentCorteIngles to do an activity
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage msg = this.myAgent.receive(template);
@@ -65,28 +64,27 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		} else {
 			try
 			{
-				@SuppressWarnings("unchecked")
+				
 				MessageContent content = (MessageContent) msg.getContentObject();
-				//MessageContent<String> content = (MessageContent<String>) msg.getContentObject();
-				String data = content.getData();
-				answerMessageContentData = this.getActivitiesString(data);
-				IdentifiedMessageContent<String> answerMessageContent =
-						new IdentifiedMessageContent<>(PlatformUtils.HANDLE_ACTIVITY_SER,
-						answerMessageContentData,
-						this.myAgent);
+				ActivityRequestData data = (ActivityRequestData)content.getData();
+				List<Activity> activities = Data.getActivities(data.getCity(), data.getStartDate());
 				
-		    	//INFORM MESSAGE ELABORATION
-				if (Debug.IS_ON) {
-					System.out.println("ActivityAgent: REQUEST received from AgentCorteIngles\n");
-				}
-				
-		    	//INFORM MESSAGE SENDING 
-				JadeUtils.sendMessage(this.myAgent,
-									  PlatformUtils.HANDLE_ACTIVITY_SER,
-									  ACLMessage.INFORM,
-									  answerMessageContent);
-				if (Debug.IS_ON) {
-					System.out.println("ActivityAgent: INFORM message sent");
+				if (activities == null) {
+					System.err.println("ActivityAgentCyclicBehaviour: listOfActivies is null");
+				} else {
+					ActivityInformData informData = new ActivityInformData(activities);
+					ResponseMessageContent answerMessageContent = Messages.createActivityInformMessageContent(content, informData);
+					
+			    	//INFORM MESSAGE ELABORATION
+					Debug.message("ActivityAgent: REQUEST received from AgentCorteIngles\n");
+					
+			    	//INFORM MESSAGE SENDING 
+					JadeUtils.sendMessage(this.myAgent,
+										  PlatformUtils.HANDLE_ACTIVITY_SER,
+										  ACLMessage.INFORM,
+										  answerMessageContent);
+					
+					Debug.message("ActivityAgent: INFORM message sent");
 				}
 			}
 			catch (UnreadableException e)
@@ -98,6 +96,9 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		}
 	}
 
+	// I think they´re useless
+	
+	/*
 	private String getActivitiesString(String dataString) {
 		
 		// 'dataString' should be "City#Date"
@@ -133,5 +134,5 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		
 		return new String(string);
 	}
-
+	 */
 }

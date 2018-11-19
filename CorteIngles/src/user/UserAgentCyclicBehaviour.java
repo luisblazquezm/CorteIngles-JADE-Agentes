@@ -5,16 +5,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-//import java.util.regex.Pattern;
 
 import data.Activity;
-//import data.Activity;
 import data.ActivityInformData;
 import data.ActivityRequestData;
 import data.Cities;
-//import data.City;
 import data.Data;
-//import data.Hotel;
 import data.Hotels;
 import data.ReservationInformData;
 import data.ReservationRequestData;
@@ -385,16 +381,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			messageContent = Messages.createReservationRequestMessageContent(reservationData);
 			Debug.message("UserAgentCyclicBehaviour: going to send reservation REQUEST");
-			
-			// I don´t know if you didn´t add this variable for any reason but, anyway, I will comment it XD. <-------------------------------------------------------------------
-			/* numberOfServers = JadeUtils.sendMessage(
-					this.myAgent,
-					PlatformUtils.HANDLE_RESERVATION_SER,
-					ACLMessage.REQUEST,
-					messageContent
-			);
-			*/
-			
+
 			numberOfServers = JadeUtils.sendMessage(
 					this.myAgent,
 					PlatformUtils.HANDLE_RESERVATION_SER,
@@ -408,9 +395,11 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			} else {
         		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
 			}
-		}// End of process reservation request
+		} else if ("nN".contains(userWantsToTravel)) {
+			return true;
+		}
 		
-		return true; // <-------------------------------------------------------------------------------------------------------------------------- Just to calm down the compiler
+		return true;
 	}
 
 	private boolean processActivityRequest() {
@@ -485,16 +474,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			messageContent = Messages.createActivityRequestMessageContent(activityData);
 			Debug.message("UserAgentCyclicBehaviour: going to send activity REQUEST");
 			
-			// I don´t know if you didn´t add this variable for any reason but, anyway, I will comment it XD. <-------------------------------------------------------------------
-			/* numberOfServers = JadeUtils.sendMessage(
-					this.myAgent,
-					PlatformUtils.HANDLE_ACTIVITY_SER,
-					ACLMessage.REQUEST,
-					messageContent
-			);
-			*/
-			
-			JadeUtils.sendMessage(
+			numberOfServers = JadeUtils.sendMessage(
 					this.myAgent,
 					PlatformUtils.HANDLE_ACTIVITY_SER,
 					ACLMessage.REQUEST,
@@ -507,9 +487,11 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			} else {
         		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
 			}
-		}// End of Process Reservation Request
+		} else if ("nN".contains(userWantsToSeeActivities)) {
+			return true;
+		}
 		
-		return true; // <-------------------------------------------------------------------------------------------------------------------------- Just to calm down the compiler
+		return true; 
 	}
 	
 	private boolean waitAndProcessResponse() {
@@ -543,10 +525,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			}
     	}
         
-        return true; // <-------------------------------------------------------------------------------------------------------------------------- Just to calm down the compiler
+        return true; 
 	}
 
-	// This could be in JadeUtils
 	private void processReservationData(ReservationInformData data) {
 		// TODO Auto-generated method stub
 		
@@ -637,7 +618,6 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		
 	}
 	
-	// This could be in JadeUtils
 	private void processActivityData(ActivityInformData data) {
 		// TODO Auto-generated method stub
 		
@@ -714,154 +694,4 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 
 	}
 	 
-	/*
-	private boolean checkHotel(String city, String hotelDestination) {
-		for (City c : Data.getListOfCities()) {
-			if (c.getName().equals(city)){
-				for(Hotel h : c.getListOfHotels()) {
-					if (h.getName().equals(hotelDestination))
-						return true;
-				}
-			} 
-		}
-		return false;
-	}
-
-	private boolean printInfoAbout(String info, String additionalInfo) {
-		
-		StringBuilder sb = new StringBuilder();
-		boolean cityFound = false;
-		
-		if (Data.getListOfCities() == null)
-			System.out.printf("printInfoAbout: ERROR list of cities is null.");
-		
-		if (info == null)
-			System.out.printf("printInfoAbout: ERROR info passed is null.");
-		
-		// Prints all the cities available in our application
-		if (info.equals("City")) {
-	    	sb.append(String.format("%s", "\n+--------------+\n"));
-	    	sb.append(String.format("| %-12s |\n", "----City----"));
-	    	sb.append(String.format("%s", "+--------------+\n"));
-	    	for (City c : Data.getListOfCities()){
-		    	sb.append(String.format("| %-12s |\n", c.getName()));
-		    	sb.append(String.format("%s", "+--------------+\n"));
-	    	}
-	    	
-		// Prints all the hotels availables in our application related to the city the user chose
-		} else if (info.equals("Hotel")) {
-			if (additionalInfo != null) {
-				for (City c : Data.getListOfCities()) {
-					if (c.getName().equals(additionalInfo)){
-						cityFound = true;
-				    	sb.append(String.format("%s", "\n+---------------------------------------------+\n"));
-				    	sb.append(String.format("| %-12s | %-12s |\n", "----Hotel----", "----Number Max Of Rooms----"));
-				    	sb.append(String.format("%s", "+---------------+-----------------------------+\n"));
-				    	for (Hotel h : c.getListOfHotels()){
-					    	sb.append(String.format("| %-13s | %-26d |\n", h.getName(), PlatformUtils.MAX_ROOMS_IN_HOTEL));
-					    	sb.append(String.format("%s", "+---------------+----------------------------+\n"));
-				    	}
-				    	
-				    	break;
-					} 
-				}
-				
-				if (!cityFound) {
-					System.out.printf("\nprintInfoAbout: Non existant city. Please, try again\n");
-					return false;
-				}
-				
-			} else {
-				System.out.printf("printInfoAbout: No city received for searching hotel");
-				return false;
-			}
-
-		// Prints all the activities availables in our application related to the city the user chose
-		} else if (info.equals("Activity")){
-			if (additionalInfo != null) {
-				for (City c : Data.getListOfCities()) {
-					if (c.getName().equals(additionalInfo)){
-						cityFound = true;
-				    	sb.append(String.format("%s", "\n+-------------+---------------------+\n"));
-				    	sb.append(String.format("| %-12s | %-12s |\n", "----Activity----", "----Calendar of Activity----"));
-				    	sb.append(String.format("%s", "+-------------+---------------------+\n"));
-				    	for (Activity a : c.getListOfActivities()){
-					    	sb.append(String.format("| %-12s | %-12d - %-12d |\n", a.getName(), a.getScheduleDescription()[0], a.getScheduleDescription()[1]));
-					    	sb.append(String.format("%s", "+-------------+---------------------+\n"));
-				    	}
-				    	
-				    	break;
-					} 
-				}
-				
-				if (!cityFound) {
-					System.out.printf("\nprintInfoAbout: Non existant city. Please, try again\n");
-					return false;
-				}
-				
-			} else {
-				System.out.printf("printInfoAbout: No city received for searching hotel");
-				return false;
-			}
-		}
-		
-		System.out.printf("%s\n", sb.toString());
-		
-		return true;
-	}
-
-	// Receives the message and prints it to the user
-	private String printInfoMessage(String contentObject) {
-		StringBuilder sb = new StringBuilder();
-		String[] data = contentObject.split(Pattern.quote(PlatformUtils.DELIMITER));
-		String type = data[PlatformUtils.RECEIVER_TYPE_INDEX];
-
-		// RESERVATIONS
-		if (type.equals(PlatformUtils.RESERVATION_MESSAGE)) {
-			String availability = data[PlatformUtils.RECEIVER_AVAILABILITY_INDEX];
-			String city = data[PlatformUtils.RECEIVER_CITY_INDEX];
-			String hotel = data[PlatformUtils.RECEIVER_HOTEL_INDEX];
-			String departureDate = data[PlatformUtils.RECEIVER_DEPARTURE_INDEX];
-			String returnDate = data[PlatformUtils.RECEIVER_RETURN_INDEX];
-			
-			// RESERVATION AVAILABLE
-			if (availability.equals(PlatformUtils.RESERVATION_AVAILABLE)){				
-		    	sb.append(String.format("%s", "\n+-----+----------------+------+-----+\n"));
-		    	sb.append(String.format("| %s | %s | %s | %s |\n", "City", "Hotel Name" , "DepartureDate", "ReturnDate"));
-		    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
-			    sb.append(String.format("| %s | %s | %s | %s | %s |\n", city, hotel , departureDate, returnDate));
-		    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
-		    	
-			// RESERVATION NOT AVAILABLE
-			} else if (availability.equals(PlatformUtils.RESERVATION_NOT_AVAILABLE)){
-				return String.format("\nReservation not available in City: %s  Hotel: %s from %s  to  %s\n", city, hotel, departureDate, returnDate);
-			}
-			
-		// ACTIVITIES
-    	} else if (type.equals(PlatformUtils.ACTIVITY_MESSAGE)) {
-			// ACTIVITY NOT FOUND
-    		if (data[1].equals("None")) {
-				return String.format("\nActivity not found");
-				
-			// ACTIVITY FOUND
-    		} else {
-    			for (int i = 0 ; i < data.length ; i++) {
-    				String[] act = data[i].split(Pattern.quote(PlatformUtils.ACTIVITIES_DELIMITER));
-    	    		String activity = act[PlatformUtils.RECEIVER_ACTIVITY_INDEX];
-    				String city = act[PlatformUtils.RECEIVER_ACTIVITY_CITY_INDEX];
-    				String startActivityDate = act[PlatformUtils.RECEIVER_START_OF_ACTIVITY_INDEX];
-    				String endActivityDate = act[PlatformUtils.RECEIVER_END_OF_ACTIVITY_INDEX];
-    			
-    		    	sb.append(String.format("%s", "\n+-----+----------------+------+-----+\n"));
-			    	sb.append(String.format("| %s | %s | %s | %s |\n", "City", "Activity" , "Date Start of Activity", "Date End of Activity"));
-			    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
-				    sb.append(String.format("| %s | %s | %s | %s | %s |\n", city, activity , startActivityDate, endActivityDate));
-			    	sb.append(String.format("%s", "+-----+----------------+------+-----+\n"));
-    			}
-    		}
-    	}
-		
-		return sb.toString();
-	}
-	*/
 }

@@ -9,8 +9,6 @@ package utilities;
 
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
-//import jade.core.behaviours.Behaviour;
-//import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -18,33 +16,11 @@ import jade.domain.FIPAAgentManagement.Envelope;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
-//import jade.lang.acl.MessageTemplate;
-//import jade.lang.acl.UnreadableException;
-//import messages.IdentifiedMessageContent;
-//import messages.MessageContent;
-
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-//import java.text.DateFormat;
-//import java.text.ParseException;
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
 import java.util.Iterator;
-//import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import data.ReservationInformData;
-import data.ReservationRequestData;
-
-import messages.MessageContent;
-import messages.ResponseMessageContent;
-
-//import data.City;
-//import data.Data;
-//import data.Hotel;
 
 public class JadeUtils
 {
@@ -329,31 +305,4 @@ public class JadeUtils
 			}
 		}
 	}
-
-	public static ResponseMessageContent createReservationInformMessageContent(
-			String[] reservationData, boolean availability) {
-		
-		ReservationInformData reservationDataObject = new ReservationInformData();
-		final String dateFormatString = "dd/MM/yyyy";
-		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
-		
-		if (dateFormat == null)
-			dateFormat = new SimpleDateFormat(); // Default format
-		
-		Date departureDate = dateFormat.parse(reservationData[PlatformUtils.SENDER_DEPARTURE_INDEX]);
-		Date returnDate = dateFormat.parse(reservationData[PlatformUtils.SENDER_RETURN_INDEX]);
-		
-		// Requester and sender AID missing
-		return new ResponseMessageContent(
-				PlatformUtils.MAKE_RESERVATION_SER,
-				new ReservationInformData(
-						reservationData[PlatformUtils.SENDER_CITY_INDEX], 
-						reservationData[PlatformUtils.SENDER_HOTEL_INDEX],
-						departureDate, 
-						returnDate,
-						availability),
-				userAid
-			);
-	}
-    	
 }

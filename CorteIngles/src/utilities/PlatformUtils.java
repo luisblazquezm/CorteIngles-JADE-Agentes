@@ -53,12 +53,11 @@ public class PlatformUtils {
 	public static final int SENDER_END_OF_ACTIVITY_INDEX = 1;
 	
 	// Indexes from receiving message the userAgent has to show the real user (RESERVATION)
-	public static final int RECEIVER_TYPE_INDEX = 0;
-	public static final int RECEIVER_AVAILABILITY_INDEX = 1;
-	public static final int RECEIVER_CITY_INDEX = 2;
-	public static final int RECEIVER_HOTEL_INDEX = 3;
-	public static final int RECEIVER_DEPARTURE_INDEX = 4;
-	public static final int RECEIVER_RETURN_INDEX = 5;
+	public static final int RECEIVER_CITY_INDEX = 0;
+	public static final int RECEIVER_HOTEL_INDEX = 1;
+	public static final int RECEIVER_DEPARTURE_INDEX = 2;
+	public static final int RECEIVER_RETURN_INDEX = 3;
+	public static final int RECEIVER_AVAILABILITY_INDEX = 4;
 	
 	// Indexes from receiving message the userAgent has to show the real user (ACTIVITY)
 	//public static final int RECEIVER_TYPE_INDEX = 0;

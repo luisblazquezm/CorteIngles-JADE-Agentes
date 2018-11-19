@@ -1,8 +1,8 @@
 package reservation;
 
-//import java.util.regex.Pattern;
-
 import data.Data;
+import data.ReservationInformData;
+import data.ReservationRequestData;
 import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
@@ -11,8 +11,8 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-//import messages.IdentifiedMessageContent;
 import messages.MessageContent;
+import messages.Messages;
 import messages.ResponseMessageContent;
 
 
@@ -46,25 +46,28 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 			
 			try
 			{
-				//@SuppressWarnings("unchecked")<---------------------------------------------------------------------------------------------------------------------------------
-				//MessageContent<String> content = (MessageContent<String>) msg.getContentObject();<------------------------------------------------------------------------------
 				MessageContent content = (MessageContent) msg.getContentObject();
-				//String[] reservationData = JadeUtils.getReservationData(content.getData());<------------------------------------------------------------------------------------
-				String[] reservationData = JadeUtils.getReservationData((String)content.getData());
+				//String[] reservationData = JadeUtils.getReservationData((String)content.getData());
+				//boolean availability = Data.reservationRequestIsAvailable(reservationData);
+				ReservationRequestData reservationData = (ReservationRequestData) content.getData();
 				boolean availability = Data.reservationRequestIsAvailable(reservationData);
-				ResponseMessageContent answerMessageContent =
-						JadeUtils.createReservationInformMessageContent(reservationData, availability); // Requester and sender missing
-				//IdentifiedMessageContent<String> answerMessageContent =
-						//JadeUtils.createReservationInformMessageContent(reservationData, availability); <------------------------------------------------------------------------------
-
+				ReservationInformData informData = new ReservationInformData(						
+						reservationData.getDestinationCity(),
+						reservationData.getDestinationHotel(),
+						reservationData.getStartDate(),
+						reservationData.getEndDate(),
+						availability);
+				//<--------------------------------------------- Identify Sender
+				
+				ResponseMessageContent answerMessageContent = Messages.createReservationInformMessageContent(content, informData);
+				
 				JadeUtils.sendMessage(this.myAgent,
 									  PlatformUtils.HANDLE_RESERVATION_SER,
 									  ACLMessage.INFORM,
 									  answerMessageContent);
 				
-				if (Debug.IS_ON) {
-					System.out.println("ReservationAgent: INFORM message sent");
-				}
+				Debug.message("ReservationAgent: INFORM message sent");
+				
 			}
 			catch (UnreadableException e)
 			{
