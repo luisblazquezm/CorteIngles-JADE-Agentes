@@ -31,6 +31,7 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 		super();
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void action() 
 	{
@@ -47,9 +48,15 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 			try
 			{
 				MessageContent content = (MessageContent) msg.getContentObject();
+				if (content == null)
+					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
+				
 				//String[] reservationData = JadeUtils.getReservationData((String)content.getData());
 				//boolean availability = Data.reservationRequestIsAvailable(reservationData);
 				ReservationRequestData reservationData = (ReservationRequestData) content.getData();
+				if (reservationData == null)
+					System.err.println("ReservationAgent: reservationData is null");
+				
 				boolean availability = Data.reservationRequestIsAvailable(reservationData);
 				ReservationInformData informData = new ReservationInformData(						
 						reservationData.getDestinationCity(),
@@ -57,14 +64,25 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 						reservationData.getStartDate(),
 						reservationData.getEndDate(),
 						availability);
+				
+				if (informData == null)
+					System.err.println("ReservationAgent: informData is null");
+				
 				//<--------------------------------------------- Identify Sender
 				
 				ResponseMessageContent answerMessageContent = Messages.createReservationInformMessageContent(content, informData);
+				if (answerMessageContent == null)
+					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
-				JadeUtils.sendMessage(this.myAgent,
-									  PlatformUtils.HANDLE_RESERVATION_SER,
-									  ACLMessage.INFORM,
-									  answerMessageContent);
+				int numberOfRecipients = JadeUtils.sendMessage(this.myAgent,
+															  PlatformUtils.HANDLE_RESERVATION_SER,
+															  ACLMessage.INFORM,
+															  answerMessageContent);
+				
+				if (numberOfRecipients <= 0) {
+					System.err.println("ServeUserBehaviour: no agents implementing requested service");
+	        		return ;
+				} 
 				
 				Debug.message("ReservationAgent: INFORM message sent");
 				

@@ -380,8 +380,10 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			);
 			
 			messageContent = Messages.createReservationRequestMessageContent(reservationData);
+			if (messageContent == null)
+				System.err.println("UserAgentCyclicBehaviour: messageContent is null");
+			
 			Debug.message("UserAgentCyclicBehaviour: going to send reservation REQUEST");
-
 			numberOfServers = JadeUtils.sendMessage(
 					this.myAgent,
 					PlatformUtils.HANDLE_RESERVATION_SER,
@@ -472,8 +474,10 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			);
 						
 			messageContent = Messages.createActivityRequestMessageContent(activityData);
-			Debug.message("UserAgentCyclicBehaviour: going to send activity REQUEST");
+			if (messageContent == null)
+				System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 			
+			Debug.message("UserAgentCyclicBehaviour: going to send activity REQUEST");
 			numberOfServers = JadeUtils.sendMessage(
 					this.myAgent,
 					PlatformUtils.HANDLE_ACTIVITY_SER,

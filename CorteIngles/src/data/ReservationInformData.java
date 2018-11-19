@@ -1,8 +1,14 @@
 package data;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ReservationInformData {
+public class ReservationInformData implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * City of destination

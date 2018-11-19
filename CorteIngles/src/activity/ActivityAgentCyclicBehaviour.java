@@ -51,6 +51,7 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public void action() 
 	{
@@ -73,16 +74,26 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 					System.err.println("ActivityAgentCyclicBehaviour: listOfActivies is null");
 				} else {
 					ActivityInformData informData = new ActivityInformData(activities);
+					if (informData == null)
+						System.err.println("ActivityAgentCyclicBehaviour: informData is null");
+					
 					ResponseMessageContent answerMessageContent = Messages.createActivityInformMessageContent(content, informData);
+					if (answerMessageContent == null)
+						System.err.println("ActivityAgentCyclicBehaviour: answerMessageContent is null");
 					
 			    	//INFORM MESSAGE ELABORATION
 					Debug.message("ActivityAgent: REQUEST received from AgentCorteIngles\n");
 					
 			    	//INFORM MESSAGE SENDING 
-					JadeUtils.sendMessage(this.myAgent,
-										  PlatformUtils.HANDLE_ACTIVITY_SER,
-										  ACLMessage.INFORM,
-										  answerMessageContent);
+					int numberOfRecipients = JadeUtils.sendMessage(this.myAgent,
+																  PlatformUtils.HANDLE_ACTIVITY_SER,
+																  ACLMessage.INFORM,
+																  answerMessageContent);
+					
+					if (numberOfRecipients <= 0) {
+						System.err.println("ServeUserBehaviour: no agents implementing requested service");
+		        		return ;
+					} 
 					
 					Debug.message("ActivityAgent: INFORM message sent");
 				}

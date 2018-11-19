@@ -41,13 +41,13 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 	public void action() {
 		
 		// Get REQUEST message from UserAgent
-		Debug.message("CorteInglesAgent waiting for REQUEST message from UserAgent\n");
+		Debug.message("ServeUserBehaviour: CorteInglesAgent waiting for REQUEST message from UserAgent\n");
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
-		Debug.message("Message REQUEST received in CorteInglesAgent\n");
+		Debug.message("ServeUserBehaviour: Message REQUEST received in CorteInglesAgent\n");
 
 		if (message == null) {
-			Debug.message("CorteInglesAgent blocked in ServeUserBehaviour");
+			Debug.message("ServeUserBehaviour: CorteInglesAgent blocked in ServeUserBehaviour");
 			block();
 		} else {
 
@@ -64,6 +64,8 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				
 				// Unwrap message content
 				MessageContent messageContent = (MessageContent) message.getContentObject();
+				if (messageContent == null)
+					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
 				// Identify the receiver of this message (Reservation or Activity)
 				messageContent.identify(message.getSender());
@@ -73,13 +75,24 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 					
 					// If reservation request, send REQUEST to ReservationAgent
 					Debug.message(PlatformUtils.RESERVATION_ALIAS);
-					sendReservationDataMessage((ReservationRequestData) messageContent.getData());
-
+					int numberOfRecipients = sendReservationDataMessage((ReservationRequestData) messageContent.getData());
+					
+					if (numberOfRecipients <= 0) {
+						System.err.println("ServeUserBehaviour: no agents implementing requested service");
+		        		return ;
+					} 
+					
 				} else if (messageContent.getService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {
 					
 					// If activity request, send REQUEST to ActivityAgent
 					Debug.message(PlatformUtils.ACTIVITY_ALIAS);
+					
 					int numberOfRecipients = sendActivityReservationDataMessage((ActivityRequestData) messageContent.getData());
+					
+					if (numberOfRecipients <= 0) {
+						System.err.println("ServeUserBehaviour: no agents implementing requested service");
+		        		return ;
+					} 
 
 					Debug.message(String.format(
 							"ServeUserBehaviour: message was forwarded to %d agents",
@@ -98,12 +111,12 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 		}
 	}
 
-	private void sendReservationDataMessage(ReservationRequestData data) {
-		JadeUtils.sendMessage(
-				this.myAgent,
-				PlatformUtils.MAKE_RESERVATION_SER,
-				ACLMessage.REQUEST,
-				Messages.createCorteInglesToReservationMessageContent(data)
+	private int sendReservationDataMessage(ReservationRequestData data) {
+		return JadeUtils.sendMessage(
+					this.myAgent,
+					PlatformUtils.MAKE_RESERVATION_SER,
+					ACLMessage.REQUEST,
+					Messages.createCorteInglesToReservationMessageContent(data)
 		);
 		
 	}

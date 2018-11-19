@@ -40,55 +40,65 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 	public void action() {
 
 		// Receive INFORM message from ActivityAgent or ReservationAgent
+		Debug.message("GetInformResponseBehaviour: CorteInglesAgent waiting for INFORM message from Reservation/Activity\n");
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
+		Debug.message("GetInformResponseBehaviour: Message INFORM received in CorteInglesAgent\n");
 		
 		if (message == null) {
-			if (Debug.IS_ON)
-				System.out.println("CorteInglesAgent blocked in ServeUserBehaviour");
+			Debug.message("GetInformResponseBehaviour: CorteInglesAgent blocked in ServeUserBehaviour");
 			block();
 		} else {
 			
 			try {
 				
-				if (Debug.IS_ON) {
-					if (message.getSender().equals(new AID(PlatformUtils.ACTIVITY_ALIAS, AID.ISLOCALNAME))) {
-						System.out.println(
+				if (message.getSender().equals(new AID(PlatformUtils.ACTIVITY_ALIAS, AID.ISLOCALNAME))) {
+					Debug.message(
+						"GetInformResponseBehaviour: "
+						+ PlatformUtils.CORTE_INGLES_ALIAS
+						+ " received INFORM type message from "
+						+ PlatformUtils.ACTIVITY_ALIAS
+					);
+				} else {
+					Debug.message(
 							"GetInformResponseBehaviour: "
 							+ PlatformUtils.CORTE_INGLES_ALIAS
 							+ " received INFORM type message from "
-							+ PlatformUtils.ACTIVITY_ALIAS
+							+ PlatformUtils.RESERVATION_ALIAS
 						);
-					} else {
-						System.out.println(
-								"GetInformResponseBehaviour: "
-								+ PlatformUtils.CORTE_INGLES_ALIAS
-								+ " received INFORM type message from "
-								+ PlatformUtils.RESERVATION_ALIAS
-							);
-					}
-					
-					System.out.println(
-						"GetInformResponseBehaviour: Message will be forwarded to "
-						+ PlatformUtils.USER_ALIAS
-					);
 				}
+				
+				Debug.message(String.format(
+					"GetInformResponseBehaviour: Message will be forwarded to "
+					+ PlatformUtils.USER_ALIAS
+					)
+				);
+				
 				
 				// Forward message to UserAgent
 				MessageContent messageContent = (MessageContent) message.getContentObject();
-				//IdentifiedMessageContent<String> messageContent = (IdentifiedMessageContent<String>) message.getContentObject();<------------------------------------------------------
+				if (messageContent == null)
+					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
+				
+				//<------------------------------------------------------------------------- Identify the receiver of this message (UserAgent)
+				//messageContent.identify(message.getSender());
+				
 				int numberOfRecipients = JadeUtils.sendMessage(
 						this.myAgent,
 		                PlatformUtils.HANDLE_USER_REQUEST_SER,
 		                ACLMessage.INFORM,
 		                messageContent);
 				
-				if (Debug.IS_ON) {
-					System.out.printf(
+				if (numberOfRecipients <= 0) {
+					System.err.println("GetInformResponseBehaviour: no agents implementing requested service");
+	        		return ;
+				} 
+				
+				Debug.message(String.format(
 							"GetInformResponseBehaviour: Message was forwarded to %d agents%n",
 							numberOfRecipients
-					);
-				}
+							)
+				);
 				
 			} catch (UnreadableException e) {
 				System.err.println("GetInformResponseBehaviour: getContentObject failed");

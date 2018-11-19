@@ -17,8 +17,7 @@ import jade.core.Agent;
  * @author mrhyd
  *
  */
-public class MessageContent
-	implements Serializable {
+public class MessageContent implements Serializable {
 	
 	/**
 	 * 
