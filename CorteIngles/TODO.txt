@@ -43,4 +43,6 @@ TODO:
 	messages.IdentifiedMessageContent)
 	- Implementado método createReservationInformMessageContent en JadeUtils (es un método que se llama desde ReservationAgentCB)
 	- En éste método falta pasarle el AID del requester y el sender para crear el ReservationInformData
+	
+	- IMPORTANTE<-------------------------------------- TRATAMIENTO DE ERRORES FALTAN POR COMPROBAR PARAMETROS QUE SE PASAN A METODOS Y VARIABLES DE RETORNO !!!!!!!!
 	  
