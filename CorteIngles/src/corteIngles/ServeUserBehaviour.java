@@ -65,21 +65,24 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				// Unwrap message content
 				MessageContent messageContent = (MessageContent) message.getContentObject();
 				if (messageContent == null)
-					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
+					System.err.println("ServeUserBehaviour: messageContent is null");
 				
-				// Identify the receiver of this message (Reservation or Activity)
+				// Identify the requester of this service (some UserAgent)
 				messageContent.identify(message.getSender());
 				
 				// Differentiate between reservation requests and activities requests
 				if (messageContent.getService().equals(PlatformUtils.HANDLE_RESERVATION_SER)) {
 					
 					// If reservation request, send REQUEST to ReservationAgent
-					Debug.message(PlatformUtils.RESERVATION_ALIAS);
-					int numberOfRecipients = sendReservationDataMessage((ReservationRequestData) messageContent.getData());
+					int numberOfRecipients = JadeUtils.sendMessage(
+							this.myAgent,
+							PlatformUtils.MAKE_RESERVATION_SER,
+							ACLMessage.REQUEST,
+							messageContent
+					);
 					
 					if (numberOfRecipients <= 0) {
 						System.err.println("ServeUserBehaviour: no agents implementing requested service");
-		        		return ;
 					} 
 					
 				} else if (messageContent.getService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {
@@ -87,11 +90,15 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 					// If activity request, send REQUEST to ActivityAgent
 					Debug.message(PlatformUtils.ACTIVITY_ALIAS);
 					
-					int numberOfRecipients = sendActivityReservationDataMessage((ActivityRequestData) messageContent.getData());
+					int numberOfRecipients = JadeUtils.sendMessage(
+							this.myAgent,
+							PlatformUtils.RETRIEVE_ACTIVITY_SER, 
+							ACLMessage.REQUEST,
+							messageContent
+					);
 					
 					if (numberOfRecipients <= 0) {
 						System.err.println("ServeUserBehaviour: no agents implementing requested service");
-		        		return ;
 					} 
 
 					Debug.message(String.format(
@@ -110,27 +117,4 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 			}
 		}
 	}
-
-	private int sendReservationDataMessage(ReservationRequestData data) {
-		return JadeUtils.sendMessage(
-					this.myAgent,
-					PlatformUtils.MAKE_RESERVATION_SER,
-					ACLMessage.REQUEST,
-					Messages.createCorteInglesToReservationMessageContent(data)
-		);
-		
-	}
-	
-	private int sendActivityReservationDataMessage(ActivityRequestData data) {
-		return JadeUtils.sendMessage(
-						this.myAgent,
-						PlatformUtils.RETRIEVE_ACTIVITY_SER, 
-						ACLMessage.REQUEST,
-						Messages.createCorteInglesToActivityMessageContent(data)
-		);
-		
-	}
-	
-	
-
 }

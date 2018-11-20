@@ -11,6 +11,7 @@
 package corteIngles;
 
 import messages.MessageContent;
+import messages.ResponseMessageContent;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -76,14 +77,14 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 				
 				
 				// Forward message to UserAgent
-				MessageContent messageContent = (MessageContent) message.getContentObject();
+				ResponseMessageContent messageContent = (ResponseMessageContent) message.getContentObject();
 				if (messageContent == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
 				//<------------------------------------------------------------------------- Identify the receiver of this message (UserAgent)
-				//messageContent.identify(message.getSender());
+				messageContent.identify(message.getSender());
 				
-				int numberOfRecipients = JadeUtils.sendMessage(
+				int numberOfRecipients = JadeUtils.sendMessage( // <--------------------- I think this won't work with more than one UserAgent
 						this.myAgent,
 		                PlatformUtils.HANDLE_USER_REQUEST_SER,
 		                ACLMessage.INFORM,

@@ -75,10 +75,7 @@ public class Messages {
 				aid);
 	}
 	
-	/**
-	 * @param data
-	 * @return
-	 */
+	/*
 	public static MessageContent createCorteInglesToReservationMessageContent(ReservationRequestData data) {
 		
 		AID aid = null;
@@ -89,10 +86,6 @@ public class Messages {
 				aid);
 	}
 	
-	/**
-	 * @param data
-	 * @return
-	 */
 	public static MessageContent createCorteInglesToActivityMessageContent(ActivityRequestData data) {
 		
 		AID aid = null;
@@ -102,4 +95,5 @@ public class Messages {
 				data,
 				aid);
 	}
+	*/
 }

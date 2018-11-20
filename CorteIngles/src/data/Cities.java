@@ -10,8 +10,7 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import utilities.JadeUtils;
+import utilities.Utils;
 
 public class Cities 
 {
@@ -67,7 +66,7 @@ public class Cities
     	String title = "CITY";
     	int width = 20;
 
-    	JadeUtils.printStringTable(title, cityNames, width);
+    	Utils.printStringTable(title, cityNames, width);
     }
     
     /**

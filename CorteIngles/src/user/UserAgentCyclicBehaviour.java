@@ -393,14 +393,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			if (numberOfServers <= 0) {
         		Debug.message("UserAgentCyclicBehaviour: no agents implementing requested service");
-        		return false;
 			} else {
         		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
 			}
-		} else if ("nN".contains(userWantsToTravel)) {
-			return true;
 		}
 		
+		// If "nN".contains(userWantsToTravel) return true
 		return true;
 	}
 
@@ -501,8 +499,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	private boolean waitAndProcessResponse() {
 		
 		// TODO Parse data and return true or false depending on conditions
+		// Should return false if reservation is not available
 		
-		Debug.formattedMessage("UserAgentCyclicBehaviour: waiting for INFORM message from %s%n", PlatformUtils.CORTE_INGLES_ALIAS);
+		Debug.message("UserAgentCyclicBehaviour: waiting for INFORM message%n");
 		
         MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
