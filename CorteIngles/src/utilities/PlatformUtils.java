@@ -16,6 +16,11 @@ import jade.core.AID;
  */
 public class PlatformUtils {
 
+	// Options in switch-case from UserAgentCB action
+	public static final int RESERVATION_OPTION = 0;
+	public static final int ACTIVITY_OPTION = 1;
+	public static final int WAIT_AND_PROCESS_RESPONSE_OPTION = 2;
+	
 	// Agents' alias
 	public static final String USER_ALIAS = "user-agent";
 	public static final String RESERVATION_ALIAS = "reservation-agent";
