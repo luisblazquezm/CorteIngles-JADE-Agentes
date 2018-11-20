@@ -17,7 +17,6 @@ import data.ReservationRequestData;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 import utilities.Utils;
-import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -33,7 +32,6 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int step = 0;
 
 	public UserAgentCyclicBehaviour(Agent agent)
 	{
@@ -278,26 +276,13 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		
 		boolean reservationIsAvailable, activitiesWereFound;
 		
-		switch(step){
-			case (PlatformUtils.RESERVATION_OPTION):
-				do {
-					reservationIsAvailable = processReservationRequest();
-				} while (!reservationIsAvailable);
-				
-				break;
-			case (PlatformUtils.ACTIVITY_OPTION):
-				do {
-					activitiesWereFound = processActivityRequest();
-				} while (!activitiesWereFound);
-				
-				break;
-			case (PlatformUtils.WAIT_AND_PROCESS_RESPONSE_OPTION):
-				waitAndProcessResponse();
-				break;
-		}
+		do {
+			reservationIsAvailable = processReservationRequest();
+		} while (!reservationIsAvailable);
 		
-
-		
+		do {
+			activitiesWereFound = processActivityRequest();
+		} while (!activitiesWereFound);
 	}
 	
 	private boolean processReservationRequest() {
@@ -408,15 +393,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			if (numberOfServers <= 0) {
         		Debug.message("UserAgentCyclicBehaviour: no agents implementing requested service");
-        		return false;
 			} else {
-        		//return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
-				step = PlatformUtils.WAIT_AND_PROCESS_RESPONSE_OPTION;
-				return true;
+        		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
 			}
-		} else if ("nN".contains(userWantsToTravel)) {
-			step = PlatformUtils.ACTIVITY_OPTION;
-			return true;
 		}
 		
 		// If "nN".contains(userWantsToTravel) return true
@@ -508,13 +487,10 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         		Debug.message("UserAgentCyclicBehaviour: no agents implementing requested service");
         		return false;
 			} else {
-        		//return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
-				step = PlatformUtils.WAIT_AND_PROCESS_RESPONSE_OPTION;
-				return true;
+        		return waitAndProcessResponse(); // Should return boolean, depending on whether found or not
 			}
 		} else if ("nN".contains(userWantsToSeeActivities)) {
 			return true;
-			// Does the program end here or just asks for a new reservation??????
 		}
 		
 		return true; 
@@ -526,7 +502,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		// Should return false if reservation is not available
 		
 		Debug.message("UserAgentCyclicBehaviour: waiting for INFORM message%n");
-		AID agentAID;
+		
         MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		
@@ -541,40 +517,13 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
     		
 			try {
 				MessageContent content = (MessageContent) message.getContentObject();
-				agentAID = content.getRequester();
-				
-				// This does not work because content.getRequester returns something not a String and different from PlatformUtils.RESERVATION_ALIAS value
-				//							|
-				//							v
-				//content.getRequester().equals(PlatformUtils.RESERVATION_ALIAS); 				
-				
-				/*
-				 * if (messageFromReservation)
-				 * 		processReservationData((ReservationInformData) content.getData());
-				 * 		step = PlatformUtils.ACTIVITY_OPTION; // Pass to do activities
-				 * else if (messageFromActivity)
-				 * 		processActivityData((ActivityInformData) content.getData());
-				 * 		step = PlatformUtils.RESERVATION_OPTION; // Pass to do reservations again
-				 * else
-				 * 		Debug.message("UserAgentCyclicBehaviour: where does this message come from?");
-				 * */
-				
-				// Antes para probarlo y que funcionase simplemente descomentaba una de estas dos y ya está pero hay que conseguir diferenciar que tipo de mensaje
-				// se recibe para dejarlo bien hecho (hay que conseguir la parte comentada de arriba).
-				//
-				//processReservationData((ReservationInformData) content.getData()); 
-				//processActivityData((ActivityInformData) content.getData());
-
-				/*
-				if (PlatformUtils.identifyAid(agentAID) != null) {
+				if (PlatformUtils.identifyAid(content.getRequester()).equals(PlatformUtils.RESERVATION_ALIAS)) {
 					processReservationData((ReservationInformData) content.getData());
-				} else if (PlatformUtils.identifyAid(agentAID) != null) {
+				} else if (PlatformUtils.identifyAid(content.getRequester()).equals(PlatformUtils.ACTIVITY_ALIAS)) {
 					processActivityData((ActivityInformData) content.getData());
 				} else {
 					Debug.message("UserAgentCyclicBehaviour: where does this message come from?");
-					step = PlatformUtils.RESERVATION_OPTION;
 				}
-				*/
 			} catch (UnreadableException e) {
 				Debug.message("UserAgentCyclicBehaviour: error converting message's content");
 				e.printStackTrace();
@@ -623,6 +572,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         sb.append(TABLE_V_SPLIT_SYMBOL + title3);
         for (int i = title3.length() ; i < width ; i++)
             sb.append(TABLE_H_SPACE_SYMBOL);
+        sb.append(TABLE_V_SPLIT_SYMBOL);
         
         sb.append(TABLE_V_SPLIT_SYMBOL + title4);
         for (int i = title4.length() ; i < width ; i++)
@@ -648,11 +598,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         
         sb.append(TABLE_V_SPLIT_SYMBOL + hotel);
         for (int i = hotel.length() ; i < width ; i++)
-        	sb.append(TABLE_H_SPACE_SYMBOL);
+        sb.append(TABLE_H_SPACE_SYMBOL);
         
         sb.append(TABLE_V_SPLIT_SYMBOL + departureDate);
         for (int i = departureDate.length() ; i < width ; i++)
                 sb.append(TABLE_H_SPACE_SYMBOL);
+        sb.append(TABLE_V_SPLIT_SYMBOL);
         
         sb.append(TABLE_V_SPLIT_SYMBOL + returnDate);
         for (int i = returnDate.length() ; i < width ; i++)
