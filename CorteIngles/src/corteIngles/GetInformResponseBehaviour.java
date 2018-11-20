@@ -84,7 +84,7 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 				//<------------------------------------------------------------------------- Identify the receiver of this message (UserAgent)
 				messageContent.identify(message.getSender());
 				
-				int numberOfRecipients = JadeUtils.sendMessage( // <--------------------- I think this won't work with more than one UserAgent
+				int numberOfRecipients = JadeUtils.sendMessage(
 						this.myAgent,
 		                PlatformUtils.HANDLE_USER_REQUEST_SER,
 		                ACLMessage.INFORM,

@@ -510,6 +510,8 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
     		Debug.formattedMessage("UserAgentCyclicBehaviour: %s blocked%n", PlatformUtils.USER_ALIAS);
     		block();
         } else {
+        	
+        	// Falta if (mensajeNotForMe) blockAgain();
 
     		Debug.message("UserAgentCyclicBehaviour: INFORM Message received");
     		

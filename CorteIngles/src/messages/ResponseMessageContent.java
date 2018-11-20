@@ -63,5 +63,13 @@ public class ResponseMessageContent
 		this.server = server;
 	}
 	
+	@Override
+	public void identify(Agent sender) {
+		this.identify(sender.getAID());;
+	}
+	
+	public void identify(AID sender) {
+		this.server = sender;
+	}
 	
 }
