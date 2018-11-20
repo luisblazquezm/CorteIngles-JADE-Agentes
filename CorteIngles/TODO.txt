@@ -29,3 +29,20 @@ TODO:
 	> He depurado bastante y hay errores que no consigo ver (aunque hay algunos que seran chorradas increiblemente grandes), 
 	  no se si porque estoy ya cansado o que jajajaj ; en cualquier caso a lo mejor viendolo los dos nos aclaramos mejor y uno lo ve antes que el otro. 
 	  Who knows -.-.
+	  
+- ULTIMANDO DETALLES (LEER IMPORTANTE)
+	- Comentadas lineas que daban error o warning con //<----------------------------------
+	en las clases:
+	        > UserAgentCB
+	        > ServeUserBehaviour
+	        > ReservationAgentCB
+	        > GetInformRespondBehaviour
+	        > ActivityCB
+	- Implementado método printStringTable de JadeUtils
+	- Comentados algunos imports que daban error o warning (muchos eran del tipo
+	messages.IdentifiedMessageContent)
+	- Implementado método createReservationInformMessageContent en JadeUtils (es un método que se llama desde ReservationAgentCB)
+	- En éste método falta pasarle el AID del requester y el sender para crear el ReservationInformData
+	
+	- IMPORTANTE<-------------------------------------- TRATAMIENTO DE ERRORES FALTAN POR COMPROBAR PARAMETROS QUE SE PASAN A METODOS Y VARIABLES DE RETORNO !!!!!!!!
+	  

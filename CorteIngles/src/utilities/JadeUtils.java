@@ -16,16 +16,54 @@ import jade.domain.FIPAAgentManagement.Envelope;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.UnreadableException;
-import platform1.MessageContent;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.regex.Pattern;
+import utilities.Debug;
+
 
 public class JadeUtils
 {
-
+	/**
+	 * @param data
+	 * @return
+	 */
+	public static String[] getReservationData(String data) {
+		
+		return data.split(Pattern.quote(PlatformUtils.DELIMITER));
+	}
+		
+	/**
+	 * @param availability
+	 * @return
+	 */
+	public static String delimitedStringFromReservation(boolean availability) {
+			
+		StringBuilder string = new StringBuilder();
+		
+		string.append(PlatformUtils.RESERVATION_MESSAGE);
+		string.append(PlatformUtils.DELIMITER);
+		
+		if (availability){
+			string.append(PlatformUtils.RESERVATION_AVAILABLE);
+			string.append(PlatformUtils.DELIMITER);
+		} else {
+			string.append(PlatformUtils.RESERVATION_NOT_AVAILABLE);
+			string.append(PlatformUtils.DELIMITER);
+		}
+		
+		string.append(PlatformUtils.SENDER_CITY_INDEX);
+		string.append(PlatformUtils.DELIMITER);
+		string.append(PlatformUtils.SENDER_HOTEL_INDEX);
+		string.append(PlatformUtils.DELIMITER);
+		string.append(PlatformUtils.SENDER_DEPARTURE_INDEX);
+		string.append(PlatformUtils.DELIMITER);
+		string.append(PlatformUtils.SENDER_RETURN_INDEX); 
+		
+		return new String(string);
+	}
+	
 	// Este método está bien, calcado del manual de JADE
 	/**
 	 * Look for all agents providing a service.
@@ -160,7 +198,7 @@ public class JadeUtils
         
         return dfd.length;
     }
-    
+
     // Este método está bien, calcado del manual de JADE
     /**
      * Defines a service that will be implemented by one or more agents.
@@ -209,13 +247,63 @@ public class JadeUtils
     	}
     		
     }
-    
-	@SuppressWarnings("unchecked")
-	public static <T extends MessageContent<?>> T extractMessageContent(ACLMessage message)
-    		throws UnreadableException
-    {
-    	return (T) message.getContentObject();
-    }
 
-
+    /**
+     * Prompts a table of available cities
+     * @param title Header of the table 
+	 * @param cityNames Array of city names
+	 * @param width Size of width of the table.
+     */
+	public static void printStringTable(String title, String[] cityNames, int width) {
+		final String CITY_NAMES_AVAILABILITY_ERROR = "No hay ciudades disponibles";
+		final String NEW_LINE = "\n";
+		final String TABLE_JOINT_SYMBOL = "+";
+		final String TABLE_V_SPLIT_SYMBOL = "|";
+		final String TABLE_H_SPLIT_SYMBOL = "-";
+		final String TABLE_H_SPACE_SYMBOL = " ";
+		StringBuilder sb = new StringBuilder();
+		
+		if (cityNames == null) {
+			System.out.println(CITY_NAMES_AVAILABILITY_ERROR);
+		} else {
+			
+			if (width <= 0) {
+				System.out.println("JadeUtils: incorrect table width");
+			} else {
+				
+				if (title == null) {
+					System.out.println("JadeUtils: table header is empty");
+				} else {
+					sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+			    	for (int i = 0 ; i < width ; i++)
+				    	sb.append(TABLE_H_SPLIT_SYMBOL);
+				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
+				    
+				    sb.append(TABLE_V_SPLIT_SYMBOL + title);
+				    for (int i = title.length() ; i < width ; i++)
+				    	sb.append(TABLE_H_SPACE_SYMBOL);
+				    sb.append(TABLE_V_SPLIT_SYMBOL + NEW_LINE);
+				    
+					sb.append(TABLE_JOINT_SYMBOL);
+			    	for (int i = 0 ; i < width ; i++)
+				    	sb.append(TABLE_H_SPLIT_SYMBOL);
+				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
+				    
+				    for(String c : cityNames) {
+						sb.append(TABLE_V_SPLIT_SYMBOL + c);
+				    	for (int i = c.length() ; i < width ; i++)
+					    	sb.append(TABLE_H_SPACE_SYMBOL);
+					    sb.append(TABLE_V_SPLIT_SYMBOL + NEW_LINE);
+				    }
+				    
+				    sb.append(TABLE_JOINT_SYMBOL);
+			    	for (int i = 0 ; i < width ; i++)
+				    	sb.append(TABLE_H_SPLIT_SYMBOL);
+				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
+				    
+				    System.out.printf(sb.toString());
+				}
+			}
+		}
+	}
 }
