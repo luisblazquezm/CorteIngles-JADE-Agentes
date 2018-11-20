@@ -11,14 +11,11 @@
 
 package corteIngles;
 
-import data.ActivityRequestData;
-import data.ReservationRequestData;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import messages.MessageContent;
-import messages.Messages;
 import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
