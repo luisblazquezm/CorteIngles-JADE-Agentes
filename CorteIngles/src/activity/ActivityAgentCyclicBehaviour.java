@@ -57,17 +57,14 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	{
 		
 		// Waiting for a REQUEST message from AgentCorteIngles to do an activity
-		Debug.message("ActivityAgentCyclicBehaviour: CorteInglesAgent waiting for REQUEST message from UserAgent\n");
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage msg = this.myAgent.receive(template);
-		Debug.message("ActivityAgentCyclicBehaviour: Message REQUEST received in CorteInglesAgent\n");
 				
 		if (msg == null) {
 			block();
 		} else {
 			try
 			{
-				Debug.message("ActivityAgentCyclicBehaviour: REQUEST received from AgentCorteIngles\n");
 				
 				MessageContent content = (MessageContent) msg.getContentObject();
 				ActivityRequestData data = (ActivityRequestData)content.getData();
