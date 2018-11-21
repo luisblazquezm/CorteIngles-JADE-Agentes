@@ -15,6 +15,13 @@ public class ReservationAgent extends Agent
 	@Override
 	public void setup()
 	{
+		try {
+			PlatformUtils.registerAgentInPlatform(this, PlatformUtils.RESERVATION_AGENT);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String[][] services = {{PlatformUtils.MAKE_RESERVATION_SER,
             					getLocalName()}};
 		Debug.message("Reservation going to register\n");

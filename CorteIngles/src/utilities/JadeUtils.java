@@ -19,50 +19,11 @@ import jade.lang.acl.ACLMessage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.regex.Pattern;
 import utilities.Debug;
 
 
 public class JadeUtils
 {
-	/**
-	 * @param data
-	 * @return
-	 */
-	public static String[] getReservationData(String data) {
-		
-		return data.split(Pattern.quote(PlatformUtils.DELIMITER));
-	}
-		
-	/**
-	 * @param availability
-	 * @return
-	 */
-	public static String delimitedStringFromReservation(boolean availability) {
-			
-		StringBuilder string = new StringBuilder();
-		
-		string.append(PlatformUtils.RESERVATION_MESSAGE);
-		string.append(PlatformUtils.DELIMITER);
-		
-		if (availability){
-			string.append(PlatformUtils.RESERVATION_AVAILABLE);
-			string.append(PlatformUtils.DELIMITER);
-		} else {
-			string.append(PlatformUtils.RESERVATION_NOT_AVAILABLE);
-			string.append(PlatformUtils.DELIMITER);
-		}
-		
-		string.append(PlatformUtils.SENDER_CITY_INDEX);
-		string.append(PlatformUtils.DELIMITER);
-		string.append(PlatformUtils.SENDER_HOTEL_INDEX);
-		string.append(PlatformUtils.DELIMITER);
-		string.append(PlatformUtils.SENDER_DEPARTURE_INDEX);
-		string.append(PlatformUtils.DELIMITER);
-		string.append(PlatformUtils.SENDER_RETURN_INDEX); 
-		
-		return new String(string);
-	}
 	
 	// Este método está bien, calcado del manual de JADE
 	/**

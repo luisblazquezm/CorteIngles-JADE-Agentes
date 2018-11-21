@@ -13,7 +13,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import messages.MessageContent;
 import messages.Messages;
-import messages.ResponseMessageContent;
 
 
 public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
@@ -58,7 +57,8 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 					System.err.println("ReservationAgent: reservationData is null");
 				
 				boolean availability = Data.reservationRequestIsAvailable(reservationData);
-				ReservationInformData informData = new ReservationInformData(						
+				ReservationInformData informData = new ReservationInformData(
+						this.myAgent,
 						reservationData.getDestinationCity(),
 						reservationData.getDestinationHotel(),
 						reservationData.getStartDate(),
@@ -70,7 +70,7 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 				
 				//<--------------------------------------------- Identify Sender
 				
-				ResponseMessageContent answerMessageContent = Messages.createReservationInformMessageContent(content, informData);
+				MessageContent answerMessageContent = Messages.createReservationInformMessageContent(informData, this.myAgent);
 				if (answerMessageContent == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				

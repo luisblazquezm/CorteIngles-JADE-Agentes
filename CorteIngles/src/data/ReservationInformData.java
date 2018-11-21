@@ -1,9 +1,12 @@
 package data;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class ReservationInformData implements Serializable{
+import jade.core.AID;
+import jade.core.Agent;
+
+public class ReservationInformData
+extends InformData {
 
 	/**
 	 * 
@@ -39,18 +42,20 @@ public class ReservationInformData implements Serializable{
 	 * 
 	 */
 	public ReservationInformData() {
-		this(null, null, null, null, false);
+		this((AID) null, null, null, null, null, false);
 	}
 	
 	/**
+	 * @param server
 	 * @param destinationCity
 	 * @param destinationHotel
 	 * @param startDate
 	 * @param endDate
 	 * @param available
 	 */
-	public ReservationInformData(String destinationCity, String destinationHotel, Date startDate, Date endDate,
-			boolean available) {
+	public ReservationInformData(Agent server, String destinationCity, String destinationHotel, Date startDate,
+			Date endDate, boolean available) {
+		super(server.getAID());
 		this.destinationCity = destinationCity;
 		this.destinationHotel = destinationHotel;
 		this.startDate = startDate;
@@ -58,6 +63,26 @@ public class ReservationInformData implements Serializable{
 		this.available = available;
 	}
 	
+	/**
+	 * @param server
+	 * @param destinationCity
+	 * @param destinationHotel
+	 * @param startDate
+	 * @param endDate
+	 * @param available
+	 */
+	public ReservationInformData(AID server, String destinationCity, String destinationHotel, Date startDate,
+			Date endDate, boolean available) {
+		super(server);
+		this.destinationCity = destinationCity;
+		this.destinationHotel = destinationHotel;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.available = available;
+	}
+
+
+
 	/**
 	 * @return the destinationCity
 	 */

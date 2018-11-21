@@ -12,6 +12,23 @@ public class Utils {
 	 * To read input
 	 */
 	private static Scanner scanner = new Scanner(System.in);
+	
+	public final static void clearConsole()
+	{
+	    try {
+	    	
+	        final String os = System.getProperty("os.name");
+
+	        if (os.contains("Windows")) {
+	            Runtime.getRuntime().exec("cls");
+	        } else {
+	            Runtime.getRuntime().exec("clear");
+	        }
+	    } catch (final Exception e) {
+	    	System.err.println("Utils: clearConsole: ERROR");
+	        e.printStackTrace();
+	    }
+	}
 
     /**
      * @param title Table's title

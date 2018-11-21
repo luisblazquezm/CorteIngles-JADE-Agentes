@@ -52,9 +52,9 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				
 				Debug.message(
 					"ServeUserBehaviour: Message from "
-					+ PlatformUtils.USER_ALIAS
+					+ PlatformUtils.getLocalName(PlatformUtils.USER_AGENT)
 					+ " was received at "
-					+ PlatformUtils.CORTE_INGLES_ALIAS
+					+ PlatformUtils.getLocalName(PlatformUtils.CORTE_INGLES_AGENT)
 				);
 				
 				Debug.message("ServeUserBehaviour: Request will be forwarded to ");
@@ -85,7 +85,7 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				} else if (messageContent.getService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {
 					
 					// If activity request, send REQUEST to ActivityAgent
-					Debug.message(PlatformUtils.ACTIVITY_ALIAS);
+					Debug.message(PlatformUtils.getLocalName(PlatformUtils.ACTIVITY_AGENT));
 					
 					int numberOfRecipients = JadeUtils.sendMessage(
 							this.myAgent,

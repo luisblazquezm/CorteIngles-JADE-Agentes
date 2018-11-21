@@ -4,96 +4,62 @@ import data.ActivityInformData;
 import data.ActivityRequestData;
 import data.ReservationInformData;
 import data.ReservationRequestData;
-import jade.core.AID;
+import jade.core.Agent;
 import utilities.PlatformUtils;
 
 public class Messages {
 			
 	/**
-	 * @param data
+	 * @param data Request data
+	 * @param requester Agent asking for service
 	 * @return
 	 */
-	public static MessageContent createReservationRequestMessageContent(ReservationRequestData data) {
+	public static MessageContent createReservationRequestMessageContent(ReservationRequestData data, Agent requester) {
 
-		AID aid = null;
-		
 		return new MessageContent(
 				PlatformUtils.HANDLE_RESERVATION_SER,
 				data,
-				aid);
+				requester.getAID());
 	}
 	
 	/**
-	 * @param data
+	 * @param data Request data
+	 * @param requester Agent asking for service
 	 * @return
 	 */
-	public static MessageContent createActivityRequestMessageContent(ActivityRequestData data) {
-		
-		AID aid = null;
+	public static MessageContent createActivityRequestMessageContent(ActivityRequestData data, Agent requester) {
 		
 		return new MessageContent(
 				PlatformUtils.HANDLE_ACTIVITY_SER,
 				data,
-				aid);
+				requester.getAID());
 	}
 	
 	/**
-	 * @param requestMessageContent
-	 * @param data
+	 * @param data Response data
+	 * @param server Agent who has answered to request
 	 * @return
 	 */
-	public static ResponseMessageContent createReservationInformMessageContent(
-			MessageContent requestMessageContent,
-			ReservationInformData data) {
-				
-		AID aid = null;
-		
-		return new ResponseMessageContent(
+	public static MessageContent createReservationInformMessageContent(ReservationInformData data, Agent server) {
+
+		return new MessageContent(
 				PlatformUtils.HANDLE_RESERVATION_SER,
 				data,
-				requestMessageContent.getRequester(),
-				aid);
+				server.getAID());
 		
 		
 	}
 
 	/**
-	 * @param requestMessageContent
-	 * @param data
+	 * @param data Response data
+	 * @param server Agent who has answered to request
 	 * @return
 	 */
-	public static ResponseMessageContent createActivityInformMessageContent(
-			MessageContent requestMessageContent,
-			ActivityInformData data) {
-	
-		AID aid = null;
-		
-		return new ResponseMessageContent(
+	public static MessageContent createActivityInformMessageContent(ActivityInformData data, Agent server) {
+
+		return new MessageContent(
 				PlatformUtils.HANDLE_ACTIVITY_SER,
 				data,
-				requestMessageContent.getRequester(),
-				aid);
+				server.getAID());
 	}
-	
-	/*
-	public static MessageContent createCorteInglesToReservationMessageContent(ReservationRequestData data) {
-		
-		AID aid = null;
-		
-		return new MessageContent(
-				PlatformUtils.MAKE_RESERVATION_SER,
-				data,
-				aid);
-	}
-	
-	public static MessageContent createCorteInglesToActivityMessageContent(ActivityRequestData data) {
-		
-		AID aid = null;
-		
-		return new MessageContent(
-				PlatformUtils.RETRIEVE_ACTIVITY_SER,
-				data,
-				aid);
-	}
-	*/
 }

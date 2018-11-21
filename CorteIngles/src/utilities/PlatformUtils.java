@@ -9,23 +9,31 @@
 package utilities;
 
 import jade.core.AID;
+import jade.core.Agent;
 
 /**
  * @author mrhyd
  *
  */
 public class PlatformUtils {
-
-	// Options in switch-case from UserAgentCB action
-	public static final int RESERVATION_OPTION = 0;
-	public static final int ACTIVITY_OPTION = 1;
-	public static final int WAIT_AND_PROCESS_RESPONSE_OPTION = 2;
 	
-	// Agents' alias
-	public static final String USER_ALIAS = "user-agent";
-	public static final String RESERVATION_ALIAS = "reservation-agent";
-	public static final String ACTIVITY_ALIAS = "activity-agent";
-	public static final String CORTE_INGLES_ALIAS = "corte-ingles-agent";
+	// Agents in platform
+	public static final String USER_AGENT = "user";
+	public static final String CORTE_INGLES_AGENT = "corte-ingles";
+	public static final String RESERVATION_AGENT = "reservation";
+	public static final String ACTIVITY_AGENT = "activity";
+	
+	// Agents' info
+	private static AID USER_AID= null;
+	private static AID CORTE_INGLES_AID = null;
+	private static AID RESERVATION_AID = null;
+	private static AID ACTIVITY_AID = null;
+	/*
+	public static String USER_ALIAS = "user-agent";
+	public static String RESERVATION_ALIAS = "reservation-agent";
+	public static String ACTIVITY_ALIAS = "activity-agent";
+	public static String CORTE_INGLES_ALIAS = "corte-ingles-agent";
+	*/
 	
 	// Services' names and types
 	public static final String RETRIEVE_ACTIVITY_SER = "retrieve-activity";
@@ -34,6 +42,7 @@ public class PlatformUtils {
 	public static final String HANDLE_ACTIVITY_SER = "handle-activity-request";
 	public static final String HANDLE_USER_REQUEST_SER = "handle-user-request";
 	
+	/*
 	// Delimiter for message content
 	public static final String DELIMITER = "#";
 	public static final String ACTIVITIES_DELIMITER = "*";
@@ -41,6 +50,7 @@ public class PlatformUtils {
 	// Type of message
 	public static final String ACTIVITY_MESSAGE = "activity-message";
 	public static final String RESERVATION_MESSAGE = "reservation-message";
+	*/
 	
 	// Availability of reservation
 	public static final String RESERVATION_AVAILABLE = "available";
@@ -80,21 +90,115 @@ public class PlatformUtils {
 	public static final int MAX_ROOMS_IN_HOTEL = 5;
 	
 	/**
-	 * @param agentAid
+	 * @param agent
+	 * @param role
+	 * @throws Exception
+	 */
+	public static void registerAgentInPlatform(Agent agent, String role) throws Exception {
+		
+		Exception exception = new Exception("PlatformUtils: registerAgentInPlatform: agent's registered in this platform should follow one of the following roles:\n"
+								            + "\t> PlatformUtils.USER_AGENT\n"
+											+ "\t> PlatformUtils.CORTE_INGLES_AGENT\n"
+								            + "\t> PlatformUtils.RESERVATION_AGENT\n"
+											+ "\t> PlatformUtils.ACTIVITY_AGENT\n");
+		
+		if (agent == null)
+			System.err.println("PlatformUtils: registerAgentInPlatform: no agent specified. Please specify an agent or delete call to method");
+		
+		if (role == null)
+			throw exception;
+		
+		switch(role) {
+		case PlatformUtils.USER_AGENT:
+			PlatformUtils.USER_AID = agent.getAID();
+		break;
+		case PlatformUtils.CORTE_INGLES_AGENT:
+			PlatformUtils.CORTE_INGLES_AID = agent.getAID();
+			break;
+		case PlatformUtils.RESERVATION_AGENT:
+			PlatformUtils.RESERVATION_AID = agent.getAID();
+			break;
+		case PlatformUtils.ACTIVITY_AGENT:
+			PlatformUtils.ACTIVITY_AID = agent.getAID();
+			break;
+		default:
+			throw exception;
+		}
+	}
+	
+	/**
+	 * @param role
 	 * @return
 	 */
-	public static String identifyAid(AID agentAid) {
+	public static String getLocalName(String role) {
 		
-		AID userAid = new AID(PlatformUtils.USER_ALIAS, AID.ISLOCALNAME);
-		AID corteInglesAid = new AID(PlatformUtils.CORTE_INGLES_ALIAS, AID.ISLOCALNAME);
-		AID reservationAid = new AID(PlatformUtils.RESERVATION_ALIAS, AID.ISLOCALNAME);
-		AID activityAid = new AID(PlatformUtils.ACTIVITY_ALIAS, AID.ISLOCALNAME);
+		String errorMessage1 = "PlatformUtils: getLocalName: agent's registered in this platform should follow one of the following roles:\n"
+								            + "\t> PlatformUtils.USER_AGENT\n"
+											+ "\t> PlatformUtils.CORTE_INGLES_AGENT\n"
+								            + "\t> PlatformUtils.RESERVATION_AGENT\n"
+											+ "\t> PlatformUtils.ACTIVITY_AGENT\n";
+		String errorMessage2 = "PlatformUtils: getLocalName: no agent registered for that role";
 		
-		if (agentAid.equals(userAid)) return PlatformUtils.USER_ALIAS;
-		else if (agentAid.equals(corteInglesAid)) return PlatformUtils.CORTE_INGLES_ALIAS;
-		else if (agentAid.equals(reservationAid)) return PlatformUtils.RESERVATION_ALIAS;
-		else if (agentAid.equals(activityAid)) return PlatformUtils.ACTIVITY_ALIAS;
-		else return null;
+		try {
+			switch(role) {
+			case PlatformUtils.USER_AGENT:
+				return PlatformUtils.USER_AID.getLocalName();
+			case PlatformUtils.CORTE_INGLES_AGENT:
+				return PlatformUtils.CORTE_INGLES_AID.getLocalName();
+			case PlatformUtils.RESERVATION_AGENT:
+				return PlatformUtils.RESERVATION_AID.getLocalName();
+			case PlatformUtils.ACTIVITY_AGENT:
+				return PlatformUtils.ACTIVITY_AID.getLocalName();
+			default:
+				System.err.println(errorMessage1);
+				return null;
+			}
+		} catch (NullPointerException e) {
+			System.err.println(errorMessage2 +": '" + role + "'");
+			return null;
+		}
+	}
+	
+	/**
+	 * @param role
+	 * @return
+	 */
+	public static AID getAid(String role) {
+		
+		String errorMessage1 = "PlatformUtils: getAid: agent's registered in this platform should follow one of the following roles:\n"
+					            + "\t> PlatformUtils.USER_AGENT\n"
+								+ "\t> PlatformUtils.CORTE_INGLES_AGENT\n"
+					            + "\t> PlatformUtils.RESERVATION_AGENT\n"
+								+ "\t> PlatformUtils.ACTIVITY_AGENT\n";
+		String errorMessage2 = "PlatformUtils: getAid: no agent registered for that role";
+		
+		switch(role) {
+		case PlatformUtils.USER_AGENT:
+			if (PlatformUtils.USER_AID != null)
+				return PlatformUtils.USER_AID;
+			else
+				break;
+		case PlatformUtils.CORTE_INGLES_AGENT:
+			if (PlatformUtils.CORTE_INGLES_AID != null)
+				return PlatformUtils.CORTE_INGLES_AID;
+			else
+				break;
+		case PlatformUtils.RESERVATION_AGENT:
+			if (PlatformUtils.RESERVATION_AID != null)
+				return PlatformUtils.RESERVATION_AID;
+			else
+				break;
+		case PlatformUtils.ACTIVITY_AGENT:
+			if (PlatformUtils.ACTIVITY_AID != null)
+				return PlatformUtils.ACTIVITY_AID;
+			else
+				break;
+		default:
+			System.err.println(errorMessage1);
+		}
+		
+		System.err.println(errorMessage2 +": '" + role + "'");
+		return null;
 	}
 
 }

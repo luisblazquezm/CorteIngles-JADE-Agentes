@@ -1,10 +1,9 @@
 package data;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityInformData implements Serializable{
+public class ActivityInformData extends InformData {
 	
 	/**
 	 * 

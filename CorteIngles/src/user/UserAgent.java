@@ -15,6 +15,14 @@ public class UserAgent extends Agent
 	@Override
 	public void setup()
 	{
+		
+		try {
+			PlatformUtils.registerAgentInPlatform(this, PlatformUtils.USER_AGENT);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String[][] services = {
 				{PlatformUtils.HANDLE_USER_REQUEST_SER, getLocalName()}
 		};

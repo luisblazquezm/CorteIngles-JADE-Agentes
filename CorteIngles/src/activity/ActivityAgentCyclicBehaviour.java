@@ -24,7 +24,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import messages.MessageContent;
 import messages.Messages;
-import messages.ResponseMessageContent;
 import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
@@ -55,19 +54,17 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() 
 	{
-		
-		// Waiting for a REQUEST message from AgentCorteIngles to do an activity
-		Debug.message("ActivityAgentCyclicBehaviour: CorteInglesAgent waiting for REQUEST message from UserAgent\n");
+
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage msg = this.myAgent.receive(template);
-		Debug.message("ActivityAgentCyclicBehaviour: Message REQUEST received in CorteInglesAgent\n");
 				
 		if (msg == null) {
+			System.err.println("ActivityAgentCyclicBehaviour: blocked\n"); // <---------------------------- Esto no se imprime wtf
 			block();
 		} else {
 			try
 			{
-				Debug.message("ActivityAgentCyclicBehaviour: REQUEST received from AgentCorteIngles\n");
+				System.err.println("ActivityAgentCyclicBehaviour: REQUEST received from AgentCorteIngles\n");
 				
 				MessageContent content = (MessageContent) msg.getContentObject();
 				ActivityRequestData data = (ActivityRequestData)content.getData();
@@ -80,7 +77,7 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 					if (informData == null)
 						System.err.println("ActivityAgentCyclicBehaviour: informData is null");
 					
-					ResponseMessageContent answerMessageContent = Messages.createActivityInformMessageContent(content, informData);
+					MessageContent answerMessageContent = Messages.createActivityInformMessageContent(informData, this.myAgent);
 					if (answerMessageContent == null)
 						System.err.println("ActivityAgentCyclicBehaviour: answerMessageContent is null");
 					
@@ -95,7 +92,7 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 					
 					if (numberOfRecipients <= 0) {
 						System.err.println("ServeUserBehaviour: no agents implementing requested service");
-		        		return ;
+		        		return;
 					} 
 					
 					Debug.message("ActivityAgent: INFORM message sent");

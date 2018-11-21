@@ -10,8 +10,7 @@
 
 package corteIngles;
 
-import messages.ResponseMessageContent;
-import jade.core.AID;
+import messages.MessageContent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -51,41 +50,35 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 			
 			try {
 				
-				if (message.getSender().equals(new AID(PlatformUtils.ACTIVITY_ALIAS, AID.ISLOCALNAME))) {
+				if (message.getSender().equals(PlatformUtils.getAid(PlatformUtils.ACTIVITY_AGENT))) {
 					Debug.message(
 						"GetInformResponseBehaviour: "
-						+ PlatformUtils.CORTE_INGLES_ALIAS
+						+ PlatformUtils.getLocalName(PlatformUtils.CORTE_INGLES_AGENT)
 						+ " received INFORM type message from "
-						+ PlatformUtils.ACTIVITY_ALIAS
+						+ PlatformUtils.getLocalName(PlatformUtils.ACTIVITY_AGENT)
 					);
 				} else {
 					Debug.message(
 							"GetInformResponseBehaviour: "
-							+ PlatformUtils.CORTE_INGLES_ALIAS
-							+ " received INFORM type message from "
-							+ PlatformUtils.RESERVATION_ALIAS
+									+ PlatformUtils.getLocalName(PlatformUtils.CORTE_INGLES_AGENT)
+									+ " received INFORM type message from "
+									+ PlatformUtils.getLocalName(PlatformUtils.RESERVATION_AGENT)
 						);
 				}
 				
 				Debug.message(String.format(
 					"GetInformResponseBehaviour: Message will be forwarded to "
-					+ PlatformUtils.USER_ALIAS
+					+ PlatformUtils.getLocalName(PlatformUtils.USER_AGENT)
 					)
 				);
 				
 				
 				// Forward message to UserAgent
-				ResponseMessageContent messageContent = (ResponseMessageContent) message.getContentObject();
+				MessageContent messageContent = (MessageContent) message.getContentObject();
 				if (messageContent == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
-				//<------------------------------------------------------------------------- Identify the receiver of this message (UserAgent)
-				messageContent.identify(message.getSender());
-				
-				if (messageContent.getRequester() == null)
-					System.err.println("UserAgentCyclicBehaviour: requester is null");
-				
-				int numberOfRecipients = JadeUtils.sendMessage( // <--------------------- I think this won't work with more than one UserAgent
+				int numberOfRecipients = JadeUtils.sendMessage(
 						this.myAgent,
 		                PlatformUtils.HANDLE_USER_REQUEST_SER,
 		                ACLMessage.INFORM,

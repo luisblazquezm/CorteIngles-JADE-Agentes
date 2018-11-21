@@ -25,6 +25,13 @@ public class ActivityAgent extends Agent {
 	@Override
 	protected void setup() {
 		
+		try {
+			PlatformUtils.registerAgentInPlatform(this, PlatformUtils.ACTIVITY_AGENT);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		/*
 		 *  At least initially, this is not needed, but I just wrote it \_('-')_/
 		 */
