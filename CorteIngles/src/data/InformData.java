@@ -3,52 +3,50 @@
  */
 package data;
 
-import java.io.Serializable;
-
 import jade.core.AID;
+import jade.core.Agent;
 
 /**
  * @author mrhyd
  *
  */
-public class InformData implements Serializable {
+public class InformData extends ServiceData{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 
-	 */
-	private AID server;
 
 	/**
 	 * @param server
+	 * @param data
 	 */
 	public InformData(AID server) {
-		this.server = server;
+		super(server);
 	}
 	
 	/**
 	 * @param server
+	 * @param data
 	 */
-	public InformData() {
-		this(null);
+	public InformData(Agent server) {
+		super();
+		if (server != null)
+			this.setSource(server.getAID());
 	}
 
 	/**
 	 * @return the server
 	 */
 	public AID getServer() {
-		return server;
+		return this.getSource();
 	}
 
 	/**
 	 * @param server the server to set
 	 */
 	public void setServer(AID server) {
-		this.server = server;
+		this.setSource(server);
 	}
 
 	

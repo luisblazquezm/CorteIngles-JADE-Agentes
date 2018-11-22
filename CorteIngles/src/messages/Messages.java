@@ -4,62 +4,70 @@ import data.ActivityInformData;
 import data.ActivityRequestData;
 import data.ReservationInformData;
 import data.ReservationRequestData;
+import data.ServiceData;
 import jade.core.Agent;
 import utilities.PlatformUtils;
 
 public class Messages {
-			
+		
 	/**
-	 * @param data Request data
-	 * @param requester Agent asking for service
+	 * @param data
+	 * @param service
 	 * @return
 	 */
-	public static MessageContent createReservationRequestMessageContent(ReservationRequestData data, Agent requester) {
+	private static ServiceDataPacket createServiceDataPacket(ServiceData data, String service) {
 
-		return new MessageContent(
-				PlatformUtils.HANDLE_RESERVATION_SER,
-				data,
-				requester.getAID());
+		return new ServiceDataPacket(
+				service, 
+				data, 
+				(Agent)null);
 	}
 	
 	/**
-	 * @param data Request data
-	 * @param requester Agent asking for service
+	 * @param data
 	 * @return
 	 */
-	public static MessageContent createActivityRequestMessageContent(ActivityRequestData data, Agent requester) {
-		
-		return new MessageContent(
-				PlatformUtils.HANDLE_ACTIVITY_SER,
-				data,
-				requester.getAID());
+	public static ServiceDataPacket createReservationRequestServiceDataPacket(ReservationRequestData data) {
+
+		ServiceDataPacket serviceDataPacket = createServiceDataPacket(data, PlatformUtils.HANDLE_RESERVATION_SER);
+		serviceDataPacket.setRequester(data.getClient());
+		return serviceDataPacket;
 	}
 	
 	/**
-	 * @param data Response data
-	 * @param server Agent who has answered to request
+	 * @param data
 	 * @return
 	 */
-	public static MessageContent createReservationInformMessageContent(ReservationInformData data, Agent server) {
+	public static ServiceDataPacket createActivityRequestServiceDataPacket(ActivityRequestData data) {
+		
+		ServiceDataPacket serviceDataPacket = createServiceDataPacket(data, PlatformUtils.HANDLE_ACTIVITY_SER);
+		serviceDataPacket.setRequester(data.getClient());
+		return serviceDataPacket;
+	}
+	
+	/**
+	 * @param requestPacket
+	 * @param data
+	 * @return
+	 */
+	public static ServiceDataPacket createReservationInformServiceDataPacket(ServiceDataPacket requestPacket, ReservationInformData data) {
 
-		return new MessageContent(
-				PlatformUtils.HANDLE_RESERVATION_SER,
-				data,
-				server.getAID());
+		ServiceDataPacket serviceDataPacket = createServiceDataPacket(data, PlatformUtils.HANDLE_RESERVATION_SER);
+		serviceDataPacket.setRequester(requestPacket.getRequester());
+		return serviceDataPacket;
 		
 		
 	}
-
+	
 	/**
-	 * @param data Response data
-	 * @param server Agent who has answered to request
+	 * @param requestPacket
+	 * @param data
 	 * @return
 	 */
-	public static MessageContent createActivityInformMessageContent(ActivityInformData data, Agent server) {
+	public static ServiceDataPacket createActivityInformServiceDataPacket(ServiceDataPacket requestPacket, ActivityInformData data) {
 
-		return new MessageContent(
-				PlatformUtils.HANDLE_ACTIVITY_SER,
-				data,
-				server.getAID());
+		ServiceDataPacket serviceDataPacket = createServiceDataPacket(data, PlatformUtils.HANDLE_ACTIVITY_SER);
+		serviceDataPacket.setRequester(requestPacket.getRequester());
+		return serviceDataPacket;
 	}
 }

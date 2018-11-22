@@ -1,7 +1,11 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import jade.core.AID;
+import jade.core.Agent;
 
 public class ActivityInformData extends InformData {
 	
@@ -15,27 +19,57 @@ public class ActivityInformData extends InformData {
 	private List<Activity> activities;
 	
 	/**
-	 *
+	 * @param server
+	 * @param data
+	 * @param activities
 	 */
-	public ActivityInformData() {
-		this.activities = null;
+	public ActivityInformData(AID server, List<Activity> activities) {
+		super(server);
+		this.activities = activities;
 	}
 	
 	/**
+	 * @param server
+	 * @param data
 	 * @param activities
 	 */
-	public ActivityInformData(List<Activity> activities) {
+	public ActivityInformData(AID server, Activity... activities) {
+		super(server);
+		List<Activity> list = new ArrayList<>();
+		list = Arrays.asList(activities);
+		this.activities = list;
+	}
+	
+	/**
+	 * @param server
+	 * @param data
+	 * @param activities
+	 */
+	public ActivityInformData(Agent server, List<Activity> activities) {
+		super(server);
 		this.activities = activities;
 	}
-
+	
 	/**
+	 * @param server
+	 * @param data
 	 * @param activities
 	 */
-	public ActivityInformData(Activity... activities) {
-		this.activities = new ArrayList<>();
-		for (Activity a : activities) {
-			this.activities.add(a);
-		}
+	public ActivityInformData(Agent server, Activity... activities) {
+		super(server);
+		List<Activity> list = new ArrayList<>();
+		list = Arrays.asList(activities);
+		this.activities = list;
+	}
+	
+	/**
+	 * @param server
+	 * @param data
+	 * @param activities
+	 */
+	public ActivityInformData() {
+		super((AID)null);
+		this.activities = null;
 	}
 
 	/**

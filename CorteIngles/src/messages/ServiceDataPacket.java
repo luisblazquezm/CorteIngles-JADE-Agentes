@@ -10,6 +10,7 @@ package messages;
 
 import java.io.Serializable;
 
+import data.ServiceData;
 import jade.core.AID;
 import jade.core.Agent;
 
@@ -17,7 +18,7 @@ import jade.core.Agent;
  * @author mrhyd
  *
  */
-public class MessageContent implements Serializable {
+public class ServiceDataPacket implements Serializable {
 	
 	/**
 	 * 
@@ -32,7 +33,7 @@ public class MessageContent implements Serializable {
 	/**
 	 * Service's associated data
 	 */
-	private Object data;
+	private ServiceData data;
 	
 	/**
 	 * 
@@ -44,7 +45,7 @@ public class MessageContent implements Serializable {
 	 * @param data
 	 * @param requester
 	 */
-	public MessageContent(String service, Object data, AID requester) {
+	public ServiceDataPacket(String service, ServiceData data, AID requester) {
 		super();
 		this.service = service;
 		this.data = data;
@@ -56,11 +57,14 @@ public class MessageContent implements Serializable {
 	 * @param data
 	 * @param requester
 	 */
-	public MessageContent(String service, Object data, Agent requester) {
+	public ServiceDataPacket(String service, ServiceData data, Agent requester) {
 		super();
 		this.service = service;
 		this.data = data;
-		this.requester = requester.getAID();
+		if (requester != null)
+			this.requester = requester.getAID();
+		else
+			this.requester = null;
 	}
 
 	/**
@@ -73,8 +77,15 @@ public class MessageContent implements Serializable {
 	/**
 	 * @return the data
 	 */
-	public Object getData() {
+	public ServiceData getData() {
 		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(ServiceData data) {
+		this.data = data;
 	}
 
 	/**
@@ -85,20 +96,9 @@ public class MessageContent implements Serializable {
 	}
 
 	/**
-	 * @param sender The sender of the message
+	 * @param requester the requester to set
 	 */
-	public void identify(AID sender) {
-		this.requester = sender;
-	}
-	
-	/**
-	 * @param sender The sender of the message
-	 */
-	public void identify(Agent sender) {
-		this.requester = sender.getAID();
-	}
-	
-	
-	
-	
+	public void setRequester(AID requester) {
+		this.requester = requester;
+	}	
 }

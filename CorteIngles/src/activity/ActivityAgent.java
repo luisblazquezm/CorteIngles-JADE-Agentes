@@ -43,6 +43,9 @@ public class ActivityAgent extends Agent {
 		
 		JadeUtils.registerServices(this, services);
 		
+		ActivityAgentCyclicBehaviour activityBehaviour = new ActivityAgentCyclicBehaviour(this);
+		this.addBehaviour(activityBehaviour);
+		
 	}
 
 	/* (non-Javadoc)

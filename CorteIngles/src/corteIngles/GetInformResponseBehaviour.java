@@ -10,7 +10,7 @@
 
 package corteIngles;
 
-import messages.MessageContent;
+import messages.ServiceDataPacket;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -74,15 +74,15 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 				
 				
 				// Forward message to UserAgent
-				MessageContent messageContent = (MessageContent) message.getContentObject();
-				if (messageContent == null)
+				ServiceDataPacket serviceDataPacket = (ServiceDataPacket) message.getContentObject();
+				if (serviceDataPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
 				int numberOfRecipients = JadeUtils.sendMessage(
 						this.myAgent,
 		                PlatformUtils.HANDLE_USER_REQUEST_SER,
 		                ACLMessage.INFORM,
-		                messageContent);
+		                serviceDataPacket);
 				
 				if (numberOfRecipients <= 0) {
 					System.err.println("GetInformResponseBehaviour: no agents implementing requested service");

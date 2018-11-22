@@ -23,7 +23,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.MessageContent;
+import messages.ServiceDataPacket;
 import messages.Messages;
 import utilities.Debug;
 
@@ -63,7 +63,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		 * 			4.1- If no activities were found, repeat reservation option
 		 * }
 		 */
-				
+		
 		switch(behaviourStep) {
 			case RESERVATION_STEP: 
 				processReservationRequest();
@@ -98,8 +98,8 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			// For message communication
 			int numberOfServers = 0;
-			ReservationRequestData reservationData = new ReservationRequestData();
-			MessageContent messageContent;
+			ReservationRequestData reservationData = new ReservationRequestData(this.myAgent, null, null, null, null);
+			ServiceDataPacket serviceDataPacket;
 			
 			// ---------------------------------------------------------------------------------------
 	        
@@ -175,8 +175,8 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 						)
 				);
 				
-				messageContent = Messages.createReservationRequestMessageContent(reservationData, this.myAgent);
-				if (messageContent == null)
+				serviceDataPacket = Messages.createReservationRequestServiceDataPacket(reservationData);
+				if (serviceDataPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
 				Debug.message("UserAgentCyclicBehaviour: going to send reservation REQUEST");
@@ -184,7 +184,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 						this.myAgent,
 						PlatformUtils.HANDLE_RESERVATION_SER,
 						ACLMessage.REQUEST,
-						messageContent
+						serviceDataPacket
 				);
 				
 				if (numberOfServers <= 0) {
@@ -227,7 +227,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			// For message communication
 			int numberOfServers = 0;
 			ActivityRequestData activityData = new ActivityRequestData();
-			MessageContent messageContent;
+			ServiceDataPacket serviceDataPacket;
 			
 			
 			// ---------------------------------------------------------------------------------------
@@ -275,8 +275,8 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 						)
 				);
 							
-				messageContent = Messages.createActivityRequestMessageContent(activityData, this.myAgent);
-				if (messageContent == null)
+				serviceDataPacket = Messages.createActivityRequestServiceDataPacket(activityData);
+				if (serviceDataPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
 				Debug.message("UserAgentCyclicBehaviour: going to send activity REQUEST");
@@ -284,7 +284,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 						this.myAgent,
 						PlatformUtils.HANDLE_ACTIVITY_SER,
 						ACLMessage.REQUEST,
-						messageContent
+						serviceDataPacket
 				);
 				
 				if (numberOfServers <= 0) {
@@ -320,8 +320,15 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
     		Debug.message("UserAgentCyclicBehaviour: INFORM Message received");
     		
 			try {
-				MessageContent content = (MessageContent) message.getContentObject();
+				ServiceDataPacket content = (ServiceDataPacket) message.getContentObject();
 				InformData informData = (InformData) content.getData();
+				
+				if (informData == null)
+					System.err.println("INFORM DATA NULL");
+				else if (informData.getServer() == null)
+					System.err.println("SERVER NULL");
+				else if (PlatformUtils.getAid(PlatformUtils.RESERVATION_AGENT) == null)
+					System.err.println("AID IS NULL");
 				
 				try {
 					if (informData.getServer().equals(PlatformUtils.getAid(PlatformUtils.RESERVATION_AGENT))) {

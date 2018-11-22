@@ -11,7 +11,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.MessageContent;
+import messages.ServiceDataPacket;
 import messages.Messages;
 
 
@@ -46,31 +46,30 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 			
 			try
 			{
-				MessageContent content = (MessageContent) msg.getContentObject();
-				if (content == null)
+				ServiceDataPacket requestPacket = (ServiceDataPacket) msg.getContentObject();
+				if (requestPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
 				//String[] reservationData = JadeUtils.getReservationData((String)content.getData());
 				//boolean availability = Data.reservationRequestIsAvailable(reservationData);
-				ReservationRequestData reservationData = (ReservationRequestData) content.getData();
+				ReservationRequestData reservationData = (ReservationRequestData) requestPacket.getData();
 				if (reservationData == null)
 					System.err.println("ReservationAgent: reservationData is null");
 				
-				boolean availability = Data.reservationRequestIsAvailable(reservationData);
-				ReservationInformData informData = new ReservationInformData(
-						this.myAgent,
-						reservationData.getDestinationCity(),
-						reservationData.getDestinationHotel(),
-						reservationData.getStartDate(),
-						reservationData.getEndDate(),
-						availability);
+				boolean availability = Data.reservationRequestIsAvailable(reservationData); // Does this make the reservation?
+				ReservationInformData informData = new ReservationInformData(this.myAgent,
+																			 reservationData.getDestinationCity(),
+																			 reservationData.getDestinationHotel(),
+																			 reservationData.getStartDate(),
+																			 reservationData.getEndDate(),
+																			 availability);
 				
 				if (informData == null)
 					System.err.println("ReservationAgent: informData is null");
 				
 				//<--------------------------------------------- Identify Sender
 				
-				MessageContent answerMessageContent = Messages.createReservationInformMessageContent(informData, this.myAgent);
+				ServiceDataPacket answerMessageContent = Messages.createReservationInformServiceDataPacket(requestPacket, informData);
 				if (answerMessageContent == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				

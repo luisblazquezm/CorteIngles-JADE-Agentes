@@ -37,42 +37,18 @@ extends InformData {
 	 * Reservation's availability
 	 */
 	private boolean available;
-	
-	/**
-	 * 
-	 */
-	public ReservationInformData() {
-		this((AID) null, null, null, null, null, false);
-	}
-	
+
 	/**
 	 * @param server
+	 * @param data
 	 * @param destinationCity
 	 * @param destinationHotel
 	 * @param startDate
 	 * @param endDate
 	 * @param available
 	 */
-	public ReservationInformData(Agent server, String destinationCity, String destinationHotel, Date startDate,
-			Date endDate, boolean available) {
-		super(server.getAID());
-		this.destinationCity = destinationCity;
-		this.destinationHotel = destinationHotel;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.available = available;
-	}
-	
-	/**
-	 * @param server
-	 * @param destinationCity
-	 * @param destinationHotel
-	 * @param startDate
-	 * @param endDate
-	 * @param available
-	 */
-	public ReservationInformData(AID server, String destinationCity, String destinationHotel, Date startDate,
-			Date endDate, boolean available) {
+	public ReservationInformData(AID server, String destinationCity, String destinationHotel,
+			Date startDate, Date endDate, boolean available) {
 		super(server);
 		this.destinationCity = destinationCity;
 		this.destinationHotel = destinationHotel;
@@ -80,9 +56,38 @@ extends InformData {
 		this.endDate = endDate;
 		this.available = available;
 	}
-
-
-
+	
+	/**
+	 * @param server
+	 * @param data
+	 * @param destinationCity
+	 * @param destinationHotel
+	 * @param startDate
+	 * @param endDate
+	 * @param available
+	 */
+	public ReservationInformData(Agent server, String destinationCity, String destinationHotel,
+			Date startDate, Date endDate, boolean available) {
+		super(server);
+		this.destinationCity = destinationCity;
+		this.destinationHotel = destinationHotel;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.available = available;
+	}
+	
+	/**
+	 *
+	 */
+	public ReservationInformData() {
+		super((AID)null);
+		this.destinationCity = null;
+		this.destinationHotel = null;
+		this.startDate = null;
+		this.endDate = null;
+		this.available = false;
+	}
+	
 	/**
 	 * @return the destinationCity
 	 */

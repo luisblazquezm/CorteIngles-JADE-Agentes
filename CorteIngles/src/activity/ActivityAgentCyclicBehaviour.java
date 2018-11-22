@@ -22,7 +22,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.MessageContent;
+import messages.ServiceDataPacket;
 import messages.Messages;
 import utilities.Debug;
 import utilities.JadeUtils;
@@ -54,7 +54,7 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() 
 	{
-
+		
 		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage msg = this.myAgent.receive(template);
 				
@@ -66,18 +66,18 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 			{
 				System.err.println("ActivityAgentCyclicBehaviour: REQUEST received from AgentCorteIngles\n");
 				
-				MessageContent content = (MessageContent) msg.getContentObject();
-				ActivityRequestData data = (ActivityRequestData)content.getData();
+				ServiceDataPacket requestPacket = (ServiceDataPacket) msg.getContentObject();
+				ActivityRequestData data = (ActivityRequestData)requestPacket.getData();
 				List<Activity> activities = Data.getActivities(data.getCity(), data.getStartDate());
 				
 				if (activities == null) {
 					System.err.println("ActivityAgentCyclicBehaviour: listOfActivies is null");
 				} else {
-					ActivityInformData informData = new ActivityInformData(activities);
+					ActivityInformData informData = new ActivityInformData(this.myAgent, activities);
 					if (informData == null)
 						System.err.println("ActivityAgentCyclicBehaviour: informData is null");
 					
-					MessageContent answerMessageContent = Messages.createActivityInformMessageContent(informData, this.myAgent);
+					ServiceDataPacket answerMessageContent = Messages.createActivityInformServiceDataPacket(requestPacket, informData);
 					if (answerMessageContent == null)
 						System.err.println("ActivityAgentCyclicBehaviour: answerMessageContent is null");
 					

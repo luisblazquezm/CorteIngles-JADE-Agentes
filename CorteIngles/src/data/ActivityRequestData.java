@@ -1,9 +1,10 @@
 package data;
 
-import java.io.Serializable;
 import java.util.Date;
+import jade.core.AID;
+import jade.core.Agent;
 
-public class ActivityRequestData implements Serializable{
+public class ActivityRequestData extends RequestData{
 	
 	/**
 	 * 
@@ -21,20 +22,39 @@ public class ActivityRequestData implements Serializable{
 	private Date startDate;
 	
 	/**
-	 * 
+	 * @param client
+	 * @param data
+	 * @param city
+	 * @param startDate
 	 */
-	public ActivityRequestData() {
-		this.city = null;
-		this.startDate = null;
-	}
-
-	/**
-	 * @param city City in which the activity is carried on
-	 * @param startDate Activity's start date
-	 */
-	public ActivityRequestData(String city, Date startDate) {
+	public ActivityRequestData(AID client, String city, Date startDate) {
+		super(client);
 		this.city = city;
 		this.startDate = startDate;
+	}
+	
+	/**
+	 * @param client
+	 * @param data
+	 * @param city
+	 * @param startDate
+	 */
+	public ActivityRequestData(Agent client, String city, Date startDate) {
+		super(client);
+		this.city = city;
+		this.startDate = startDate;
+	}
+	
+	/**
+	 * @param client
+	 * @param data
+	 * @param city
+	 * @param startDate
+	 */
+	public ActivityRequestData() {
+		super((AID)null);
+		this.city = null;
+		this.startDate = null;
 	}
 
 	/**

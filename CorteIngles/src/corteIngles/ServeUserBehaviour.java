@@ -15,7 +15,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.MessageContent;
+import messages.ServiceDataPacket;
 import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
@@ -60,29 +60,26 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 				Debug.message("ServeUserBehaviour: Request will be forwarded to ");
 				
 				// Unwrap message content
-				MessageContent messageContent = (MessageContent) message.getContentObject();
-				if (messageContent == null)
+				ServiceDataPacket serviceDataPacket = (ServiceDataPacket) message.getContentObject();
+				if (serviceDataPacket == null)
 					System.err.println("ServeUserBehaviour: messageContent is null");
 				
-				// Identify the requester of this service (some UserAgent)
-				messageContent.identify(message.getSender());
-				
 				// Differentiate between reservation requests and activities requests
-				if (messageContent.getService().equals(PlatformUtils.HANDLE_RESERVATION_SER)) {
+				if (serviceDataPacket.getService().equals(PlatformUtils.HANDLE_RESERVATION_SER)) {
 					
 					// If reservation request, send REQUEST to ReservationAgent
 					int numberOfRecipients = JadeUtils.sendMessage(
 							this.myAgent,
 							PlatformUtils.MAKE_RESERVATION_SER,
 							ACLMessage.REQUEST,
-							messageContent
+							serviceDataPacket
 					);
 					
 					if (numberOfRecipients <= 0) {
 						System.err.println("ServeUserBehaviour: no agents implementing requested service");
 					} 
 					
-				} else if (messageContent.getService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {
+				} else if (serviceDataPacket.getService().equals(PlatformUtils.HANDLE_ACTIVITY_SER)) {
 					
 					// If activity request, send REQUEST to ActivityAgent
 					Debug.message(PlatformUtils.getLocalName(PlatformUtils.ACTIVITY_AGENT));
@@ -91,7 +88,7 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 							this.myAgent,
 							PlatformUtils.RETRIEVE_ACTIVITY_SER, 
 							ACLMessage.REQUEST,
-							messageContent
+							serviceDataPacket
 					);
 					
 					if (numberOfRecipients <= 0) {

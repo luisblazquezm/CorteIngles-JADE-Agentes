@@ -1,9 +1,10 @@
 package data;
 
-import java.io.Serializable;
 import java.util.Date;
+import jade.core.AID;
+import jade.core.Agent;
 
-public class ReservationRequestData implements Serializable {
+public class ReservationRequestData extends RequestData{
 
 	/**
 	 * 
@@ -31,23 +32,53 @@ public class ReservationRequestData implements Serializable {
 	private Date endDate;
 	
 	/**
-	 * 
+	 * @param client
+	 * @param data
+	 * @param destinationCity
+	 * @param destinationHotel
+	 * @param startDate
+	 * @param endDate
 	 */
-	public ReservationRequestData() {
-		this(null, null, null, null);
-	}
-	
-	/**
-	 * @param destinationCity City of destination
-	 * @param destinationHotel Hotel of destination in city
-	 * @param startDate Reservation's start date
-	 * @param endDate Reservation's end date
-	 */
-	public ReservationRequestData(String destinationCity, String destinationHotel, Date startDate, Date endDate) {
+	public ReservationRequestData(AID client, String destinationCity, String destinationHotel,
+			Date startDate, Date endDate) {
+		super(client);
 		this.destinationCity = destinationCity;
 		this.destinationHotel = destinationHotel;
 		this.startDate = startDate;
 		this.endDate = endDate;
+	}
+	
+	/**
+	 * @param client
+	 * @param data
+	 * @param destinationCity
+	 * @param destinationHotel
+	 * @param startDate
+	 * @param endDate
+	 */
+	public ReservationRequestData(Agent client, String destinationCity, String destinationHotel,
+			Date startDate, Date endDate) {
+		super(client);
+		this.destinationCity = destinationCity;
+		this.destinationHotel = destinationHotel;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
+	
+	/**
+	 * @param client
+	 * @param data
+	 * @param destinationCity
+	 * @param destinationHotel
+	 * @param startDate
+	 * @param endDate
+	 */
+	public ReservationRequestData() {
+		super((AID) null);
+		this.destinationCity = null;
+		this.destinationHotel = null;
+		this.startDate = null;
+		this.endDate = null;
 	}
 	
 	/**
