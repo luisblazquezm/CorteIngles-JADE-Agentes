@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import data.Activity;
 import data.ActivityInformData;
@@ -356,71 +357,25 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         return true; 
 	}
 	
-	/*
-	private boolean waitAndProcessResponse() {
+	private void processReservationData(ReservationInformData data) {
 		
-		// TODO Parse data and return true or false depending on conditions
-		// Should return false if reservation is not available
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
-		Debug.message("UserAgentCyclicBehaviour: waiting for INFORM message%n");
-		AID agentAID;
-        MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
-		ACLMessage message = this.myAgent.receive(template);
-		
-        if (message == null) {
-    		Debug.formattedMessage("UserAgentCyclicBehaviour: %s blocked%n", PlatformUtils.USER_ALIAS);
-    		block();
-        } else {
-
-    		Debug.message("UserAgentCyclicBehaviour: INFORM Message received");
-    		
-			try {
-				MessageContent content = (MessageContent) message.getContentObject();
-				agentAID = content.getRequester();
-				
-				// This does not work because content.getRequester returns something not a String and different from PlatformUtils.RESERVATION_ALIAS value
-				//							|
-				//							v
-				//content.getRequester().equals(PlatformUtils.RESERVATION_ALIAS); 				
-				
-				 *
-				 * if (messageFromReservation)
-				 * 		processReservationData((ReservationInformData) content.getData());
-				 * 		step = PlatformUtils.ACTIVITY_OPTION; // Pass to do activities
-				 * else if (messageFromActivity)
-				 * 		processActivityData((ActivityInformData) content.getData());
-				 * 		step = PlatformUtils.RESERVATION_OPTION; // Pass to do reservations again
-				 * else
-				 * 		Debug.message("UserAgentCyclicBehaviour: where does this message come from?");
-				 *
-				
-				// Antes para probarlo y que funcionase simplemente descomentaba una de estas dos y ya está pero hay que conseguir diferenciar que tipo de mensaje
-				// se recibe para dejarlo bien hecho (hay que conseguir la parte comentada de arriba).
-				//
-				//processReservationData((ReservationInformData) content.getData()); 
-				//processActivityData((ActivityInformData) content.getData());
-
-				
-				if (PlatformUtils.identifyAid(agentAID) != null) {
-					processReservationData((ReservationInformData) content.getData());
-				} else if (PlatformUtils.identifyAid(agentAID) != null) {
-					processActivityData((ActivityInformData) content.getData());
-				} else {
-					Debug.message("UserAgentCyclicBehaviour: where does this message come from?");
-					step = PlatformUtils.RESERVATION_OPTION;
-				}
-				
-			} catch (UnreadableException e) {
-				Debug.message("UserAgentCyclicBehaviour: error converting message's content");
-				e.printStackTrace();
-			}
-    	}
+		String[] titles = {"RESULTADO", "CIUDAD", "HOTEL", "FECHA DE ENTRADA", "FECHA DE SALIDA"};
+		int[] widths = {16,16,16,16,16};
+        String[][] results = new String[1][5];
+        	
+        results[0][0] = String.valueOf(data.isAvailable());
+        results[0][1] = data.getDestinationCity();
+        results[0][2] = data.getDestinationHotel();
+        results[0][3] = dateFormat.format(data.getStartDate());
+        results[0][4] = dateFormat.format(data.getEndDate());
         
-        return true; 
+        Utils.printStringTable(titles, widths, results);
+		
 	}
-	
-	*/
 
+	/*
 	private void processReservationData(ReservationInformData data) {
 		// TODO Auto-generated method stub
 		
@@ -508,81 +463,31 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         System.out.printf(sb.toString());
 		
 	}
+	*/
 	
 	private void processActivityData(ActivityInformData data) {
-		// TODO Auto-generated method stub
-		
-		// Basically, print data
-    	final String NEW_LINE = "\n";
-        final String TABLE_JOINT_SYMBOL = "+";
-        final String TABLE_V_SPLIT_SYMBOL = "|";
-        final String TABLE_H_SPLIT_SYMBOL = "-";
-        final String TABLE_H_SPACE_SYMBOL = " ";
-        StringBuilder sb = new StringBuilder();
-        int width = 20;
-        String title1 = "ACTIVITY";
-        String title2 = "START DATE";
-        String title3 = "END DATE";
-        int NUM_PARAMS = 3;
-        
-        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
-        for (int i = 0 ; i < NUM_PARAMS ; i++){
-            for (int j = 0 ; j < width ; j++)
-                sb.append(TABLE_H_SPLIT_SYMBOL);
-            sb.append(TABLE_JOINT_SYMBOL);
-        }
-        sb.append(NEW_LINE);
-        
 
-        sb.append(TABLE_V_SPLIT_SYMBOL + title1);
-        for (int i = title1.length() ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
+		String[] titles = {"CIUDAD", "FECHA DE ENTRADA", "FECHA DE SALIDA"};
+		int[] widths = {15, 15, 15};
         
-        sb.append(TABLE_V_SPLIT_SYMBOL + title2);
-        for (int i = title2.length() ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
+        List<Activity> results = data.getListOfActivities();
         
-        sb.append(TABLE_V_SPLIT_SYMBOL + title3);
-        for (int i = title3.length() ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
-        sb.append(TABLE_V_SPLIT_SYMBOL);
-
-        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
-        for (int i = 0 ; i < NUM_PARAMS ; i++){
-            for (int j = 0 ; j < width ; j++)
-                sb.append(TABLE_H_SPLIT_SYMBOL);
-            sb.append(TABLE_JOINT_SYMBOL);
+        String[][] tableData = new String[results.size()][4];
+        
+        for (int i = 0; i < results.size(); ++i) {
+        	
+        	Activity activity = results.get(i);
+        	int[] scheduleDescription = activity.getScheduleDescription();
+        	
+        	tableData[i][PlatformUtils.RECEIVER_ACTIVITY_CITY_INDEX] = data.getCityName();
+        	tableData[i][PlatformUtils.RECEIVER_ACTIVITY_INDEX] = activity.getName();
+        	tableData[i][PlatformUtils.RECEIVER_START_OF_ACTIVITY_INDEX] = String.format("%d", scheduleDescription[0]);
+        	tableData[i][PlatformUtils.RECEIVER_END_OF_ACTIVITY_INDEX] = String.format("%d", scheduleDescription[1]);
+        	
         }
-        sb.append(NEW_LINE);
         
-    	for (Activity a : data.getArrayOfActivities()) {
-    		String activity = a.getName();
-    		int []scheduleDescription = a.getScheduleDescription();
-    		
-            sb.append(TABLE_V_SPLIT_SYMBOL + activity);
-            for (int i = activity.length() ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
-            
-            sb.append(TABLE_V_SPLIT_SYMBOL + scheduleDescription[PlatformUtils.SENDER_START_OF_ACTIVITY_INDEX]);
-            for (int i = 2 ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
-            
-            sb.append(TABLE_V_SPLIT_SYMBOL + scheduleDescription[PlatformUtils.SENDER_START_OF_ACTIVITY_INDEX]);
-            for (int i = 2 ; i < width ; i++)
-                    sb.append(TABLE_H_SPACE_SYMBOL);
-            sb.append(TABLE_V_SPLIT_SYMBOL);
-    	}
+        Utils.printStringTable(titles, widths, tableData);
         
-        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
-        for (int i = 0 ; i < NUM_PARAMS ; i++){
-            for (int j = 0 ; j < width ; j++)
-                sb.append(TABLE_H_SPLIT_SYMBOL);
-            sb.append(TABLE_JOINT_SYMBOL);
-        }
-        sb.append(NEW_LINE);
-            
-        System.out.printf(sb.toString());
-
 	}
-	 
+        
 }

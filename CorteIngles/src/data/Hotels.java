@@ -95,7 +95,7 @@ public class Hotels {
     	String title = "HOTEL";
     	int width = 20;
 
-    	Utils.printStringTable(title, hotelNames, width);
+    	Utils.printStringTable(title, width, hotelNames);
     }
     
     /**

@@ -13,40 +13,34 @@ public class ActivityInformData extends InformData {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
+	private String cityName;
+	
 	/**
 	 * 
 	 */
 	private List<Activity> activities;
 	
-	/**
-	 * @param server
-	 * @param data
-	 * @param activities
-	 */
-	public ActivityInformData(AID server, List<Activity> activities) {
+	public ActivityInformData(AID server, String cityName, List<Activity> activities) {
 		super(server);
+		this.cityName = cityName;
 		this.activities = activities;
 	}
 	
-	/**
-	 * @param server
-	 * @param data
-	 * @param activities
-	 */
-	public ActivityInformData(AID server, Activity... activities) {
+	public ActivityInformData(AID server, String cityName, Activity... activities) {
 		super(server);
+		this.cityName = cityName;
 		List<Activity> list = new ArrayList<>();
 		list = Arrays.asList(activities);
 		this.activities = list;
 	}
 	
-	/**
-	 * @param server
-	 * @param data
-	 * @param activities
-	 */
-	public ActivityInformData(Agent server, List<Activity> activities) {
+	public ActivityInformData(Agent server, String cityName, List<Activity> activities) {
 		super(server);
+		this.cityName = cityName;
 		this.activities = activities;
 	}
 	
@@ -55,8 +49,9 @@ public class ActivityInformData extends InformData {
 	 * @param data
 	 * @param activities
 	 */
-	public ActivityInformData(Agent server, Activity... activities) {
+	public ActivityInformData(Agent server, String cityName, Activity... activities) {
 		super(server);
+		this.cityName = cityName;
 		List<Activity> list = new ArrayList<>();
 		list = Arrays.asList(activities);
 		this.activities = list;
@@ -105,6 +100,20 @@ public class ActivityInformData extends InformData {
 		}
 	}
 	
+	/**
+	 * @return the cityName
+	 */
+	public String getCityName() {
+		return cityName;
+	}
+
+	/**
+	 * @param cityName the cityName to set
+	 */
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
 	/**
 	 * @return True if any activities were found, false otherwise
 	 */

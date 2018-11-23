@@ -148,7 +148,4 @@ extends InformData {
 	public void setAvailable(boolean available) {
 		this.available = available;
 	}
-	
-	
-
 }

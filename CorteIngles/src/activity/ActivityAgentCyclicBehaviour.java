@@ -59,13 +59,10 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 		ACLMessage msg = this.myAgent.receive(template);
 				
 		if (msg == null) {
-			System.err.println("ActivityAgentCyclicBehaviour: blocked\n"); // <---------------------------- Esto no se imprime wtf
 			block();
 		} else {
 			try
-			{
-				System.err.println("ActivityAgentCyclicBehaviour: REQUEST received from AgentCorteIngles\n");
-				
+			{				
 				ServiceDataPacket requestPacket = (ServiceDataPacket) msg.getContentObject();
 				ActivityRequestData data = (ActivityRequestData)requestPacket.getData();
 				List<Activity> activities = Data.getActivities(data.getCity(), data.getStartDate());
@@ -73,7 +70,7 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 				if (activities == null) {
 					System.err.println("ActivityAgentCyclicBehaviour: listOfActivies is null");
 				} else {
-					ActivityInformData informData = new ActivityInformData(this.myAgent, activities);
+					ActivityInformData informData = new ActivityInformData(this.myAgent, data.getCity(), activities);
 					if (informData == null)
 						System.err.println("ActivityAgentCyclicBehaviour: informData is null");
 					

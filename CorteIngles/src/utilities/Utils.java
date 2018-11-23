@@ -29,44 +29,82 @@ public class Utils {
 	        e.printStackTrace();
 	    }
 	}
-
-    /**
-     * @param title Table's title
-     * @param array Content of the table
-     * @param width Table's width
+	
+	/**
+     * @param titles Table columns' titles
+     * @param widths Table columns' widths
+     * @param tableContents Contents of the table
      */
-    public static void printStringTable(String title, String[] array, int width) {
+    public static void printStringTable(String titles[], int[] widths, String[][] tableContents) {
+    	
+    	if (titles == null || widths == null || tableContents == null) {
+    		System.err.println("printStringTable: parameters cannot be null");
+    		return;
+    	} else if (titles.length != widths.length || titles.length != tableContents[0].length) {
+    		System.err.println("printStringTable: parameters 'titles', 'widths'"
+    				           + "and 'tableContents[]' must be of the same length");
+    		return;
+    	}
     	
     	String newLine = String.format("%n");
     	String headerFrame = "=";
     	String bodyFrame = "-";
-    	String contentFormat = "| %-" + (width - 2) + "s |" + newLine;
+    	String contentBorder = "|";
+    	String cellFormatStart = contentBorder + " %-";
+    	String cellFormatEnd = "s ";
     	String leftBorder = "+";
     	String rightBorder = "+" + newLine;
     	    	
     	StringBuilder stringBuilder = new StringBuilder();
     	
     	stringBuilder.append(newLine + leftBorder);
-    	for (int i = 0; i < width; ++i)
+    	for (int i = 0; i < titles.length - 1; ++i)
+    		for (int j = 0; j < widths[i]; ++j)
+    			stringBuilder.append(headerFrame);
+    	for (int j = 0; j < widths[widths.length - 1] - 1; ++j)
     		stringBuilder.append(headerFrame);
     	stringBuilder.append(rightBorder);
     	
-    	stringBuilder.append(String.format(contentFormat, title));
+    	for (int i = 0; i < titles.length; ++i)
+    		stringBuilder.append(String.format(cellFormatStart + (widths[i] - 3) + cellFormatEnd, titles[i]));
+    	stringBuilder.append(contentBorder + newLine);
     	
     	stringBuilder.append(leftBorder);
-    	for (int i = 0; i < width; ++i)
+    	for (int i = 0; i < titles.length - 1; ++i)
+    		for (int j = 0; j < widths[i]; ++j)
+    			stringBuilder.append(headerFrame);
+    	for (int j = 0; j < widths[widths.length - 1] - 1; ++j)
     		stringBuilder.append(headerFrame);
     	stringBuilder.append(rightBorder);
     	
-    	for (String c : array){
-    		stringBuilder.append(String.format(contentFormat, c));
+    	for (String[] row : tableContents){
+    		
+    		for (int i = 0; i < row.length; ++i) {
+    			String cell = row[i];
+	    		stringBuilder.append(String.format(cellFormatStart + (widths[i] - 3) + cellFormatEnd, cell));
+    		}
+    		stringBuilder.append(contentBorder + newLine);
+    		
     		stringBuilder.append(leftBorder);
-        	for (int i = 0; i < width; ++i)
+        	for (int i = 0; i < titles.length - 1; ++i)
+        		for (int j = 0; j < widths[i]; ++j)
+        			stringBuilder.append(bodyFrame);
+        	for (int j = 0; j < widths[widths.length - 1] - 1; ++j)
         		stringBuilder.append(bodyFrame);
         	stringBuilder.append(rightBorder);
     	}
     	
     	System.out.println(stringBuilder);
+    }
+
+    /**
+     * @param title Table's title
+     * @param width Table's width
+     * @param tableContents Contents of the table
+     */
+    public static void printStringTable(String title, int width, String[] tableContents) {
+    	
+    	Utils.printStringTable(new String[] {title}, new int[] {width}, new String[][] {tableContents});
     }
 		
 	/**

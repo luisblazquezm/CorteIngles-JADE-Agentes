@@ -66,7 +66,7 @@ public class Cities
     	String title = "CITY";
     	int width = 20;
 
-    	Utils.printStringTable(title, cityNames, width);
+    	Utils.printStringTable(title, width, cityNames);
     }
     
     /**
