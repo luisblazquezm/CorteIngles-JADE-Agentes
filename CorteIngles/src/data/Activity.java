@@ -66,6 +66,5 @@ public class Activity implements Serializable {
 	public String toString() {
 		return Activities.stringDescription(this);
 	}
-	
     
 }

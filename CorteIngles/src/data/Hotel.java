@@ -7,6 +7,8 @@
 
 package data;
 
+import java.util.Comparator;
+
 import utilities.Debug;
 
 /**
@@ -90,4 +92,6 @@ public class Hotel {
 		return false;
 		
 	}
+	
+
 }

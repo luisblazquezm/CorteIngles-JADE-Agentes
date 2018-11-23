@@ -8,8 +8,13 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
 import utilities.Utils;
 
 public class Cities 
@@ -52,9 +57,20 @@ public class Cities
 	 */
     public static List<City> randomList() {
     	List<City> list = new ArrayList<>();
+    	Set<City> hashSet = new HashSet<>();
+    	
 		for (int i = 0; i < Cities.CITY_NAMES.length ; ++i) {
 			list.add(Cities.instanceWithRandomAttributes());
 		}
+
+		/* This does not work because Set only eliminate duplicate objects Cities and we want it to eliminate duplicate names */
+		hashSet.addAll(list);
+		list.clear();
+		list.addAll(hashSet);
+		
+		/* Encapsulate this */
+		Collections.sort(list, Cities.CityNameComparator);
+	
 		return list;
     }
     
@@ -121,5 +137,16 @@ public class Cities
     private static String getRandomCityName() {
 		return Cities.CITY_NAMES[random.nextInt(Cities.CITY_NAMES.length)];
 	}
+    
+	
+    /**
+     * 
+     */
+    private static Comparator<City> CityNameComparator = new Comparator<City>() {
+
+		public int compare(City c1, City c2) {
+			return c1.getName().compareToIgnoreCase(c2.getName());
+	    }
+	};
 
 }

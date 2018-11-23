@@ -8,6 +8,7 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -15,7 +16,7 @@ import java.util.List;
  * @author mrhyd
  *
  */
-public class City {
+public class City{
 	
 	/**
 	 * City's name
@@ -88,4 +89,5 @@ public class City {
 	public String getName() {
 		return name;
 	}
+	
 }

@@ -467,8 +467,8 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	
 	private void processActivityData(ActivityInformData data) {
 
-		String[] titles = {"CIUDAD", "FECHA DE ENTRADA", "FECHA DE SALIDA"};
-		int[] widths = {15, 15, 15};
+		String[] titles = {"ACTIVIDAD", "CIUDAD", "FECHA DE ENTRADA", "FECHA DE SALIDA"};
+		int[] widths = {25, 15, 15, 15};
         
         List<Activity> results = data.getListOfActivities();
         

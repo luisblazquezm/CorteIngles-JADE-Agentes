@@ -35,12 +35,70 @@ public class Utils {
      * @param widths Table columns' widths
      * @param tableContents Contents of the table
      */
-    public static void printStringTable(String titles[], int[] widths, String[][] tableContents) {
+    public static void printStringTable(String titles[], int[] widths, String[][] tableContents) {    	
     	
     	if (titles == null || widths == null || tableContents == null) {
     		System.err.println("printStringTable: parameters cannot be null");
     		return;
     	} else if (titles.length != widths.length || titles.length != tableContents[0].length) {
+    		System.err.println("printStringTable: parameters 'titles', 'widths'"
+			           + "and 'tableContents[]' must be of the same length");
+			return;
+		}
+    	
+    	StringBuilder sb = new StringBuilder();		
+		final String NEW_LINE = "\n";
+        final String TABLE_JOINT_SYMBOL = "+";
+        final String TABLE_V_SPLIT_SYMBOL = "|";
+        final String TABLE_H_SPLIT_SYMBOL = "-";
+        final String TABLE_H_SPACE_SYMBOL = " ";
+        
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < titles.length ; i++){
+            for (int j = 0 ; j < widths[0] ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        sb.append(NEW_LINE);
+        
+        for	(String title : titles) {
+            sb.append(TABLE_V_SPLIT_SYMBOL + title);
+            for (int i = title.length() ; i < widths[0] ; i++)
+                sb.append(TABLE_H_SPACE_SYMBOL);
+        }
+        sb.append(TABLE_V_SPLIT_SYMBOL);
+
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < titles.length ; i++){
+            for (int j = 0 ; j < widths[0] ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        
+        for (String[] row : tableContents) {
+            sb.append(NEW_LINE + TABLE_V_SPLIT_SYMBOL);
+        	for (String content : row) {
+                sb.append(content);
+                for (int i = content.length() ; i < widths[0] ; i++)
+                	sb.append(TABLE_H_SPACE_SYMBOL);
+                
+            	sb.append(TABLE_V_SPLIT_SYMBOL);
+        	}
+        }
+    	
+        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
+        for (int i = 0 ; i < titles.length ; i++){
+            for (int j = 0 ; j < widths[0] ; j++)
+                sb.append(TABLE_H_SPLIT_SYMBOL);
+            sb.append(TABLE_JOINT_SYMBOL);
+        }
+        sb.append(NEW_LINE);
+            
+        System.out.printf(sb.toString());
+    	
+    	/*
+    	else if (titles.length != widths.length || titles.length != tableContents[0].length) {
     		System.err.println("printStringTable: parameters 'titles', 'widths'"
     				           + "and 'tableContents[]' must be of the same length");
     		return;
@@ -92,9 +150,11 @@ public class Utils {
         	for (int j = 0; j < widths[widths.length - 1] - 1; ++j)
         		stringBuilder.append(bodyFrame);
         	stringBuilder.append(rightBorder);
+        	
+        	System.out.println(stringBuilder);
     	}
+    	*/
     	
-    	System.out.println(stringBuilder);
     }
 
     /**
@@ -104,7 +164,15 @@ public class Utils {
      */
     public static void printStringTable(String title, int width, String[] tableContents) {
     	
-    	Utils.printStringTable(new String[] {title}, new int[] {width}, new String[][] {tableContents});
+    	String[] t = new String[] {title};
+    	int[] w = new int[] {width};
+    	String[][] tb = new String[tableContents.length][t.length];
+    	for (int i = 0; i< tableContents.length ; i++) {
+    		for (int j = 0; j < t.length; j++)
+    			tb[i][j] = tableContents[i];
+    	}
+    	
+    	Utils.printStringTable(t, w, tb);
     }
 		
 	/**
