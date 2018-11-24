@@ -14,7 +14,7 @@ import utilities.Debug;
  * @author mrhyd
  *
  */
-public class Hotel implements Serializable {
+public class Hotel implements Serializable, Comparable<Hotel> {
 	
 	/**
 	 * 
@@ -113,5 +113,15 @@ public class Hotel implements Serializable {
 	@Override
 	public int hashCode() {
 	    return (this.name.hashCode() + this.occupationCalendar.hashCode());        
+	}
+
+	@Override
+	public int compareTo(Hotel hotel) {
+
+		if (hotel == null) {
+			return 1;
+		} else {
+			return this.name.compareToIgnoreCase(hotel.getName());
+		}
 	}
 }

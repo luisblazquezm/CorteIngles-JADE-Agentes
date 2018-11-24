@@ -16,7 +16,7 @@ import java.util.List;
  * @author mrhyd
  *
  */
-public class City implements Serializable {
+public class City implements Serializable, Comparable<City> {
 	
 	/**
 	 * 
@@ -111,5 +111,15 @@ public class City implements Serializable {
 	@Override
 	public int hashCode() {
 	    return (this.name.hashCode() + this.listOfHotels.hashCode() + this.listOfActivities.hashCode());        
+	}
+
+	@Override
+	public int compareTo(City city) {
+
+		if (city == null) {
+			return 1;
+		} else {
+			return this.name.compareToIgnoreCase(city.getName());
+		}
 	}
 }

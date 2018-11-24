@@ -10,11 +10,10 @@ package data;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import utilities.Debug;
 
@@ -36,28 +35,25 @@ public class Data {
 		
 		listOfCities = Cities.randomList();
 
-		Set<City> s = new HashSet<City>();
-	    s.addAll(listOfCities);         
+		Set<City> s = new TreeSet<>(new CityComparator());
+	    s.addAll(listOfCities); // Ordered, no duplicates
 	    listOfCities = new ArrayList<City>();
-	    listOfCities.addAll(s); // No duplicates
-		Collections.sort(listOfCities, new CityComparator()); // Ordered
+	    listOfCities.addAll(s);
 		
 		for (City city : listOfCities) {
 			
 			List<Hotel> listOfHotels = city.getListOfHotels();
-			Set<Hotel> setOfHotels = new HashSet<Hotel>();
+			Set<Hotel> setOfHotels = new TreeSet<>(new HotelComparator()); // Ordered, no duplicates
 			setOfHotels.addAll(listOfHotels);         
 			listOfHotels = new ArrayList<Hotel>();
-			listOfHotels.addAll(setOfHotels); // No duplicates
-			Collections.sort(listOfHotels, new HotelComparator()); // Ordered
+			listOfHotels.addAll(setOfHotels);
 			city.setListOfHotels(listOfHotels);
 			
 			List<Activity> listOfActivities = city.getListOfActivities();
-			Set<Activity> setOfActivities = new HashSet<Activity>();
+			Set<Activity> setOfActivities = new TreeSet<>(new ActivityComparator()); // Ordered, no duplicates
 			setOfActivities.addAll(listOfActivities);         
 			listOfActivities = new ArrayList<Activity>();
-			listOfActivities.addAll(setOfActivities); // No duplicates
-			Collections.sort(listOfActivities, new ActivityComparator()); // Ordered
+			listOfActivities.addAll(setOfActivities);
 			city.setListOfActivities(listOfActivities);
 			
 		}

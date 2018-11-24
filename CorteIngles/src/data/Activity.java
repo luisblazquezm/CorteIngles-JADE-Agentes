@@ -11,7 +11,7 @@ package data;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class Activity implements Serializable {
+public class Activity implements Serializable, Comparable<Activity> {
 
 	/**
 	 * 
@@ -77,6 +77,16 @@ public class Activity implements Serializable {
 	@Override
 	public int hashCode() {
 	    return (this.name.hashCode() + this.scheduleDescription.hashCode());        
+	}
+
+	@Override
+	public int compareTo(Activity activity) {
+
+		if (activity == null) {
+			return 1;
+		} else {
+			return this.name.compareToIgnoreCase(activity.getName());
+		}
 	}
     
 }
