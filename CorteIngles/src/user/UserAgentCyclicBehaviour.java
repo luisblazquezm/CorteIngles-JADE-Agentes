@@ -362,10 +362,14 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		String[] titles = {"RESULTADO", "CIUDAD", "HOTEL", "FECHA DE ENTRADA", "FECHA DE SALIDA"};
-		int[] widths = {16,16,16,16,16};
+		int[] widths = {20,12,16,16,16};
         String[][] results = new String[1][5];
         	
-        results[0][0] = String.valueOf(data.isAvailable());
+        if(data.isAvailable()) {
+        	results[0][0] = "RESERVADO CON ÉXITO";
+        } else {
+        	results[0][0] = "NO DISPONIBLE";
+        }
         results[0][1] = data.getDestinationCity();
         results[0][2] = data.getDestinationHotel();
         results[0][3] = dateFormat.format(data.getStartDate());

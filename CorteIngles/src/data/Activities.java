@@ -7,8 +7,6 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -64,13 +62,12 @@ public class Activities {
 	 * @return List of random activities
 	 */
 	public static List<Activity> randomList() {
+		
 		List<Activity> list = new ArrayList<>();
+		
 		for (int i = 0; i < ACTIVITIES.length ; ++i) {
 			list.add(Activities.instanceWithRandomAttributes());
 		}
-		
-		/* Encapsulate this */
-		Collections.sort(list, Activities.ActivityNameComparator);
 		
 		return list;
 	}
@@ -91,14 +88,4 @@ public class Activities {
 		end = start + random.nextInt(31 - start);	// start - 31
 		return new int[] {start, end};
 	}
-	
-    /**
-     * 
-     */
-    private static Comparator<Activity> ActivityNameComparator = new Comparator<Activity>() {
-
-		public int compare(Activity a1, Activity a2) {
-			return a1.getName().compareToIgnoreCase(a2.getName());
-	    }
-	};
 }

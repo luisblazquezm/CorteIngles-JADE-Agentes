@@ -7,8 +7,8 @@
 
 package data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -16,8 +16,13 @@ import java.util.List;
  * @author mrhyd
  *
  */
-public class City{
+public class City implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * City's name
 	 */
@@ -89,5 +94,22 @@ public class City{
 	public String getName() {
 		return name;
 	}
+
+	@Override
+	public boolean equals(Object object) {
+
+	    if(object instanceof City)
+	    {
+	    	City temp = (City) object;
+	        if(this.name == temp.getName())
+	            return true;
+	    }
+	    
+	    return false;
+	}
 	
+	@Override
+	public int hashCode() {
+	    return (this.name.hashCode() + this.listOfHotels.hashCode() + this.listOfActivities.hashCode());        
+	}
 }

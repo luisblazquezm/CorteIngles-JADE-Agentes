@@ -7,16 +7,20 @@
 
 package data;
 
-import java.util.Comparator;
-
+import java.io.Serializable;
 import utilities.Debug;
 
 /**
  * @author mrhyd
  *
  */
-public class Hotel {
+public class Hotel implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 *  Hotel name
 	 */
@@ -93,5 +97,21 @@ public class Hotel {
 		
 	}
 	
+	@Override
+	public boolean equals(Object object) {
 
+	    if(object instanceof Hotel)
+	    {
+	    	Hotel temp = (Hotel) object;
+	        if(this.name == temp.getName())
+	            return true;
+	    }
+	    
+	    return false;
+	}
+	
+	@Override
+	public int hashCode() {
+	    return (this.name.hashCode() + this.occupationCalendar.hashCode());        
+	}
 }

@@ -9,6 +9,7 @@
 package data;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Activity implements Serializable {
 
@@ -59,12 +60,23 @@ public class Activity implements Serializable {
 	public void setScheduleDescription(int[] scheduleDescription) {
 		this.scheduleDescription = scheduleDescription;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+
 	@Override
-	public String toString() {
-		return Activities.stringDescription(this);
+	public boolean equals(Object object) {
+
+	    if(object instanceof Activity)
+	    {
+	    	Activity temp = (Activity) object;
+	        if(this.name == temp.getName() && Arrays.equals(this.scheduleDescription, temp.getScheduleDescription()));
+	            return true;
+	    }
+	    
+	    return false;
+	}
+	
+	@Override
+	public int hashCode() {
+	    return (this.name.hashCode() + this.scheduleDescription.hashCode());        
 	}
     
 }

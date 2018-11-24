@@ -8,8 +8,6 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -59,13 +57,12 @@ public class Hotels {
 	 * @return Random-length list of random Hotel class's instances
 	 */
 	public static List<Hotel> randomList() {
+		
     	List<Hotel> list = new ArrayList<>();
+    	
 		for (int i = 0; i < Hotels.HOTEL_NAMES.length ; ++i) {
 			list.add(Hotels.instanceWithRandomAttributes());
 		}
-		
-		/* Encapsulate this */
-		Collections.sort(list, Hotels.HotelNameComparator);
 		
 		return list;
     }
@@ -149,14 +146,4 @@ public class Hotels {
     	
     	Hotels.printHotelNameList(array);
     }
-    
-    /**
-     * 
-     */
-    private static Comparator<Hotel> HotelNameComparator = new Comparator<Hotel>() {
-
-		public int compare(Hotel h1, Hotel h2) {
-			return h1.getName().compareToIgnoreCase(h2.getName());
-	    }
-	};
 }
