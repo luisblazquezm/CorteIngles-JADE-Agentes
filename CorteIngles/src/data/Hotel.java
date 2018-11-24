@@ -103,7 +103,7 @@ public class Hotel implements Serializable {
 	    if(object instanceof Hotel)
 	    {
 	    	Hotel temp = (Hotel) object;
-	        if(this.name == temp.getName())
+	        if(this.name.equals(temp.getName()))
 	            return true;
 	    }
 	    

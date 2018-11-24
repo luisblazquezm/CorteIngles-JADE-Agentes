@@ -101,7 +101,7 @@ public class City implements Serializable {
 	    if(object instanceof City)
 	    {
 	    	City temp = (City) object;
-	        if(this.name == temp.getName())
+	        if(this.name.equals(temp.getName()))
 	            return true;
 	    }
 	    

@@ -67,7 +67,7 @@ public class Activity implements Serializable {
 	    if(object instanceof Activity)
 	    {
 	    	Activity temp = (Activity) object;
-	        if(this.name == temp.getName() && Arrays.equals(this.scheduleDescription, temp.getScheduleDescription()));
+	        if(this.name.equals(temp.getName()) && Arrays.equals(this.scheduleDescription, temp.getScheduleDescription()));
 	            return true;
 	    }
 	    
