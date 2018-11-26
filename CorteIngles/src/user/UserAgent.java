@@ -4,6 +4,7 @@ import jade.core.Agent;
 import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
+import utilities.Utils;
 
 public class UserAgent extends Agent  
 {
@@ -15,6 +16,8 @@ public class UserAgent extends Agent
 	@Override
 	public void setup()
 	{
+		// Initialize Utils' resources
+		Utils.init();
 		
 		try {
 			PlatformUtils.registerAgentInPlatform(this, PlatformUtils.USER_AGENT);
@@ -44,5 +47,6 @@ public class UserAgent extends Agent
 	@Override
 	protected void takeDown() {
 		JadeUtils.deregisterService(this);
+		//Utils.cleanResources();
 	}
 }

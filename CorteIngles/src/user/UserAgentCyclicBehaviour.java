@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import data.Activity;
 import data.ActivityInformData;
 import data.ActivityRequestData;
@@ -19,8 +18,13 @@ import data.ReservationRequestData;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 import utilities.Utils;
+import jade.content.lang.sl.SLCodec;
+import jade.content.onto.basic.Action;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.domain.FIPANames;
+import jade.domain.JADEAgentManagement.JADEManagementOntology;
+import jade.domain.JADEAgentManagement.ShutdownPlatform;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -45,6 +49,8 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	private int reservationStep = this.GET_INPUT_STEP;
 	private int activityStep = this.GET_INPUT_STEP;
 	private int behaviourStep = this.RESERVATION_STEP;
+	boolean behaviourIsOver = false;
+	boolean behaviourFirstTimeOn = true;
 
 	public UserAgentCyclicBehaviour(Agent agent)
 	{
@@ -65,6 +71,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		 * }
 		 */
 		
+		if (behaviourFirstTimeOn) {
+			displayMainInterface();
+			Utils.getUserInput("Pulse cualquier tecla para continuar...");
+			behaviourFirstTimeOn = false;
+		}
+		
 		switch(behaviourStep) {
 			case RESERVATION_STEP: 
 				processReservationRequest();
@@ -72,6 +84,11 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			case ACTIVITY_STEP:
 				processActivityRequest();
 			break;
+		}
+		
+		if (behaviourIsOver) {
+			Utils.getUserInput("Gracias por usar el servicio del Corte Inglés. Pulse cualquier tecla para salir...");
+			this.requestPlatformShutdown();
 		}
 	}
 	
@@ -103,19 +120,20 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			ServiceDataPacket serviceDataPacket;
 			
 			// ---------------------------------------------------------------------------------------
-	        
-			// Utils.clearConsole();
-			
+	        			
 			userWantsToTravel = Utils.getUserInput(
-					"¿Desea realizar un viaje? [S/n]: ",
+					"¿Desea realizar un viaje? [S/n] (pulse 'q' si desea salir): ",
 					true,
 					MAX_ATTEMPTS,
 					"s",
-					"n");
-			
-			 if ("nN".contains(userWantsToTravel)) {
-					behaviourStep = this.ACTIVITY_STEP;
-					return;
+					"n",
+					"q");
+			 if ("qQ".contains(userWantsToTravel)) {
+				 this.behaviourIsOver = true;
+				 return;
+			 } else if ("nN".contains(userWantsToTravel)) {
+				behaviourStep = this.ACTIVITY_STEP;
+				return;
 		    } else if ("sS".contains(userWantsToTravel)) { // Process reservation request
 	        	
 	        	/*
@@ -233,16 +251,18 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			// ---------------------------------------------------------------------------------------
 	        
-			// Utils.clearConsole();
-			
 			userWantsToSeeActivities = Utils.getUserInput(
-					"¿Desea ver información sobre actividades de ocio? [S/n]: ",
+					"¿Desea ver información sobre actividades de ocio? [S/n] (pulse 'q' si desea salir): ",
 					true,
 					MAX_ATTEMPTS,
 					"s",
-					"n");
+					"n",
+					"q");
 			
-			if ("sS".contains(userWantsToSeeActivities)) { // Process reservation request
+			if ("qQ".contains(userWantsToSeeActivities)) {
+				this.behaviourIsOver = true;
+				return;
+			} else if ("sS".contains(userWantsToSeeActivities)) { // Process reservation request
 	        	
 	        	/*
 	        	 * 1- Read input
@@ -492,6 +512,59 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         
         Utils.printStringTable(titles, widths, tableData);
         
+	}
+	
+	private void displayMainInterface() {
+		
+		String newLine = String.format("%n");
+		String mainInterface = "********************************************************************************" + newLine
+				             + "*   ________                                                                   *" + newLine
+				             + "*  /   _____|                                                                  *" + newLine
+				             + "*  |  /        _______   _____   _______   _____                               *" + newLine
+				             + "*  |  |       /   _   \\ /  _  | |__   __| |  ___|                              *" + newLine
+				             + "*  |  |       |  / \\  | | |_|/     | |    |  \\                                 *" + newLine
+				             + "*  |  \\_____  |  \\_/  | |    \\     | |    |  /__                               *" + newLine
+				             + "*  \\________| \\_______/ |_|\\__|    |_|    |_____|                              *" + newLine
+				             + "*                                                                              *" + newLine
+				             + "*                                                                              *" + newLine
+				             + "*                                                                              *" + newLine
+				             + "*                        _________                     _                       *" + newLine
+				             + "*                       |___   ___|                   | |     /                *" + newLine
+				             + "*                           | |      _  __    _____   | |  _____   _____       *" + newLine
+				             + "*                           | |     | |/  \\  /  _  \\  | | |  ___| |   __|      *" + newLine
+				             + "*                           | |     |  __  | | /_\\ |  | | |  \\     \\  \\        *" + newLine
+				             + "*                        ___| |___  | /  \\ | \\___  |  | | |  /__   _\\  \\       *" + newLine
+				             + "*                       |_________| |_|  |_| __  | |  |_| |_____| |_____|      *" + newLine
+				             + "*                                            \\ \\_| |                           *" + newLine
+				             + "*                                             \\____/                           *" + newLine
+				             + "*                                                                              *" + newLine
+				             + "********************************************************************************" + newLine
+				             + "*                                                                              *" + newLine
+				             + "* - Servicio de reservas de hoteles                                            *" + newLine
+				             + "*                                                                              *" + newLine
+				             + "* - Servicio de actividades de recreo                                          *" + newLine
+				             + "*                                                                              *" + newLine
+				             + "********************************************************************************";
+		
+		Utils.clearConsole();
+		System.out.println(mainInterface);
+		
+	}
+	
+	private void requestPlatformShutdown() {
+		
+		ACLMessage shutdownMessage = new ACLMessage(ACLMessage.REQUEST);
+        myAgent.getContentManager().registerLanguage(new SLCodec());
+        myAgent.getContentManager().registerOntology(JADEManagementOntology.getInstance());
+        shutdownMessage.addReceiver(myAgent.getAMS());
+        shutdownMessage.setLanguage(FIPANames.ContentLanguage.FIPA_SL);
+        shutdownMessage.setOntology(JADEManagementOntology.getInstance().getName());
+        try {
+            myAgent.getContentManager().fillContent(shutdownMessage, new Action(myAgent.getAID(), new ShutdownPlatform()));
+            myAgent.send(shutdownMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
         
 }

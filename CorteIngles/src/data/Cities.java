@@ -25,10 +25,10 @@ public class Cities
 	/**
 	 * Cities' names
 	 */
-	private static String[] CITY_NAMES = {"Vigo", "Plasencia", "Madrid", "Salamanca", "Leon",
-									  "Caceres", "Lugo", "Toledo", "Málaga", "Sevilla",
+	private static String[] CITY_NAMES = {"Vigo", "Plasencia", "Madrid", "Salamanca", "León",
+									  "Cáceres", "Lugo", "Toledo", "Málaga", "Sevilla",
 									  "Nueva York", "Londres", "París", "Tokyo", "San Petersburgo",
-									  "München", "Berlin", "Frankfurt", "Giza", "Marsella",
+									  "München", "Berlín", "Frankfurt", "Giza", "Marsella",
 									  "Roma", "Sofía", "Santorini", "Lübeck", "Moscú"};
         
 	static {

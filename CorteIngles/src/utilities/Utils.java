@@ -11,8 +11,18 @@ public class Utils {
 	/**
 	 * To read input
 	 */
-	private static Scanner scanner = new Scanner(System.in);
+	private static Scanner scanner;
 	
+	public static void init() {
+		scanner = new Scanner(System.in);
+		return;
+	}
+	
+	public static void cleanResources() {
+		scanner.close();
+		return;
+	}
+		
 	public final static void clearConsole()
 	{
 	    try {
@@ -20,7 +30,7 @@ public class Utils {
 	        final String os = System.getProperty("os.name");
 
 	        if (os.contains("Windows")) {
-	            Runtime.getRuntime().exec("cls");
+	        	new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	        } else {
 	            Runtime.getRuntime().exec("clear");
 	        }
