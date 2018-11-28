@@ -22,14 +22,13 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.ServiceDataPacket;
-import messages.Messages;
-import utilities.Debug;
+import packets.Packets;
+import packets.ServiceDataPacket;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
@@ -39,10 +38,17 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * @param agent This object's agent
+	 */
 	public ActivityAgentCyclicBehaviour(Agent agent) {
 		super(agent);
 	}
 	
+	
+	/**
+	 * 
+	 */
 	public ActivityAgentCyclicBehaviour() {
 		super();
 	}
@@ -50,19 +56,17 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	/* (non-Javadoc)
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
-	@SuppressWarnings("unused")
 	@Override
 	public void action() 
 	{
 		
-		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		MessageTemplate template = PlatformUtils.createPlatformMessageTemplate(ACLMessage.INFORM);
 		ACLMessage msg = this.myAgent.receive(template);
 				
 		if (msg == null) {
 			block();
 		} else {
-			try
-			{				
+			try {				
 				ServiceDataPacket requestPacket = (ServiceDataPacket) msg.getContentObject();
 				ActivityRequestData data = (ActivityRequestData)requestPacket.getData();
 				List<Activity> activities = Data.getActivities(data.getCity(), data.getStartDate());
@@ -70,18 +74,10 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 				if (activities == null) {
 					System.err.println("ActivityAgentCyclicBehaviour: listOfActivies is null");
 				} else {
-					ActivityInformData informData = new ActivityInformData(this.myAgent, data.getCity(), activities);
-					if (informData == null)
-						System.err.println("ActivityAgentCyclicBehaviour: informData is null");
+					ActivityInformData informData = new ActivityInformData(PlatformUtils.ACTIVITY_AGENT, data.getCity(), activities);
 					
-					ServiceDataPacket answerMessageContent = Messages.createActivityInformServiceDataPacket(requestPacket, informData);
-					if (answerMessageContent == null)
-						System.err.println("ActivityAgentCyclicBehaviour: answerMessageContent is null");
-					
-			    	//INFORM MESSAGE ELABORATION
-					Debug.message("ActivityAgent: REQUEST received from AgentCorteIngles\n");
-					
-			    	//INFORM MESSAGE SENDING 
+					ServiceDataPacket answerMessageContent = Packets.createActivityInformServiceDataPacket(requestPacket, informData);
+
 					int numberOfRecipients = JadeUtils.sendMessage(this.myAgent,
 																  PlatformUtils.HANDLE_ACTIVITY_SER,
 																  ACLMessage.INFORM,
@@ -91,56 +87,12 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 						System.err.println("ServeUserBehaviour: no agents implementing requested service");
 		        		return;
 					} 
-					
-					Debug.message("ActivityAgent: INFORM message sent");
 				}
-			}
-			catch (UnreadableException e)
-			{
+			} catch (UnreadableException e) {
 				System.err.println("ActivityAgentCyclicBehaviour: getContentObject failed");
 				e.printStackTrace();
 			}
 			
 		}
 	}
-
-	// I think they´re useless
-	
-	/*
-	private String getActivitiesString(String dataString) {
-		
-		// 'dataString' should be "City#Date"
-		String[] data = dataString.split(Pattern.quote(PlatformUtils.DELIMITER));
-		
-		List<Activity> activities = Data.getActivities(data[0], Integer.parseInt(data[1]));
-		if (activities == null) {
-			return PlatformUtils.ACTIVITY_MESSAGE + PlatformUtils.DELIMITER + "None";
-		}
-		
-		StringBuilder answer = new StringBuilder();
-		
-		answer.append(PlatformUtils.ACTIVITY_MESSAGE);
-		for (Activity a : activities) {
-			answer.append(PlatformUtils.DELIMITER);
-			answer.append(delimitedStringFromActivity(a));
-		}
-		
-		return new String(answer);
-	}
-	
-	private String delimitedStringFromActivity(Activity activity) {
-		
-		int[] schedule = activity.getScheduleDescription();
-		
-		StringBuilder string = new StringBuilder();
-		
-		string.append(activity.getName());
-		string.append(PlatformUtils.ACTIVITIES_DELIMITER);
-		string.append(String.valueOf(schedule[0]));
-		string.append(PlatformUtils.ACTIVITIES_DELIMITER);
-		string.append(String.valueOf(schedule[1]));
-		
-		return new String(string);
-	}
-	 */
 }

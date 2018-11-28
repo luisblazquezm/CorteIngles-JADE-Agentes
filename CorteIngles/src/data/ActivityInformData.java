@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jade.core.AID;
-import jade.core.Agent;
-
 public class ActivityInformData extends InformData {
 	
 	/**
@@ -15,41 +12,32 @@ public class ActivityInformData extends InformData {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 
+	 * City in which activities are carried out
 	 */
 	private String cityName;
 	
 	/**
-	 * 
+	 * List of activities carried out in city
 	 */
 	private List<Activity> activities;
 	
-	public ActivityInformData(AID server, String cityName, List<Activity> activities) {
-		super(server);
-		this.cityName = cityName;
-		this.activities = activities;
-	}
-	
-	public ActivityInformData(AID server, String cityName, Activity... activities) {
-		super(server);
-		this.cityName = cityName;
-		List<Activity> list = new ArrayList<>();
-		list = Arrays.asList(activities);
-		this.activities = list;
-	}
-	
-	public ActivityInformData(Agent server, String cityName, List<Activity> activities) {
-		super(server);
-		this.cityName = cityName;
-		this.activities = activities;
-	}
-	
 	/**
-	 * @param server
-	 * @param data
-	 * @param activities
+	 * @param server Agent answering to request
+	 * @param cityName City in which activities are carried out
+	 * @param activities List of activities carried out in city
 	 */
-	public ActivityInformData(Agent server, String cityName, Activity... activities) {
+	public ActivityInformData(String server, String cityName, List<Activity> activities) {
+		super(server);
+		this.cityName = cityName;
+		this.activities = activities;
+	}
+	
+	/**
+	 * @param server Agent answering to request
+	 * @param cityName City in which activities are carried out
+	 * @param activities Array of activities carried out in city
+	 */
+	public ActivityInformData(String server, String cityName, Activity... activities) {
 		super(server);
 		this.cityName = cityName;
 		List<Activity> list = new ArrayList<>();
@@ -57,13 +45,12 @@ public class ActivityInformData extends InformData {
 		this.activities = list;
 	}
 	
+	
 	/**
-	 * @param server
-	 * @param data
-	 * @param activities
+	 * 
 	 */
 	public ActivityInformData() {
-		super((AID)null);
+		super(null);
 		this.activities = null;
 	}
 
@@ -123,7 +110,4 @@ public class ActivityInformData extends InformData {
 		else
 			return true;
 	}
-	
-	
-
 }

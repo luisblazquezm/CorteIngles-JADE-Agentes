@@ -11,7 +11,7 @@ import java.io.Serializable;
 import utilities.Debug;
 
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class Hotel implements Serializable, Comparable<Hotel> {
@@ -97,6 +97,9 @@ public class Hotel implements Serializable, Comparable<Hotel> {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object object) {
 
@@ -110,11 +113,17 @@ public class Hotel implements Serializable, Comparable<Hotel> {
 	    return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 	    return (this.name.hashCode() + this.occupationCalendar.hashCode());        
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(Hotel hotel) {
 

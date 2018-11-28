@@ -3,7 +3,6 @@ package reservation;
 import data.Data;
 import data.ReservationInformData;
 import data.ReservationRequestData;
-import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 import jade.core.Agent;
@@ -11,10 +10,14 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.ServiceDataPacket;
-import messages.Messages;
+import packets.Packets;
+import packets.ServiceDataPacket;
 
 
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
 public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 {
 	/**
@@ -22,15 +25,23 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * @param agent This object's associated agent
+	 */
 	public ReservationAgentCyclicBehaviour(Agent agent) {
 		super(agent);
 	}
 	
+	/**
+	 * 
+	 */
 	public ReservationAgentCyclicBehaviour() {
 		super();
 	}
 	
-	@SuppressWarnings("unused")
+	/* (non-Javadoc)
+	 * @see jade.core.behaviours.Behaviour#action()
+	 */
 	@Override
 	public void action() 
 	{
@@ -40,36 +51,25 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 		
 		if (msg == null) {
 			block();
-		} else {
-
-			Debug.message("ReservationAgent: REQUEST received from AgentCorteIngles\n");
-			
-			try
-			{
+		} else {			
+			try {
 				ServiceDataPacket requestPacket = (ServiceDataPacket) msg.getContentObject();
 				if (requestPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
-				//String[] reservationData = JadeUtils.getReservationData((String)content.getData());
-				//boolean availability = Data.reservationRequestIsAvailable(reservationData);
 				ReservationRequestData reservationData = (ReservationRequestData) requestPacket.getData();
 				if (reservationData == null)
 					System.err.println("ReservationAgent: reservationData is null");
 				
-				boolean availability = Data.reservationRequestIsAvailable(reservationData); // Does this make the reservation?
-				ReservationInformData informData = new ReservationInformData(this.myAgent,
+				boolean availability = Data.reservationRequestIsAvailable(reservationData);
+				ReservationInformData informData = new ReservationInformData(PlatformUtils.RESERVATION_AGENT,
 																			 reservationData.getDestinationCity(),
 																			 reservationData.getDestinationHotel(),
 																			 reservationData.getStartDate(),
 																			 reservationData.getEndDate(),
 																			 availability);
-				
-				if (informData == null)
-					System.err.println("ReservationAgent: informData is null");
-				
-				//<--------------------------------------------- Identify Sender
-				
-				ServiceDataPacket answerMessageContent = Messages.createReservationInformServiceDataPacket(requestPacket, informData);
+			
+				ServiceDataPacket answerMessageContent = Packets.createReservationInformServiceDataPacket(requestPacket, informData);
 				if (answerMessageContent == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
@@ -81,18 +81,12 @@ public class ReservationAgentCyclicBehaviour extends CyclicBehaviour
 				if (numberOfRecipients <= 0) {
 					System.err.println("ServeUserBehaviour: no agents implementing requested service");
 	        		return ;
-				} 
+				}
 				
-				Debug.message("ReservationAgent: INFORM message sent");
-				
-			}
-			catch (UnreadableException e)
-			{
+			} catch (UnreadableException e) {
 				System.err.println("ReservationAgentCyclicBehaviour: getContentObject failed");
 				e.printStackTrace();
 			}
-			
 		}
-
 	}
 }

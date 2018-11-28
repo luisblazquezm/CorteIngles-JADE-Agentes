@@ -13,8 +13,11 @@ import java.util.Random;
 
 import utilities.Utils;
 
-public class Cities 
-{
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
+public class Cities {
 	
 	/**
 	 * Random object used by class

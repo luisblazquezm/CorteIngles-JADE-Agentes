@@ -1,17 +1,13 @@
-/**
- * @author mrhyd
- * 
- * This class is the agent named 'Ocio' in the task's PDF file.
- * 
- */
-
 package activity;
 
 import jade.core.Agent;
-import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
 public class ActivityAgent extends Agent {
 
 	/**
@@ -24,19 +20,6 @@ public class ActivityAgent extends Agent {
 	 */
 	@Override
 	protected void setup() {
-		
-		try {
-			PlatformUtils.registerAgentInPlatform(this, PlatformUtils.ACTIVITY_AGENT);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		/*
-		 *  At least initially, this is not needed, but I just wrote it \_('-')_/
-		 */
-//		JadeUtils.registerService(this, "activity-service", "add-activity");
-		Debug.message("Activity going to register\n");
 		
 		String[][] services = {{PlatformUtils.RETRIEVE_ACTIVITY_SER,
 				  			   getLocalName()}};

@@ -8,6 +8,7 @@
 package utilities;
 
 import jade.content.lang.sl.SLCodec;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -22,10 +23,12 @@ import java.util.Iterator;
 import utilities.Debug;
 
 
-public class JadeUtils
-{
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
+public class JadeUtils {
 	
-	// Este método está bien, calcado del manual de JADE
 	/**
 	 * Look for all agents providing a service.
 	 * @param clientAgent Agent that requests service.
@@ -62,7 +65,6 @@ public class JadeUtils
         return null;
     }
     
-    // Este método está bien, calcado del manual de JADE
     /**
      * Look for all agents providing a service and get the first of them.
      * @param clientAgent Agent that requests service.
@@ -118,7 +120,6 @@ public class JadeUtils
         return null;
     }
     
-    // Este método está bien, calcado del manual de JADE
     /**
      * Send an object from agent clientAgent to an agent implementing specified service.
      * @param clientAgent Agent that requests service.
@@ -126,7 +127,7 @@ public class JadeUtils
 	 * @param performative ACLMessage performative for the message
 	 * @param object Sent message.
      */
-    public static int sendMessage(Agent clientAgent, String serviceType, int performative , Object object)
+    public static int sendMessage(Agent clientAgent, String serviceType, int performative, Object object)
     {
         DFAgentDescription[] dfd;
         dfd = findAgentsForService(clientAgent, serviceType);
@@ -159,8 +160,38 @@ public class JadeUtils
         
         return dfd.length;
     }
+    
+    /**
+     * Send an object from agent clientAgent to an agent implementing specified service.
+     * @param clientAgent Agent that requests service.
+	 * @param serviceType  Required service's type.
+	 * @param performative ACLMessage performative for the message
+	 * @param object Sent message.
+     */
+    public static void sendMessageTo(Object object, int performative, Agent clientAgent, AID... receivers)
+    {
+        
+        try {
+        	
+        	ACLMessage aclMessage = new ACLMessage(performative);
 
-    // Este método está bien, calcado del manual de JADE
+            aclMessage.setOntology(PlatformUtils.PLATFORM_ONTOLOGY);
+            aclMessage.setLanguage(PlatformUtils.PLATFORM_LANGUAGE);
+			aclMessage.setContentObject((Serializable) object);
+        	for (AID receiver : receivers)
+        		aclMessage.addReceiver(receiver);
+        	
+    		clientAgent.send(aclMessage);
+            
+        } catch(IOException e) {
+//            JOptionPane.showMessageDialog(null,
+//                                        "Agente " + getLocalName() + ": " + e.getMessage(),
+//                                        "Error",
+//                                        JOptionPane.ERROR_MESSAGE);
+    		e.printStackTrace();
+        }
+    }
+
     /**
      * Defines a service that will be implemented by one or more agents.
      * @param agent Agent that implements the service.
@@ -181,19 +212,23 @@ public class JadeUtils
 			ServiceDescription sd = new ServiceDescription();
 			sd.setType(services[i][0]);
 			sd.setName(services[i][1]);
-//			sd.addOntologies("ontologia");
-//			sd.addLanguages(new SLCodec().getName());
+			sd.addOntologies(PlatformUtils.PLATFORM_ONTOLOGY);
+			sd.addLanguages(PlatformUtils.PLATFORM_LANGUAGE);
 			dfd.addServices(sd);
 		}
 		
 		try {
 			DFService.register(agent, dfd);
 		} catch (FIPAException e1) {
-			// TODO Auto-generated catch block
+			System.err.println("JadeUtils: registerServices: DFService.register failed");
 			e1.printStackTrace();
 		}
     }
     
+    /**
+     * @param agent Agent whose services are to be deregistered
+     * @throws NullPointerException
+     */
     public static void deregisterService (Agent agent) 
     		throws NullPointerException
     {

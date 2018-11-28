@@ -1,9 +1,11 @@
 package data;
 
 import java.util.Date;
-import jade.core.AID;
-import jade.core.Agent;
 
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
 public class ReservationRequestData extends RequestData{
 
 	/**
@@ -32,14 +34,14 @@ public class ReservationRequestData extends RequestData{
 	private Date endDate;
 	
 	/**
-	 * @param client
-	 * @param data
-	 * @param destinationCity
-	 * @param destinationHotel
-	 * @param startDate
-	 * @param endDate
+	 * @param client Requester of the service
+	 * @param data Service's associated data
+	 * @param destinationCity Destination city
+	 * @param destinationHotel Destination hotel
+	 * @param startDate Reservation's start date
+	 * @param endDate Reservation's end date
 	 */
-	public ReservationRequestData(AID client, String destinationCity, String destinationHotel,
+	public ReservationRequestData(String client, String destinationCity, String destinationHotel,
 			Date startDate, Date endDate) {
 		super(client);
 		this.destinationCity = destinationCity;
@@ -48,33 +50,12 @@ public class ReservationRequestData extends RequestData{
 		this.endDate = endDate;
 	}
 	
-	/**
-	 * @param client
-	 * @param data
-	 * @param destinationCity
-	 * @param destinationHotel
-	 * @param startDate
-	 * @param endDate
-	 */
-	public ReservationRequestData(Agent client, String destinationCity, String destinationHotel,
-			Date startDate, Date endDate) {
-		super(client);
-		this.destinationCity = destinationCity;
-		this.destinationHotel = destinationHotel;
-		this.startDate = startDate;
-		this.endDate = endDate;
-	}
 	
 	/**
-	 * @param client
-	 * @param data
-	 * @param destinationCity
-	 * @param destinationHotel
-	 * @param startDate
-	 * @param endDate
+	 * 
 	 */
 	public ReservationRequestData() {
-		super((AID) null);
+		super(null);
 		this.destinationCity = null;
 		this.destinationHotel = null;
 		this.startDate = null;
@@ -129,6 +110,4 @@ public class ReservationRequestData extends RequestData{
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	
-	
 }

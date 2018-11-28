@@ -10,17 +10,16 @@
 
 package corteIngles;
 
-import messages.ServiceDataPacket;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import utilities.Debug;
+import packets.ServiceDataPacket;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class GetInformResponseBehaviour extends CyclicBehaviour {
@@ -37,43 +36,14 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() {
 
-		// Receive INFORM message from ActivityAgent or ReservationAgent
-		Debug.message("GetInformResponseBehaviour: CorteInglesAgent waiting for INFORM message from Reservation/Activity\n");
-		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+		MessageTemplate template = PlatformUtils.createPlatformMessageTemplate(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
-		Debug.message("GetInformResponseBehaviour: Message INFORM received in CorteInglesAgent\n");
 		
 		if (message == null) {
-			Debug.message("GetInformResponseBehaviour: CorteInglesAgent blocked in ServeUserBehaviour");
 			block();
 		} else {
 			
-			try {
-				
-				if (message.getSender().equals(PlatformUtils.getAid(PlatformUtils.ACTIVITY_AGENT))) {
-					Debug.message(
-						"GetInformResponseBehaviour: "
-						+ PlatformUtils.getLocalName(PlatformUtils.CORTE_INGLES_AGENT)
-						+ " received INFORM type message from "
-						+ PlatformUtils.getLocalName(PlatformUtils.ACTIVITY_AGENT)
-					);
-				} else {
-					Debug.message(
-							"GetInformResponseBehaviour: "
-									+ PlatformUtils.getLocalName(PlatformUtils.CORTE_INGLES_AGENT)
-									+ " received INFORM type message from "
-									+ PlatformUtils.getLocalName(PlatformUtils.RESERVATION_AGENT)
-						);
-				}
-				
-				Debug.message(String.format(
-					"GetInformResponseBehaviour: Message will be forwarded to "
-					+ PlatformUtils.getLocalName(PlatformUtils.USER_AGENT)
-					)
-				);
-				
-				
-				// Forward message to UserAgent
+			try {				
 				ServiceDataPacket serviceDataPacket = (ServiceDataPacket) message.getContentObject();
 				if (serviceDataPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
@@ -87,13 +57,7 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 				if (numberOfRecipients <= 0) {
 					System.err.println("GetInformResponseBehaviour: no agents implementing requested service");
 	        		return ;
-				} 
-				
-				Debug.message(String.format(
-							"GetInformResponseBehaviour: Message was forwarded to %d agents%n",
-							numberOfRecipients
-							)
-				);
+				}
 				
 			} catch (UnreadableException e) {
 				System.err.println("GetInformResponseBehaviour: getContentObject failed");

@@ -18,7 +18,7 @@ import java.util.TreeSet;
 import utilities.Debug;
 
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class Data {
@@ -170,10 +170,16 @@ public class Data {
 	   
 	}
 
+	/**
+	 * @return the list of cities
+	 */
 	public static List<City> getListOfCities() {
 		return listOfCities;
 	}
 	
+	/**
+	 * @return the list of city names
+	 */
 	public static List<String> getListOfCityNames() {
 		List<String> list = new ArrayList<>();
 		for (City c : listOfCities) {
@@ -182,12 +188,19 @@ public class Data {
 		return list;
 	}
 	
+	/**
+	 * @return the array of city names
+	 */
 	public static String[] getArrayOfCityNames() {
 		String[] array = new String[listOfCities.size()];
 		array = getListOfCityNames().toArray(array);
 		return array;
 	}
 	
+	/**
+	 * @param cityName The name in which the hotels must be searched
+	 * @return The list of hotels of the selected city
+	 */
 	public static List<Hotel> getListOfHotels(String cityName) {
 
 		City city = null;
@@ -208,6 +221,10 @@ public class Data {
 		return city.getListOfHotels();
 	}
 	
+	/**
+	 * @param cityName The name in which the hotel names must be searched
+	 * @return The list of hotel names of the selected city
+	 */
 	public static List<String> getListOfHotelNames(String cityName) {
 		List<String> list = new ArrayList<>();
 		for (Hotel c : Data.getListOfHotels(cityName)) {
@@ -216,6 +233,10 @@ public class Data {
 		return list;
 	}
 	
+	/**
+	 * @param cityName The name in which the hotel names must be searched
+	 * @return The array of hotel names of the selected city
+	 */
 	public static String[] getArrayOfHotelNames(String cityName) {
 		
 		List<String> list = Data.getListOfHotelNames(cityName);
@@ -223,45 +244,4 @@ public class Data {
 		array = list.toArray(array);
 		return array;
 	}
-	
-	/*
-	 * I think this won't be used
-	 * 
-	public static List<Activity> getListOfActivities(String cityName) {
-
-		City city = null;
-		
-		if (cityName == null)
-			return null;
-		
-		for (City c : listOfCities) {
-			if (c.getName().equals(cityName)) {
-				city = c;
-				break;
-			}
-		}
-		
-		if (city == null)
-			return null;
-		
-		return city.getListOfActivities();
-	}
-	
-	public static List<String> getListOfActivityNames(String cityName) {
-		List<String> list = new ArrayList<>();
-		for (Activity c : Data.getListOfActivities(cityName)) {
-			list.add(c.getName());
-		}
-		return list;
-	}
-
-	public static String[] getArrayOfActivityNames(String cityName) {
-		List<String> list = Data.getListOfActivityNames(cityName);
-		String[] array = new String[list.size()];
-		array = list.toArray(array);
-		return array;
-	}
-	
-	*/
-
 }

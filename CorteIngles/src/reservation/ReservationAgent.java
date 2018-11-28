@@ -1,10 +1,13 @@
 package reservation;
 
 import jade.core.Agent;
-import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
 public class ReservationAgent extends Agent
 {
 	/**
@@ -12,19 +15,14 @@ public class ReservationAgent extends Agent
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/* (non-Javadoc)
+	 * @see jade.core.Agent#setup()
+	 */
 	@Override
-	public void setup()
-	{
-		try {
-			PlatformUtils.registerAgentInPlatform(this, PlatformUtils.RESERVATION_AGENT);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setup() {
 		
 		String[][] services = {{PlatformUtils.MAKE_RESERVATION_SER,
             					getLocalName()}};
-		Debug.message("Reservation going to register\n");
 		JadeUtils.registerServices(this, services);
 		
 		

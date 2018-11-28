@@ -11,9 +11,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class City implements Serializable, Comparable<City> {
@@ -95,6 +94,9 @@ public class City implements Serializable, Comparable<City> {
 		return name;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object object) {
 
@@ -108,11 +110,17 @@ public class City implements Serializable, Comparable<City> {
 	    return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 	    return (this.name.hashCode() + this.listOfHotels.hashCode() + this.listOfActivities.hashCode());        
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(City city) {
 

@@ -1,52 +1,33 @@
-/**
- * 
- */
 package data;
 
 import java.io.Serializable;
 
-import jade.core.AID;
-import jade.core.Agent;
-
 /**
- * @author i0910465
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
-public class ServiceData implements Serializable{
+public class ServiceData implements Serializable {
+	
 	/**
-	 * 
+	 * Serial version UID
 	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 
+	 * Data source (agent role as defined in PlatformUtils)
 	 */
-	private AID source;
+	private String source;
 		
 	/**
-	 * @param source
-	 * @param data
+	 * @param source Data source
 	 */
-	public ServiceData(AID source) {
-		super();
+	public ServiceData(String source) {
 		this.source = source;
 	}
 	
-	/**
-	 * @param source
-	 * @param data
-	 */
-	public ServiceData(Agent source) {
-		super();
-		if (source != null)
-			this.source = source.getAID();
-		else
-			this.source = null;
-	}
 	
 	/**
-	 * @param source
-	 * @param data
+	 * 
 	 */
 	public ServiceData() {
 		this.source = null;
@@ -55,14 +36,14 @@ public class ServiceData implements Serializable{
 	/**
 	 * @return the source
 	 */
-	public AID getSource() {
+	public String getSource() {
 		return source;
 	}
 
 	/**
 	 * @param source the source to set
 	 */
-	public void setSource(AID source) {
+	public void setSource(String source) {
 		this.source = source;
 	}
 }

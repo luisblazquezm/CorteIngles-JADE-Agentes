@@ -8,11 +8,12 @@
 
 package utilities;
 
-import jade.core.AID;
-import jade.core.Agent;
+import jade.content.lang.sl.SLCodec;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class PlatformUtils {
@@ -23,18 +24,6 @@ public class PlatformUtils {
 	public static final String RESERVATION_AGENT = "reservation";
 	public static final String ACTIVITY_AGENT = "activity";
 	
-	// Agents' info
-	private static AID USER_AID= null;
-	private static AID CORTE_INGLES_AID = null;
-	private static AID RESERVATION_AID = null;
-	private static AID ACTIVITY_AID = null;
-	/*
-	public static String USER_ALIAS = "user-agent";
-	public static String RESERVATION_ALIAS = "reservation-agent";
-	public static String ACTIVITY_ALIAS = "activity-agent";
-	public static String CORTE_INGLES_ALIAS = "corte-ingles-agent";
-	*/
-	
 	// Services' names and types
 	public static final String RETRIEVE_ACTIVITY_SER = "retrieve-activity";
 	public static final String MAKE_RESERVATION_SER = "make-reservation";
@@ -42,16 +31,10 @@ public class PlatformUtils {
 	public static final String HANDLE_ACTIVITY_SER = "handle-activity-request";
 	public static final String HANDLE_USER_REQUEST_SER = "handle-user-request";
 	
-	/*
-	// Delimiter for message content
-	public static final String DELIMITER = "#";
-	public static final String ACTIVITIES_DELIMITER = "*";
-	
-	// Type of message
-	public static final String ACTIVITY_MESSAGE = "activity-message";
-	public static final String RESERVATION_MESSAGE = "reservation-message";
-	*/
-	
+	// Packets' associated data
+	public static final String PLATFORM_ONTOLOGY = "corte-ingles-ontology";
+	public static final String PLATFORM_LANGUAGE = new SLCodec().getName();
+		
 	// Availability of reservation
 	public static final String RESERVATION_AVAILABLE = "available";
 	public static final String RESERVATION_NOT_AVAILABLE = "not-available";
@@ -90,115 +73,17 @@ public class PlatformUtils {
 	public static final int MAX_ROOMS_IN_HOTEL = 5;
 	
 	/**
-	 * @param agent
-	 * @param role
-	 * @throws Exception
+	 * @param performative ACLMessage's performative
+	 * @return MessageTemplate object
 	 */
-	public static void registerAgentInPlatform(Agent agent, String role) throws Exception {
+	public static MessageTemplate createPlatformMessageTemplate(int performative) {
 		
-		Exception exception = new Exception("PlatformUtils: registerAgentInPlatform: agent's registered in this platform should follow one of the following roles:\n"
-								            + "\t> PlatformUtils.USER_AGENT\n"
-											+ "\t> PlatformUtils.CORTE_INGLES_AGENT\n"
-								            + "\t> PlatformUtils.RESERVATION_AGENT\n"
-											+ "\t> PlatformUtils.ACTIVITY_AGENT\n");
+		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		template = MessageTemplate.and(template, MessageTemplate.MatchLanguage(PLATFORM_LANGUAGE));
+		template = MessageTemplate.and(template, MessageTemplate.MatchOntology(PLATFORM_ONTOLOGY));
 		
-		if (agent == null)
-			System.err.println("PlatformUtils: registerAgentInPlatform: no agent specified. Please specify an agent or delete call to method");
+		return template;
 		
-		if (role == null)
-			throw exception;
-		
-		switch(role) {
-		case PlatformUtils.USER_AGENT:
-			PlatformUtils.USER_AID = agent.getAID();
-		break;
-		case PlatformUtils.CORTE_INGLES_AGENT:
-			PlatformUtils.CORTE_INGLES_AID = agent.getAID();
-			break;
-		case PlatformUtils.RESERVATION_AGENT:
-			PlatformUtils.RESERVATION_AID = agent.getAID();
-			break;
-		case PlatformUtils.ACTIVITY_AGENT:
-			PlatformUtils.ACTIVITY_AID = agent.getAID();
-			break;
-		default:
-			throw exception;
-		}
-	}
-	
-	/**
-	 * @param role
-	 * @return
-	 */
-	public static String getLocalName(String role) {
-		
-		String errorMessage1 = "PlatformUtils: getLocalName: agent's registered in this platform should follow one of the following roles:\n"
-								            + "\t> PlatformUtils.USER_AGENT\n"
-											+ "\t> PlatformUtils.CORTE_INGLES_AGENT\n"
-								            + "\t> PlatformUtils.RESERVATION_AGENT\n"
-											+ "\t> PlatformUtils.ACTIVITY_AGENT\n";
-		String errorMessage2 = "PlatformUtils: getLocalName: no agent registered for that role";
-		
-		try {
-			switch(role) {
-			case PlatformUtils.USER_AGENT:
-				return PlatformUtils.USER_AID.getLocalName();
-			case PlatformUtils.CORTE_INGLES_AGENT:
-				return PlatformUtils.CORTE_INGLES_AID.getLocalName();
-			case PlatformUtils.RESERVATION_AGENT:
-				return PlatformUtils.RESERVATION_AID.getLocalName();
-			case PlatformUtils.ACTIVITY_AGENT:
-				return PlatformUtils.ACTIVITY_AID.getLocalName();
-			default:
-				System.err.println(errorMessage1);
-				return null;
-			}
-		} catch (NullPointerException e) {
-			System.err.println(errorMessage2 +": '" + role + "'");
-			return null;
-		}
-	}
-	
-	/**
-	 * @param role
-	 * @return
-	 */
-	public static AID getAid(String role) {
-		
-		String errorMessage1 = "PlatformUtils: getAid: agent's registered in this platform should follow one of the following roles:\n"
-					            + "\t> PlatformUtils.USER_AGENT\n"
-								+ "\t> PlatformUtils.CORTE_INGLES_AGENT\n"
-					            + "\t> PlatformUtils.RESERVATION_AGENT\n"
-								+ "\t> PlatformUtils.ACTIVITY_AGENT\n";
-		String errorMessage2 = "PlatformUtils: getAid: no agent registered for that role";
-		
-		switch(role) {
-		case PlatformUtils.USER_AGENT:
-			if (PlatformUtils.USER_AID != null)
-				return PlatformUtils.USER_AID;
-			else
-				break;
-		case PlatformUtils.CORTE_INGLES_AGENT:
-			if (PlatformUtils.CORTE_INGLES_AID != null)
-				return PlatformUtils.CORTE_INGLES_AID;
-			else
-				break;
-		case PlatformUtils.RESERVATION_AGENT:
-			if (PlatformUtils.RESERVATION_AID != null)
-				return PlatformUtils.RESERVATION_AID;
-			else
-				break;
-		case PlatformUtils.ACTIVITY_AGENT:
-			if (PlatformUtils.ACTIVITY_AID != null)
-				return PlatformUtils.ACTIVITY_AID;
-			else
-				break;
-		default:
-			System.err.println(errorMessage1);
-		}
-		
-		System.err.println(errorMessage2 +": '" + role + "'");
-		return null;
 	}
 
 }

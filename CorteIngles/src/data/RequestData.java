@@ -1,39 +1,36 @@
 package data;
 
-import jade.core.AID;
-import jade.core.Agent;
-
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
 public class RequestData extends ServiceData {
-
-	/**
-	 * @param client
-	 * @param data
-	 */
-	public RequestData(AID client) {
-		super(client);
-	}
-	
-	/**
-	 * @param client
-	 * @param data
-	 */
-	public RequestData(Agent client) {
-		super();
-		if (client != null)
-			this.setSource(client.getAID());
-	}
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @param client Agent requesting service
+	 * @param data Service's associated data
+	 */
+	public RequestData(String client) {
+		super(client);
+	}
 	
-	public AID getClient()
+	/**
+	 * @return the client
+	 */
+	public String getClient()
 	{
 		return this.getSource();
 	}
 	
-	public void setClient(AID client)
+	/**
+	 * @param client the client to set
+	 */
+	public void setClient(String client)
 	{
 		this.setSource(client);
 	}

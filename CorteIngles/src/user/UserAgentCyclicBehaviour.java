@@ -1,6 +1,5 @@
 package user;
 
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,10 +27,13 @@ import jade.domain.JADEAgentManagement.ShutdownPlatform;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import messages.ServiceDataPacket;
-import messages.Messages;
-import utilities.Debug;
+import packets.Packets;
+import packets.ServiceDataPacket;
 
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
 public class UserAgentCyclicBehaviour extends CyclicBehaviour
 {
 	/**
@@ -52,11 +54,17 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	boolean behaviourIsOver = false;
 	boolean behaviourFirstTimeOn = true;
 
+	/**
+	 * @param agent This object's associated agent
+	 */
 	public UserAgentCyclicBehaviour(Agent agent)
 	{
 		super(agent);
 	}
 
+	/* (non-Javadoc)
+	 * @see jade.core.behaviours.Behaviour#action()
+	 */
 	@Override
 	public void action()
 	{
@@ -92,6 +100,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		}
 	}
 	
+	/**
+	 * Carries out the operations needed to send a reservation request
+	 */
 	private void processReservationRequest() {
 		
 		if (reservationStep == GET_INPUT_STEP) {
@@ -106,7 +117,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				startLimitDate = dateFormat.parse("01/05/2019");
 				endLimitDate = dateFormat.parse("31/05/2019");
 			} catch (ParseException e) {
-				Debug.message("UserAgentCycliBehaviour: wrong date format");
+				System.err.println("UserAgentCycliBehaviour: wrong date format");
 				startLimitDate = null;
 				endLimitDate = null;
 			}
@@ -116,7 +127,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			// For message communication
 			int numberOfServers = 0;
-			ReservationRequestData reservationData = new ReservationRequestData(this.myAgent, null, null, null, null);
+			ReservationRequestData reservationData = new ReservationRequestData(PlatformUtils.USER_AGENT, null, null, null, null);
 			ServiceDataPacket serviceDataPacket;
 			
 			// ---------------------------------------------------------------------------------------
@@ -194,11 +205,10 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 						)
 				);
 				
-				serviceDataPacket = Messages.createReservationRequestServiceDataPacket(reservationData);
+				serviceDataPacket = Packets.createReservationRequestServiceDataPacket(this.myAgent, reservationData);
 				if (serviceDataPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
-				Debug.message("UserAgentCyclicBehaviour: going to send reservation REQUEST");
 				numberOfServers = JadeUtils.sendMessage(
 						this.myAgent,
 						PlatformUtils.HANDLE_RESERVATION_SER,
@@ -207,7 +217,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				);
 				
 				if (numberOfServers <= 0) {
-	        		Debug.message("UserAgentCyclicBehaviour: no agents implementing requested service");
+	        		System.err.println("UserAgentCyclicBehaviour: no agents implementing requested service");
 	        		return;
 				} else {
 					reservationStep = this.MESSAGE_STEP;
@@ -220,6 +230,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		}
 	}
 
+	/**
+	 * Carries out the operations needed to send an activity request
+	 */
 	private void processActivityRequest() {
 		
 		if (activityStep == GET_INPUT_STEP) {
@@ -235,7 +248,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				startLimitDate = dateFormat.parse("01/05/2019");
 				endLimitDate = dateFormat.parse("31/05/2019");
 			} catch (ParseException e) {
-				Debug.message("UserAgentCycliBehaviour: wrong date format");
+				System.err.println("UserAgentCycliBehaviour: wrong date format");
 				startLimitDate = null;
 				endLimitDate = null;
 			}
@@ -296,11 +309,10 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 						)
 				);
 							
-				serviceDataPacket = Messages.createActivityRequestServiceDataPacket(activityData);
+				serviceDataPacket = Packets.createActivityRequestServiceDataPacket(this.myAgent, activityData);
 				if (serviceDataPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
-				Debug.message("UserAgentCyclicBehaviour: going to send activity REQUEST");
 				numberOfServers = JadeUtils.sendMessage(
 						this.myAgent,
 						PlatformUtils.HANDLE_ACTIVITY_SER,
@@ -309,7 +321,7 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				);
 				
 				if (numberOfServers <= 0) {
-	        		Debug.message("UserAgentCyclicBehaviour: no agents implementing requested service");
+	        		System.err.println("UserAgentCyclicBehaviour: no agents implementing requested service");
 	        		return;
 				} else {
 					activityStep = this.MESSAGE_STEP;
@@ -323,22 +335,20 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	}
 	
 	
-	private boolean waitAndProcessResponse() {
+	/**
+	 * Waits for an answer and processes it 
+	 */
+	private void waitAndProcessResponse() {
 		
 		// TODO Parse data and return true or false depending on conditions
 		// Should return false if reservation is not available
-		
-		Debug.message("UserAgentCyclicBehaviour: waiting for INFORM message");
 		
         MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		
         if (message == null) {
-    		Debug.formattedMessage("UserAgentCyclicBehaviour: %s blocked%n", PlatformUtils.getLocalName(PlatformUtils.USER_AGENT));
     		block();
         } else {
-
-    		Debug.message("UserAgentCyclicBehaviour: INFORM Message received");
     		
 			try {
 				ServiceDataPacket content = (ServiceDataPacket) message.getContentObject();
@@ -348,15 +358,13 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 					System.err.println("INFORM DATA NULL");
 				else if (informData.getServer() == null)
 					System.err.println("SERVER NULL");
-				else if (PlatformUtils.getAid(PlatformUtils.RESERVATION_AGENT) == null)
-					System.err.println("AID IS NULL");
 				
 				try {
-					if (informData.getServer().equals(PlatformUtils.getAid(PlatformUtils.RESERVATION_AGENT))) {
+					if (informData.getServer().equals(PlatformUtils.RESERVATION_AGENT)) {
 						processReservationData((ReservationInformData) content.getData());
 						reservationStep = this.GET_INPUT_STEP;
 						behaviourStep = this.ACTIVITY_STEP;
-					} else if (informData.getServer().equals(PlatformUtils.getAid(PlatformUtils.ACTIVITY_AGENT))) {
+					} else if (informData.getServer().equals(PlatformUtils.ACTIVITY_AGENT)) {
 						processActivityData((ActivityInformData) content.getData());
 						activityStep = this.GET_INPUT_STEP;
 						behaviourStep = this.RESERVATION_STEP;
@@ -373,10 +381,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				e.printStackTrace();
 			}
     	}
-        
-        return true; 
 	}
 	
+	/**
+	 * Prints the reservation information received
+	 * @param data Data to be processed
+	 */
 	private void processReservationData(ReservationInformData data) {
 		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -398,97 +408,11 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         Utils.printStringTable(titles, widths, results);
 		
 	}
-
-	/*
-	private void processReservationData(ReservationInformData data) {
-		// TODO Auto-generated method stub
-		
-		// Basically, print data
-		StringBuilder sb = new StringBuilder();
-		final String dateFormatString = "dd/MM/yyyy";
-		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);			
-		final String NEW_LINE = "\n";
-        final String TABLE_JOINT_SYMBOL = "+";
-        final String TABLE_V_SPLIT_SYMBOL = "|";
-        final String TABLE_H_SPLIT_SYMBOL = "-";
-        final String TABLE_H_SPACE_SYMBOL = " ";
-        int width = 20;
-        String title1 = "CITY";
-        String title2 = "HOTEL";
-        String title3 = "START DATE";
-        String title4 = "END DATE";
-        int NUM_PARAMS = 4;
-        
-        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
-        for (int i = 0 ; i < NUM_PARAMS ; i++){
-            for (int j = 0 ; j < width ; j++)
-                sb.append(TABLE_H_SPLIT_SYMBOL);
-            sb.append(TABLE_JOINT_SYMBOL);
-        }
-        sb.append(NEW_LINE);
-        
-
-        sb.append(TABLE_V_SPLIT_SYMBOL + title1);
-        for (int i = title1.length() ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
-        
-        sb.append(TABLE_V_SPLIT_SYMBOL + title2);
-        for (int i = title2.length() ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
-        
-        sb.append(TABLE_V_SPLIT_SYMBOL + title3);
-        for (int i = title3.length() ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
-        
-        sb.append(TABLE_V_SPLIT_SYMBOL + title4);
-        for (int i = title4.length() ; i < width ; i++)
-            sb.append(TABLE_H_SPACE_SYMBOL);
-        sb.append(TABLE_V_SPLIT_SYMBOL);
-
-        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
-        for (int i = 0 ; i < NUM_PARAMS ; i++){
-            for (int j = 0 ; j < width ; j++)
-                sb.append(TABLE_H_SPLIT_SYMBOL);
-            sb.append(TABLE_JOINT_SYMBOL);
-        }
-        sb.append(NEW_LINE);
-        
-		String city = data.getDestinationCity();
-		String hotel = data.getDestinationHotel();
-		String departureDate = dateFormat.format(data.getStartDate());
-		String returnDate = dateFormat.format(data.getEndDate());
-		
-        sb.append(TABLE_V_SPLIT_SYMBOL + city);
-        for (int i = city.length() ; i < width ; i++)
-        sb.append(TABLE_H_SPACE_SYMBOL);
-        
-        sb.append(TABLE_V_SPLIT_SYMBOL + hotel);
-        for (int i = hotel.length() ; i < width ; i++)
-        	sb.append(TABLE_H_SPACE_SYMBOL);
-        
-        sb.append(TABLE_V_SPLIT_SYMBOL + departureDate);
-        for (int i = departureDate.length() ; i < width ; i++)
-                sb.append(TABLE_H_SPACE_SYMBOL);
-        
-        sb.append(TABLE_V_SPLIT_SYMBOL + returnDate);
-        for (int i = returnDate.length() ; i < width ; i++)
-                sb.append(TABLE_H_SPACE_SYMBOL);
-        sb.append(TABLE_V_SPLIT_SYMBOL);
-    	
-        
-        sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
-        for (int i = 0 ; i < NUM_PARAMS ; i++){
-            for (int j = 0 ; j < width ; j++)
-                sb.append(TABLE_H_SPLIT_SYMBOL);
-            sb.append(TABLE_JOINT_SYMBOL);
-        }
-        sb.append(NEW_LINE);
-            
-        System.out.printf(sb.toString());
-		
-	}
-	*/
 	
+	/**
+	 * Prints the activity information received
+	 * @param data Data to be processed
+	 */
 	private void processActivityData(ActivityInformData data) {
 
 		String[] titles = {"ACTIVIDAD", "CIUDAD", "FECHA DE ENTRADA", "FECHA DE SALIDA"};
@@ -514,6 +438,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
         
 	}
 	
+	/**
+	 * Displays a pseudo user interface
+	 */
 	private void displayMainInterface() {
 		
 		String newLine = String.format("%n");
@@ -551,6 +478,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 		
 	}
 	
+	/**
+	 * Sends a message to AMS agent to shut down platform
+	 */
 	private void requestPlatformShutdown() {
 		
 		ACLMessage shutdownMessage = new ACLMessage(ACLMessage.REQUEST);

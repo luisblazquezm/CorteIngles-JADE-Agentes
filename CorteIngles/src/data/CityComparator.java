@@ -1,12 +1,9 @@
-/**
- * 
- */
 package data;
 
 import java.util.Comparator;
 
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class CityComparator implements Comparator<City> {

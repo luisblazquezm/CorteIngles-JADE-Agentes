@@ -6,6 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
 public class Utils {
 	
 	/**
@@ -13,16 +17,26 @@ public class Utils {
 	 */
 	private static Scanner scanner;
 	
+	/**
+	 * Inits this class's resources
+	 */
 	public static void init() {
 		scanner = new Scanner(System.in);
 		return;
 	}
 	
+	
+	/**
+	 * Clean up this class's resources
+	 */
 	public static void cleanResources() {
 		scanner.close();
 		return;
 	}
 		
+	/**
+	 * Clears the CLI. System independent
+	 */
 	public final static void clearConsole()
 	{
 	    try {
@@ -106,65 +120,6 @@ public class Utils {
         sb.append(NEW_LINE);
             
         System.out.printf(sb.toString());
-    	
-    	/*
-    	else if (titles.length != widths.length || titles.length != tableContents[0].length) {
-    		System.err.println("printStringTable: parameters 'titles', 'widths'"
-    				           + "and 'tableContents[]' must be of the same length");
-    		return;
-    	}
-    	
-    	String newLine = String.format("%n");
-    	String headerFrame = "=";
-    	String bodyFrame = "-";
-    	String contentBorder = "|";
-    	String cellFormatStart = contentBorder + " %-";
-    	String cellFormatEnd = "s ";
-    	String leftBorder = "+";
-    	String rightBorder = "+" + newLine;
-    	    	
-    	StringBuilder stringBuilder = new StringBuilder();
-    	
-    	stringBuilder.append(newLine + leftBorder);
-    	for (int i = 0; i < titles.length - 1; ++i)
-    		for (int j = 0; j < widths[i]; ++j)
-    			stringBuilder.append(headerFrame);
-    	for (int j = 0; j < widths[widths.length - 1] - 1; ++j)
-    		stringBuilder.append(headerFrame);
-    	stringBuilder.append(rightBorder);
-    	
-    	for (int i = 0; i < titles.length; ++i)
-    		stringBuilder.append(String.format(cellFormatStart + (widths[i] - 3) + cellFormatEnd, titles[i]));
-    	stringBuilder.append(contentBorder + newLine);
-    	
-    	stringBuilder.append(leftBorder);
-    	for (int i = 0; i < titles.length - 1; ++i)
-    		for (int j = 0; j < widths[i]; ++j)
-    			stringBuilder.append(headerFrame);
-    	for (int j = 0; j < widths[widths.length - 1] - 1; ++j)
-    		stringBuilder.append(headerFrame);
-    	stringBuilder.append(rightBorder);
-    	
-    	for (String[] row : tableContents){
-    		
-    		for (int i = 0; i < row.length; ++i) {
-    			String cell = row[i];
-	    		stringBuilder.append(String.format(cellFormatStart + (widths[i] - 3) + cellFormatEnd, cell));
-    		}
-    		stringBuilder.append(contentBorder + newLine);
-    		
-    		stringBuilder.append(leftBorder);
-        	for (int i = 0; i < titles.length - 1; ++i)
-        		for (int j = 0; j < widths[i]; ++j)
-        			stringBuilder.append(bodyFrame);
-        	for (int j = 0; j < widths[widths.length - 1] - 1; ++j)
-        		stringBuilder.append(bodyFrame);
-        	stringBuilder.append(rightBorder);
-        	
-        	System.out.println(stringBuilder);
-    	}
-    	*/
-    	
     }
 
     /**
@@ -231,38 +186,6 @@ public class Utils {
 		final String MAX_ATTEMPTS_REACHED_MESSAGE = "Ha realizado demasiados intentos. Inténtelo más tarde";
 		String input = null;
 		int attempts = 1;
-		
-		/*
-		 * Si no hay opciones:
-		 * 		Devolver input
-		 * Si hay opciones:
-		 * 		Hacer
-	     *			Leer(input)
-		 * 			Si (Vacio(input))
-		 * 				Si (defaultOption)
-		 * 					input = defaultOption
-		 * 					salirDeBucle
-		 * 				SiNo
-		 * 					imprimirMensajeError
-		 * 					++intentos
-		 * 					Si (intentos > maxIntentos)
-		 * 						salirDeBucle
-		 * 					continuarBucle
-		 * 			SiNo
-		 * 				Si (input in opciones)
-		 * 					salirDeBucle
-		 * 				SiNo
-		 * 					imprimirMensajeError
-		 * 					++intentos
-		 * 					Si (intentos > maxIntentos)
-		 * 						salirDeBucle
-		 * 					continuarBucle
-		 * 		Mientras (NoSeDigaOtraCosa)
-		 * 		
-		 * 		Cerrar(scanner)
-		 * 		Devolver(input)
-		 * 
-		 */
 				
 		if (options == null) {
 			if (prompt != null)
@@ -408,6 +331,4 @@ public class Utils {
 		System.out.println(maxAttemptsReachedMessage);
 		return null;
 	}
-
-
 }

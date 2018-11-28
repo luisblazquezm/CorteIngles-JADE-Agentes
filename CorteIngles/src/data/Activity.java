@@ -61,6 +61,9 @@ public class Activity implements Serializable, Comparable<Activity> {
 		this.scheduleDescription = scheduleDescription;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object object) {
 
@@ -74,11 +77,17 @@ public class Activity implements Serializable, Comparable<Activity> {
 	    return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 	    return (this.name.hashCode() + this.scheduleDescription.hashCode());        
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(Activity activity) {
 

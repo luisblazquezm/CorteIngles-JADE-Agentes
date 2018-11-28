@@ -6,10 +6,9 @@
  * 
  */
 
-package messages;
+package packets;
 
 import java.io.Serializable;
-
 import data.ServiceData;
 import jade.core.AID;
 import jade.core.Agent;
@@ -21,7 +20,7 @@ import jade.core.Agent;
 public class ServiceDataPacket implements Serializable {
 	
 	/**
-	 * 
+	 * Serial version UID
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -36,29 +35,27 @@ public class ServiceDataPacket implements Serializable {
 	private ServiceData data;
 	
 	/**
-	 * 
+	 * Agent requesting service being carried on
 	 */
 	private AID requester;
 
 	/**
-	 * @param service
-	 * @param data
-	 * @param requester
+	 * @param service Service to be carried on
+	 * @param data Service's associated data
+	 * @param requester Agent role requesting service being carried on
 	 */
 	public ServiceDataPacket(String service, ServiceData data, AID requester) {
-		super();
 		this.service = service;
 		this.data = data;
 		this.requester = requester;
 	}
 	
 	/**
-	 * @param service
-	 * @param data
-	 * @param requester
+	 * @param service Service to be carried on
+	 * @param data Service's associated data
+	 * @param requester Agent role requesting service being carried on
 	 */
 	public ServiceDataPacket(String service, ServiceData data, Agent requester) {
-		super();
 		this.service = service;
 		this.data = data;
 		if (requester != null)

@@ -8,13 +8,12 @@
 package corteIngles;
 
 import jade.core.Agent;
-import utilities.Debug;
 import utilities.JadeUtils;
 import utilities.PlatformUtils;
 import jade.core.behaviours.ParallelBehaviour;
 
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class CorteInglesAgent extends Agent {
@@ -30,23 +29,12 @@ public class CorteInglesAgent extends Agent {
 	@Override
 	protected void setup() {
 		
-		try {
-			PlatformUtils.registerAgentInPlatform(this, PlatformUtils.CORTE_INGLES_AGENT);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		String[][] services = {
 				{PlatformUtils.HANDLE_RESERVATION_SER, getLocalName()},
 				{PlatformUtils.HANDLE_ACTIVITY_SER, getLocalName()}
 		};
 		
-		Debug.message("CorteInglesAgent going to register\n");
-		
 		JadeUtils.registerServices(this, services);
-		
-		Debug.message("CorteInglesAgent services registered");
 		
 		ParallelBehaviour corteInglesBehaviour = 
 				new ParallelBehaviour(this, ParallelBehaviour.WHEN_ANY);

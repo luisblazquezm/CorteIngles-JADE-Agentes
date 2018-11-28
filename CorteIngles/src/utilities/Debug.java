@@ -7,8 +7,9 @@
 
 package utilities;
 
+
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public final class Debug {

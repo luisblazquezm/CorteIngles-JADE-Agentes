@@ -16,7 +16,7 @@ import utilities.PlatformUtils;
 import utilities.Utils;
 
 /**
- * @author mrhyd
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
  *
  */
 public class Hotels {

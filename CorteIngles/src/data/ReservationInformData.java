@@ -2,11 +2,11 @@ package data;
 
 import java.util.Date;
 
-import jade.core.AID;
-import jade.core.Agent;
-
-public class ReservationInformData
-extends InformData {
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
+public class ReservationInformData extends InformData {
 
 	/**
 	 * 
@@ -39,34 +39,15 @@ extends InformData {
 	private boolean available;
 
 	/**
-	 * @param server
-	 * @param data
-	 * @param destinationCity
-	 * @param destinationHotel
-	 * @param startDate
-	 * @param endDate
-	 * @param available
+	 * @param server Server that answers to service request
+	 * @param data Response data
+	 * @param destinationCity Destination city
+	 * @param destinationHotel Destination hotel
+	 * @param startDate Reservation's start date
+	 * @param endDate Reservation's end date
+	 * @param available Reservation's availability
 	 */
-	public ReservationInformData(AID server, String destinationCity, String destinationHotel,
-			Date startDate, Date endDate, boolean available) {
-		super(server);
-		this.destinationCity = destinationCity;
-		this.destinationHotel = destinationHotel;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.available = available;
-	}
-	
-	/**
-	 * @param server
-	 * @param data
-	 * @param destinationCity
-	 * @param destinationHotel
-	 * @param startDate
-	 * @param endDate
-	 * @param available
-	 */
-	public ReservationInformData(Agent server, String destinationCity, String destinationHotel,
+	public ReservationInformData(String server, String destinationCity, String destinationHotel,
 			Date startDate, Date endDate, boolean available) {
 		super(server);
 		this.destinationCity = destinationCity;
@@ -80,7 +61,7 @@ extends InformData {
 	 *
 	 */
 	public ReservationInformData() {
-		super((AID)null);
+		super(null);
 		this.destinationCity = null;
 		this.destinationHotel = null;
 		this.startDate = null;

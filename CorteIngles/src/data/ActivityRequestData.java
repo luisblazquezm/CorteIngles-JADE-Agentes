@@ -1,9 +1,11 @@
 package data;
 
 import java.util.Date;
-import jade.core.AID;
-import jade.core.Agent;
 
+/**
+ * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
+ *
+ */
 public class ActivityRequestData extends RequestData{
 	
 	/**
@@ -22,37 +24,21 @@ public class ActivityRequestData extends RequestData{
 	private Date startDate;
 	
 	/**
-	 * @param client
-	 * @param data
-	 * @param city
-	 * @param startDate
+	 * @param client Requester of the service (Agent role as defined in PlatformUtils)
+	 * @param city Activity's city
+	 * @param startDate Activity's date
 	 */
-	public ActivityRequestData(AID client, String city, Date startDate) {
+	public ActivityRequestData(String client, String city, Date startDate) {
 		super(client);
 		this.city = city;
 		this.startDate = startDate;
 	}
 	
 	/**
-	 * @param client
-	 * @param data
-	 * @param city
-	 * @param startDate
-	 */
-	public ActivityRequestData(Agent client, String city, Date startDate) {
-		super(client);
-		this.city = city;
-		this.startDate = startDate;
-	}
-	
-	/**
-	 * @param client
-	 * @param data
-	 * @param city
-	 * @param startDate
+	 * 
 	 */
 	public ActivityRequestData() {
-		super((AID)null);
+		super(null);
 		this.city = null;
 		this.startDate = null;
 	}
