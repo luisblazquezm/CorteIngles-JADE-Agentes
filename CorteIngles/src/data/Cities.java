@@ -34,6 +34,26 @@ public class Cities {
 									  "München", "Berlín", "Frankfurt", "Giza", "Marsella",
 									  "Roma", "Sofía", "Santorini", "Lübeck", "Moscú"};
         
+	/**
+	 * Minimum number of hotels in one city
+	 */
+	static final int MIN_NUMBER_OF_HOTELS_PER_CITY = 10;
+	
+	/**
+	 * Maximum number of hotels in one city
+	 */
+	static final int MAX_NUMBER_OF_HOTELS_PER_CITY = 30;
+	
+	/**
+	 * Minimum number of activities in one city
+	 */
+	static final int MIN_NUMBER_OF_ACTIVITIES_PER_CITY = 10;
+	
+	/**
+	 * Maximum number of activities in one city
+	 */
+	static final int MAX_NUMBER_OF_ACTIVITIES_PER_CITY = 25;
+	
 	static {
 		random = new Random();
 		random.setSeed(System.currentTimeMillis());
@@ -45,19 +65,24 @@ public class Cities {
     public static City instanceWithRandomAttributes(){
     	
     	return new City(
-    			Cities.getRandomCityName(), 
-    			Hotels.randomList(), 
-    			Activities.randomList()
-    			);
+			Cities.getRandomCityName(),
+			Hotels.randomList(random.nextInt(
+					(MAX_NUMBER_OF_HOTELS_PER_CITY - MIN_NUMBER_OF_HOTELS_PER_CITY + 1)
+					+ MIN_NUMBER_OF_HOTELS_PER_CITY)),
+			Activities.randomList(random.nextInt(
+					(MAX_NUMBER_OF_ACTIVITIES_PER_CITY - MIN_NUMBER_OF_ACTIVITIES_PER_CITY + 1)
+					+ MIN_NUMBER_OF_ACTIVITIES_PER_CITY))
+			);
     }
     
     /**
+     * @param size Number of elements in list
 	 * @return Random-length list of random City class's instances
 	 */
-    public static List<City> randomList() {
+    public static List<City> randomList(int size) {
     	List<City> list = new ArrayList<>();
     	
-		for (int i = 0; i < Cities.CITY_NAMES.length ; ++i) {
+		for (int i = 0; i < size; ++i) {
 			list.add(Cities.instanceWithRandomAttributes());
 		}
 	

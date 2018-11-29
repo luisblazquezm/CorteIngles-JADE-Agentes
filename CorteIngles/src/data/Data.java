@@ -28,12 +28,16 @@ public class Data {
 	 */
 	private static List<City> listOfCities;
 	
+	/**
+	 * Number of cities to generate
+	 */
+	final static int NUMBER_OF_CITIES = 10;
 	
 	static {
 		
 		// Don't know what I am doing wrong so that duplicates keep coming up \_('-')_/
 		
-		listOfCities = Cities.randomList();
+		listOfCities = Cities.randomList(NUMBER_OF_CITIES);
 
 		Set<City> s = new TreeSet<>(new CityComparator());
 	    s.addAll(listOfCities); // Ordered, no duplicates
@@ -68,41 +72,34 @@ public class Data {
 	public static List<Activity> getActivities(String cityName, Date day) {
 		
 		if (cityName == null){
-			System.err.println("Data: invalid cityName");
+			System.err.println("Data: getActivities: invalid cityName");
 			return null;
 		}
 		
 		if (day == null){
-			System.err.println("Data: invalid day");
+			System.err.println("Data: getActivities: invalid day");
 			return null;
 		}
-		
-		final String dateFormatString = "dd/MM/yyyy";
-		final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
-		String activityDate = dateFormat.format(day);
-		String[] partsOfDate = activityDate.split("/");
-		int departureDay = Integer.parseInt(partsOfDate[0]); // Gets only the day dd from dd/MM/yyyy
 		
 		List<Activity> list = new ArrayList<>();
 		
 		City city = null;
 		for (City c : listOfCities) {
-			if (c.getName().equals(cityName))
+			if (c.getName().equalsIgnoreCase(cityName))
 				city = c;
 		}
 		
 		if (city == null) {
-			return null;
+			return list;
 		} else {
-			
 			for (Activity a : city.getListOfActivities()) {
-				if (a.getScheduleDescription()[0] <= departureDay && a.getScheduleDescription()[1] >= departureDay) {
+				if (a.getScheduleDescription()[0].equals(day)) {
 					list.add(a);
 				}
 			}
-			
-			return list;
 		}
+		
+		return list;
 	}
 
 
@@ -138,7 +135,7 @@ public class Data {
 			
 		City city = null;
 		for (City c : listOfCities) {
-			if (c.getName().equals(cityName))
+			if (c.getName().equalsIgnoreCase(cityName))
 				city = c;
 		}
 		
@@ -148,7 +145,7 @@ public class Data {
 		} else {
 			
 			for (Hotel h : city.getListOfHotels()) {
-				if (h.getName().equals(hotelName)) {
+				if (h.getName().equalsIgnoreCase(hotelName)) {
 					hotel = h;
 				}
 			}
@@ -209,7 +206,7 @@ public class Data {
 			return null;
 		
 		for (City c : listOfCities) {
-			if (c.getName().equals(cityName)) {
+			if (c.getName().equalsIgnoreCase(cityName)) {
 				city = c;
 				break;
 			}

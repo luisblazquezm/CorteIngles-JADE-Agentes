@@ -27,7 +27,7 @@ public class Hotel implements Serializable, Comparable<Hotel> {
 	private final String name;
 	
 	/**
-	 * List of rooms. Array index is room number, content is size of empty room.
+	 * List of rooms. Array index is day of month number, content is number of free rooms.
 	 */
 	private int[] occupationCalendar;
 	
@@ -77,7 +77,7 @@ public class Hotel implements Serializable, Comparable<Hotel> {
 		if (departureDate == 0 || returnDate == 0 || numberOfCustomers == 0) {
 			Debug.formattedMessage("%naddCustomer: invalid parameters%n");
 		} else {
-			for (int i = departureDate ; i <= returnDate ; i++) {
+			for (int i = departureDate; i <= returnDate; i++) {
 				if (this.occupationCalendar[i] < numberOfCustomers) {
 					Debug.formattedMessage("%naddCustomer: room not available%n");
 					customerCanBeAdded = false;

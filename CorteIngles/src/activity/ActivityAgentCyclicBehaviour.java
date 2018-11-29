@@ -60,34 +60,46 @@ public class ActivityAgentCyclicBehaviour extends CyclicBehaviour {
 	public void action() 
 	{
 		
-		MessageTemplate template = PlatformUtils.createPlatformMessageTemplate(ACLMessage.INFORM);
+		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage msg = this.myAgent.receive(template);
 				
 		if (msg == null) {
 			block();
 		} else {
-			try {				
-				ServiceDataPacket requestPacket = (ServiceDataPacket) msg.getContentObject();
-				ActivityRequestData data = (ActivityRequestData)requestPacket.getData();
-				List<Activity> activities = Data.getActivities(data.getCity(), data.getStartDate());
+			try {
 				
-				if (activities == null) {
-					System.err.println("ActivityAgentCyclicBehaviour: listOfActivies is null");
-				} else {
-					ActivityInformData informData = new ActivityInformData(PlatformUtils.ACTIVITY_AGENT, data.getCity(), activities);
-					
-					ServiceDataPacket answerMessageContent = Packets.createActivityInformServiceDataPacket(requestPacket, informData);
-
-					int numberOfRecipients = JadeUtils.sendMessage(this.myAgent,
-																  PlatformUtils.HANDLE_ACTIVITY_SER,
-																  ACLMessage.INFORM,
-																  answerMessageContent);
-					
-					if (numberOfRecipients <= 0) {
-						System.err.println("ServeUserBehaviour: no agents implementing requested service");
-		        		return;
-					} 
+				ServiceDataPacket requestPacket = (ServiceDataPacket) msg.getContentObject();
+				if (requestPacket == null) {
+					System.err.println("ActivityAgentCyclicBehaviour: request packet is null");
+					return;
 				}
+				
+				ActivityRequestData data = (ActivityRequestData)requestPacket.getData();
+				if (data == null) {
+					System.err.println("ActivityAgentCyclicBehaviour: data is null");
+					return;
+				}
+				
+				List<Activity> activities = Data.getActivities(data.getCity(), data.getStartDate());
+				if (activities == null) {
+					System.err.println("ActivityAgentCyclicBehaviour: listOfActivities is null");
+					return;
+				}
+				
+				ActivityInformData informData = new ActivityInformData(PlatformUtils.ACTIVITY_AGENT, data.getCity(), activities);
+				
+				ServiceDataPacket answerMessageContent = Packets.createActivityInformServiceDataPacket(requestPacket, informData);
+
+				int numberOfRecipients = JadeUtils.sendMessage(this.myAgent,
+															   PlatformUtils.HANDLE_ACTIVITY_SER,
+															   ACLMessage.INFORM,
+															   answerMessageContent);
+				
+				if (numberOfRecipients <= 0) {
+					System.err.println("ServeUserBehaviour: no agents implementing requested service");
+	        		return;
+				} 
+				
 			} catch (UnreadableException e) {
 				System.err.println("ActivityAgentCyclicBehaviour: getContentObject failed");
 				e.printStackTrace();

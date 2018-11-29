@@ -16,7 +16,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import packets.ServiceDataPacket;
 import utilities.JadeUtils;
-import utilities.PlatformUtils;
 
 /**
  * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
@@ -35,8 +34,8 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 	//@SuppressWarnings("unchecked")
 	@Override
 	public void action() {
-
-		MessageTemplate template = PlatformUtils.createPlatformMessageTemplate(ACLMessage.INFORM);
+		
+		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		
 		if (message == null) {
@@ -48,16 +47,11 @@ public class GetInformResponseBehaviour extends CyclicBehaviour {
 				if (serviceDataPacket == null)
 					System.err.println("UserAgentCyclicBehaviour: messageContent is null");
 				
-				int numberOfRecipients = JadeUtils.sendMessage(
+				JadeUtils.sendMessageTo(
+						serviceDataPacket,
+						ACLMessage.INFORM,
 						this.myAgent,
-		                PlatformUtils.HANDLE_USER_REQUEST_SER,
-		                ACLMessage.INFORM,
-		                serviceDataPacket);
-				
-				if (numberOfRecipients <= 0) {
-					System.err.println("GetInformResponseBehaviour: no agents implementing requested service");
-	        		return ;
-				}
+						serviceDataPacket.getRequester());
 				
 			} catch (UnreadableException e) {
 				System.err.println("GetInformResponseBehaviour: getContentObject failed");

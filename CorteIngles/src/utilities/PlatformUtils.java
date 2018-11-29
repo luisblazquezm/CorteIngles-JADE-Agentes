@@ -9,8 +9,6 @@
 package utilities;
 
 import jade.content.lang.sl.SLCodec;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 
 /**
  * @author Luis Blázquez Miñambres y Samuel Gómez Sánchez
@@ -70,20 +68,4 @@ public class PlatformUtils {
 	
 	// Others
 	public static final int DAYS_OF_MAY = 31;
-	public static final int MAX_ROOMS_IN_HOTEL = 5;
-	
-	/**
-	 * @param performative ACLMessage's performative
-	 * @return MessageTemplate object
-	 */
-	public static MessageTemplate createPlatformMessageTemplate(int performative) {
-		
-		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
-		template = MessageTemplate.and(template, MessageTemplate.MatchLanguage(PLATFORM_LANGUAGE));
-		template = MessageTemplate.and(template, MessageTemplate.MatchOntology(PLATFORM_ONTOLOGY));
-		
-		return template;
-		
-	}
-
 }

@@ -36,7 +36,7 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() {
 		
-		MessageTemplate template = PlatformUtils.createPlatformMessageTemplate(ACLMessage.REQUEST);
+		MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage message = this.myAgent.receive(template);
 		int numberOfRecipients = 0;
 
@@ -63,7 +63,7 @@ public class ServeUserBehaviour extends CyclicBehaviour {
 					
 					numberOfRecipients = JadeUtils.sendMessage(
 							this.myAgent,
-							PlatformUtils.RETRIEVE_ACTIVITY_SER, 
+							PlatformUtils.RETRIEVE_ACTIVITY_SER,
 							ACLMessage.REQUEST,
 							serviceDataPacket
 					);

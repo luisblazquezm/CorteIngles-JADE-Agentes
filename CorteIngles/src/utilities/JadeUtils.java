@@ -35,7 +35,7 @@ public class JadeUtils {
 	 * @param serviceType  Required service's type.
 	 * @return DFAgentDescription array of agents which provide the service.
 	 */
-    protected static DFAgentDescription[] findAgentsForService(Agent clientAgent, String serviceType)
+	protected static DFAgentDescription[] findAgentsForService(Agent clientAgent, String serviceType)
     {
     	DFAgentDescription template = new DFAgentDescription();
     	ServiceDescription serviceDescription = new ServiceDescription();
@@ -63,7 +63,7 @@ public class JadeUtils {
 		}
         
         return null;
-    }
+}
     
     /**
      * Look for all agents providing a service and get the first of them.
@@ -71,7 +71,7 @@ public class JadeUtils {
 	 * @param serviceType  Required service's type.
 	 * @return First agent which provides the service.
      */
-    protected static DFAgentDescription findFirstAgentForService(Agent clientAgent, String serviceType)
+	protected static DFAgentDescription findFirstAgentForService(Agent clientAgent, String serviceType)
     {
     	DFAgentDescription template = new DFAgentDescription();
         ServiceDescription serviceDescription = new ServiceDescription();
@@ -118,16 +118,19 @@ public class JadeUtils {
         }
         
         return null;
-    }
-    
+}
+        
     /**
-     * Send an object from agent clientAgent to an agent implementing specified service.
-     * @param clientAgent Agent that requests service.
-	 * @param serviceType  Required service's type.
-	 * @param performative ACLMessage performative for the message
-	 * @param object Sent message.
+     * Send an object from agent clientAgent to an agent implementing specified service
+     * @param clientAgent Agent that requests service
+	 * @param serviceType  Required service's type
+     * @param ontology ACLMessage's ontology
+     * @param language ACLMessage's language
+     * @param performative ACLMessage's performative for the message
+	 * @param object Sent message
+     * @return
      */
-    public static int sendMessage(Agent clientAgent, String serviceType, int performative, Object object)
+	public static int sendMessage(Agent clientAgent, String serviceType, int performative , Object object)
     {
         DFAgentDescription[] dfd;
         dfd = findAgentsForService(clientAgent, serviceType);
@@ -159,24 +162,27 @@ public class JadeUtils {
         }
         
         return dfd.length;
-    }
+}
     
     /**
      * Send an object from agent clientAgent to an agent implementing specified service.
      * @param clientAgent Agent that requests service.
 	 * @param serviceType  Required service's type.
+	 * @param ontology ACLMessage's ontology
+	 * @param language ACLMessage's language
 	 * @param performative ACLMessage performative for the message
 	 * @param object Sent message.
      */
-    public static void sendMessageTo(Object object, int performative, Agent clientAgent, AID... receivers)
+    public static void sendMessageTo(
+    		Object object,
+    		int performative,
+    		Agent clientAgent,
+    		AID... receivers)
     {
         
         try {
         	
         	ACLMessage aclMessage = new ACLMessage(performative);
-
-            aclMessage.setOntology(PlatformUtils.PLATFORM_ONTOLOGY);
-            aclMessage.setLanguage(PlatformUtils.PLATFORM_LANGUAGE);
 			aclMessage.setContentObject((Serializable) object);
         	for (AID receiver : receivers)
         		aclMessage.addReceiver(receiver);
@@ -198,31 +204,31 @@ public class JadeUtils {
 	 * @param services Array of Service's type - Service's name pairs
      */
     public static void registerServices(Agent agent, String[][] services)
-    	throws NullPointerException
-    {
-    	
-    	if (agent == null || services == null) {
-    		throw new NullPointerException();
-    	}
-    	
-		DFAgentDescription dfd = new DFAgentDescription();
-		dfd.setName(agent.getAID());
-		
-		for (int i = 0; i < services.length; ++i) {
-			ServiceDescription sd = new ServiceDescription();
-			sd.setType(services[i][0]);
-			sd.setName(services[i][1]);
-			sd.addOntologies(PlatformUtils.PLATFORM_ONTOLOGY);
-			sd.addLanguages(PlatformUtils.PLATFORM_LANGUAGE);
-			dfd.addServices(sd);
-		}
-		
-		try {
-			DFService.register(agent, dfd);
-		} catch (FIPAException e1) {
-			System.err.println("JadeUtils: registerServices: DFService.register failed");
-			e1.printStackTrace();
-		}
+        	throws NullPointerException
+        {
+        	
+        	if (agent == null || services == null) {
+        		throw new NullPointerException();
+        	}
+        	
+    		DFAgentDescription dfd = new DFAgentDescription();
+    		dfd.setName(agent.getAID());
+    		
+    		for (int i = 0; i < services.length; ++i) {
+    			ServiceDescription sd = new ServiceDescription();
+    			sd.setType(services[i][0]);
+    			sd.setName(services[i][1]);
+//    			sd.addOntologies("ontologia");
+//    			sd.addLanguages(new SLCodec().getName());
+    			dfd.addServices(sd);
+    		}
+    		
+    		try {
+    			DFService.register(agent, dfd);
+    		} catch (FIPAException e1) {
+    			// TODO Auto-generated catch block
+    			e1.printStackTrace();
+    		}
     }
     
     /**
@@ -243,63 +249,4 @@ public class JadeUtils {
     	}
     		
     }
-
-    /**
-     * Prompts a table of available cities
-     * @param title Header of the table 
-	 * @param cityNames Array of city names
-	 * @param width Size of width of the table.
-     */
-	public static void printStringTable(String title, String[] cityNames, int width) {
-		final String CITY_NAMES_AVAILABILITY_ERROR = "No hay ciudades disponibles";
-		final String NEW_LINE = "\n";
-		final String TABLE_JOINT_SYMBOL = "+";
-		final String TABLE_V_SPLIT_SYMBOL = "|";
-		final String TABLE_H_SPLIT_SYMBOL = "-";
-		final String TABLE_H_SPACE_SYMBOL = " ";
-		StringBuilder sb = new StringBuilder();
-		
-		if (cityNames == null) {
-			System.out.println(CITY_NAMES_AVAILABILITY_ERROR);
-		} else {
-			
-			if (width <= 0) {
-				System.out.println("JadeUtils: incorrect table width");
-			} else {
-				
-				if (title == null) {
-					System.out.println("JadeUtils: table header is empty");
-				} else {
-					sb.append(NEW_LINE + TABLE_JOINT_SYMBOL);
-			    	for (int i = 0 ; i < width ; i++)
-				    	sb.append(TABLE_H_SPLIT_SYMBOL);
-				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
-				    
-				    sb.append(TABLE_V_SPLIT_SYMBOL + title);
-				    for (int i = title.length() ; i < width ; i++)
-				    	sb.append(TABLE_H_SPACE_SYMBOL);
-				    sb.append(TABLE_V_SPLIT_SYMBOL + NEW_LINE);
-				    
-					sb.append(TABLE_JOINT_SYMBOL);
-			    	for (int i = 0 ; i < width ; i++)
-				    	sb.append(TABLE_H_SPLIT_SYMBOL);
-				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
-				    
-				    for(String c : cityNames) {
-						sb.append(TABLE_V_SPLIT_SYMBOL + c);
-				    	for (int i = c.length() ; i < width ; i++)
-					    	sb.append(TABLE_H_SPACE_SYMBOL);
-					    sb.append(TABLE_V_SPLIT_SYMBOL + NEW_LINE);
-				    }
-				    
-				    sb.append(TABLE_JOINT_SYMBOL);
-			    	for (int i = 0 ; i < width ; i++)
-				    	sb.append(TABLE_H_SPLIT_SYMBOL);
-				    sb.append(TABLE_JOINT_SYMBOL + NEW_LINE);
-				    
-				    System.out.printf(sb.toString());
-				}
-			}
-		}
-	}
 }

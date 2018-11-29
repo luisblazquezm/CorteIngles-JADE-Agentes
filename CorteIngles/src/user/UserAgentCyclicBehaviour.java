@@ -53,6 +53,12 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	private int behaviourStep = this.RESERVATION_STEP;
 	boolean behaviourIsOver = false;
 	boolean behaviourFirstTimeOn = true;
+	
+	/**
+	 * Some needed objects
+	 */
+	final String dateFormatString = "dd/MM/yyyy";
+	final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
 
 	/**
 	 * @param agent This object's associated agent
@@ -109,8 +115,6 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			// Constants
 			final int MAX_ATTEMPTS = 5;
-			final String dateFormatString = "dd/MM/yyyy";
-			final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
 			Date startLimitDate;
 			Date endLimitDate;
 			try {
@@ -240,8 +244,6 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 
 			// Constants
 			final int MAX_ATTEMPTS = 5;
-			final String dateFormatString = "dd/MM/yyyy";
-			final DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
 			Date startLimitDate;
 			Date endLimitDate;
 			try {
@@ -274,6 +276,9 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 			
 			if ("qQ".contains(userWantsToSeeActivities)) {
 				this.behaviourIsOver = true;
+				return;
+			} else if ("nN".contains(userWantsToSeeActivities)) {
+				behaviourStep = this.RESERVATION_STEP;
 				return;
 			} else if ("sS".contains(userWantsToSeeActivities)) { // Process reservation request
 	        	
@@ -340,9 +345,6 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	 */
 	private void waitAndProcessResponse() {
 		
-		// TODO Parse data and return true or false depending on conditions
-		// Should return false if reservation is not available
-		
         MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage message = this.myAgent.receive(template);
 		
@@ -389,8 +391,6 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	 */
 	private void processReservationData(ReservationInformData data) {
 		
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		
 		String[] titles = {"RESULTADO", "CIUDAD", "HOTEL", "FECHA DE ENTRADA", "FECHA DE SALIDA"};
 		int[] widths = {20,12,16,16,16};
         String[][] results = new String[1][5];
@@ -415,22 +415,36 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 	 */
 	private void processActivityData(ActivityInformData data) {
 
-		String[] titles = {"ACTIVIDAD", "CIUDAD", "FECHA DE ENTRADA", "FECHA DE SALIDA"};
-		int[] widths = {25, 15, 15, 15};
+		String[] titles = {"ACTIVIDAD", "CIUDAD", "FECHA DE INICIO", "FECHA DE FINALIZACION"};
+		int[] widths = {25, 15, 15, 20};
+		String[][] tableData = null;
         
+		if (data == null) {
+			System.err.println("UserAgentCyclicBehaviour: processActivityData: no data");
+		}
+		
         List<Activity> results = data.getListOfActivities();
+        if (results == null || results.size() == 0) {
+        	tableData = new String[1][4];
+        	tableData[0][0] = "NO HAY COINCIDENCIAS";
+        	tableData[0][1] = "";
+        	tableData[0][2] = "";
+        	tableData[0][3] = "";
+        	Utils.printStringTable(titles, widths, tableData);
+        	return;
+        }
         
-        String[][] tableData = new String[results.size()][4];
+        tableData = new String[results.size()][4];
         
         for (int i = 0; i < results.size(); ++i) {
         	
         	Activity activity = results.get(i);
-        	int[] scheduleDescription = activity.getScheduleDescription();
+        	Date[] scheduleDescription = activity.getScheduleDescription();
         	
         	tableData[i][PlatformUtils.RECEIVER_ACTIVITY_CITY_INDEX] = data.getCityName();
         	tableData[i][PlatformUtils.RECEIVER_ACTIVITY_INDEX] = activity.getName();
-        	tableData[i][PlatformUtils.RECEIVER_START_OF_ACTIVITY_INDEX] = String.format("%d", scheduleDescription[0]);
-        	tableData[i][PlatformUtils.RECEIVER_END_OF_ACTIVITY_INDEX] = String.format("%d", scheduleDescription[1]);
+        	tableData[i][PlatformUtils.RECEIVER_START_OF_ACTIVITY_INDEX] = dateFormat.format(scheduleDescription[0]);
+        	tableData[i][PlatformUtils.RECEIVER_END_OF_ACTIVITY_INDEX] = dateFormat.format(scheduleDescription[1]);
         	
         }
         

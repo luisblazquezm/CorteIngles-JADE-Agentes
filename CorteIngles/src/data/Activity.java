@@ -10,6 +10,7 @@ package data;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 
 public class Activity implements Serializable, Comparable<Activity> {
 
@@ -21,17 +22,18 @@ public class Activity implements Serializable, Comparable<Activity> {
 	/**
 	 * Name of the activity
 	 */
-	private String name;	
+	private String name;
+	
 	/**
 	 * Start and end dates of the activity
 	 */
-	private int[] scheduleDescription;
+	private Date[] scheduleDescription;
 	
 	/**
 	 * @param name
 	 * @param scheduleDescription
 	 */
-	public Activity(String name, int[] scheduleDescription) {
+	public Activity(String name, Date[] scheduleDescription) {
 		super();
 		this.name = name;
 		this.scheduleDescription = scheduleDescription;
@@ -51,13 +53,13 @@ public class Activity implements Serializable, Comparable<Activity> {
 	/**
 	 * @return the scheduleDescription
 	 */
-	public int[] getScheduleDescription() {
+	public Date[] getScheduleDescription() {
 		return scheduleDescription;
 	}
 	/**
 	 * @param scheduleDescription the scheduleDescription to set
 	 */
-	public void setScheduleDescription(int[] scheduleDescription) {
+	public void setScheduleDescription(Date[] scheduleDescription) {
 		this.scheduleDescription = scheduleDescription;
 	}
 

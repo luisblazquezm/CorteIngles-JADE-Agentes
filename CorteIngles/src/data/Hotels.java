@@ -41,6 +41,16 @@ public class Hotels {
 			  							  "Select", "Sol", "Superior", "Tropical", "Torino"
 	};
 	
+	/**
+	 * Minimum number of free rooms at boot
+	 */
+	static final int MIN_NUMBER_OF_FREE_ROOMS = 10;
+	
+	/**
+	 * Maximum number of free rooms at boot
+	 */
+	static final int MAX_NUMBER_OF_FREE_ROOMS = 100;
+	
 	static {
 		random = new Random();
 		random.setSeed(System.currentTimeMillis());
@@ -54,13 +64,14 @@ public class Hotels {
 	}
 	
 	/**
+	 * @param size Number of elements in list
 	 * @return Random-length list of random Hotel class's instances
 	 */
-	public static List<Hotel> randomList() {
+	public static List<Hotel> randomList(int size) {
 		
     	List<Hotel> list = new ArrayList<>();
     	
-		for (int i = 0; i < Hotels.HOTEL_NAMES.length ; ++i) {
+		for (int i = 0; i < size; ++i) {
 			list.add(Hotels.instanceWithRandomAttributes());
 		}
 		
@@ -79,11 +90,12 @@ public class Hotels {
 	 */
 	private static int[] getRandomOccupationCalendar() {
 		
-		int numberOfRooms = random.nextInt(PlatformUtils.MAX_ROOMS_IN_HOTEL) + 1;
 		int[] occupationCalendar = new int[PlatformUtils.DAYS_OF_MAY];
 		
 		for (int i = 0; i < PlatformUtils.DAYS_OF_MAY; ++i) {
-			occupationCalendar[i] = numberOfRooms;
+			occupationCalendar[i] = random.nextInt(
+					(MAX_NUMBER_OF_FREE_ROOMS - MIN_NUMBER_OF_FREE_ROOMS + 1))
+					+ MIN_NUMBER_OF_FREE_ROOMS;
 		}
 		
 		return occupationCalendar;
