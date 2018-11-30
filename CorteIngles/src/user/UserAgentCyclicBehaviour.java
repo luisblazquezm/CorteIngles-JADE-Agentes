@@ -198,11 +198,11 @@ public class UserAgentCyclicBehaviour extends CyclicBehaviour
 				reservationData.setEndDate(
 						Utils.getDateFromUser(
 							"Introduzca la fecha de salida ("
-									+ dateFormat.format(startLimitDate)
+									+ dateFormat.format(reservationData.getStartDate())
 									+ " - "
 									+ dateFormat.format(endLimitDate)
 									+ "): ",
-							startLimitDate,
+							reservationData.getStartDate(),
 							endLimitDate,
 							dateFormat,
 							MAX_ATTEMPTS
